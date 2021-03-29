@@ -13,7 +13,7 @@ public class APIManager {
     public static gsonAttraction getAttractionFromAPI(String attractionName) throws IOException {
         String searchPlace = attractionName.replace(" ","%20");
         String url = "https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=" + searchPlace +
-             "&inputtype=textquery&fields=place_id&key=AIzaSyAujNlik91rOdQwXKVEQgHakotz7hfl9oM";
+             "&inputtype=textquery&fields=place_id&key=OUR_KEY";
         Gson gson = new Gson();
         PlaceID idHolder = gson.fromJson(getJsonString(url), PlaceID.class);
         return getGsonAttractionObject(idHolder.getCandidates().get(0).getPlaceId());
@@ -23,7 +23,7 @@ public class APIManager {
         //Place ID: ChIJc2nSALkEdkgRkuoJJBfzkUI
         String url =
                 "https://maps.googleapis.com/maps/api/place/details/json?place_id=" + placeID +
-                        "&fields=name,formatted_address,formatted_phone_number,opening_hours,geometry,types,business_status,price_level,place_id&key=AIzaSyAujNlik91rOdQwXKVEQgHakotz7hfl9oM";
+                        "&fields=name,formatted_address,formatted_phone_number,opening_hours,geometry,types,business_status,price_level,place_id&key=OUR_KEY";
         Gson gson = new Gson();
         gsonAttraction attraction = gson.fromJson(getJsonString(url), gsonAttraction.class);
         return attraction;

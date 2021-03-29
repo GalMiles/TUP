@@ -1,17 +1,11 @@
 import java.io.IOException;
 import java.sql.*;
 
-import com.google.gson.Gson;
-
 public class Main {
     public static void main(String[] args) throws SQLException {
 
 
 
-
-        String dbURL = "jdbc:mysql://localhost:3306/attractions";
-        String userName = "root";
-        String password = "742!GDFMP"; //your root password
 /*
         //Connect to the database server
         Connection sqlConnection =
