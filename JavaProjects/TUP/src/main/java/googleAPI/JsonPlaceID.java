@@ -1,7 +1,8 @@
-import java.util.ArrayList;
-import java.util.List;
+package googleAPI;
 
-public class PlaceID {
+import java.util.ArrayList;
+
+public class JsonPlaceID {
 
     private ArrayList<Candidate> candidates;
 
@@ -29,7 +30,7 @@ public class PlaceID {
 
     @Override
     public String toString() {
-        return "PlaceID{" +
+        return "googleAPI.PlaceID{" +
                 "candidates=" + candidates +
                 '}';
     }

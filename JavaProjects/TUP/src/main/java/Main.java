@@ -1,8 +1,12 @@
+import engine.Attraction;
+import googleAPI.APIManager;
+import googleAPI.JsonAttraction;
+
 import java.io.IOException;
 import java.sql.*;
 
 public class Main {
-    public static void main(String[] args) throws SQLException {
+    public static void main(String[] args) {
 
 
 
@@ -31,11 +35,11 @@ public class Main {
 
 
 
-//        gsonAttraction temp = gson.fromJson(lines, gsonAttraction.class);
+//        googleAPI.gsonAttraction temp = gson.fromJson(lines, googleAPI.gsonAttraction.class);
 //
-//        Attraction realAttraction = new Attraction(temp);
+//        engine.Attraction realAttraction = new engine.Attraction(temp);
 //
-//        DBManager db = new DBManager(dbURL, userName, password);
+//        database.DBManager db = new database.DBManager(dbURL, userName, password);
 //
 //        db.insertDataToDataBase(realAttraction);
 //
@@ -51,9 +55,11 @@ public class Main {
 
         try
         {
-             gsonAttraction tempAttraction= APIManager.getAttractionFromAPI("london eye");
-             Attraction attraction = new Attraction(tempAttraction);
-            System.out.println(attraction);
+            APIManager apiManager = new APIManager();
+           JsonAttraction tempAttraction= apiManager.getAttractionFromAPI("london eye");
+           Attraction attraction = new Attraction(tempAttraction);
+           System.out.println(attraction);
+
         }
         catch (IOException e)
         {

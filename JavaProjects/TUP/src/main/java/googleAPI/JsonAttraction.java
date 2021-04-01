@@ -1,18 +1,34 @@
+package googleAPI;
+
+
 import java.util.ArrayList;
 import java.util.List;
 
-public class gsonAttraction {
-    List html_attributions = new ArrayList<String>();
-    JsonResult result;
-    String status;
+public class JsonAttraction {
+
+    private List html_attributions = new ArrayList<String>();
+    private JsonResult result;
+    private String status;
 
     @Override
     public String toString() {
-        return "Attraction{" +
+        return "engine.Attraction{" +
                 "html_attributions = " + html_attributions +"\n" +
                 "result = \n" + result +"\n"+
                 "status = " + status +
                 '}';
+    }
+
+    public List getHtml_attributions() {
+        return html_attributions;
+    }
+
+    public JsonResult getResult() {
+        return result;
+    }
+
+    public String getStatus() {
+        return status;
     }
 
     public class JsonResult {
@@ -25,6 +41,37 @@ public class gsonAttraction {
         ArrayList<String> types;
         Geometry geometry;
 
+        public String getFormatted_address() {
+            return formatted_address;
+        }
+
+        public String getFormatted_phone_number() {
+            return formatted_phone_number;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public String getPlace_id() {
+            return place_id;
+        }
+
+        public OpeningHours getOpening_hours() {
+            return opening_hours;
+        }
+
+        public String getBusiness_status() {
+            return business_status;
+        }
+
+        public ArrayList<String> getTypes() {
+            return types;
+        }
+
+        public Geometry getGeometry() {
+            return geometry;
+        }
 
         @Override
         public String toString() {
