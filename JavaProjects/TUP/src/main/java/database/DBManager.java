@@ -1,6 +1,7 @@
 package database;
 
 import engine.Attraction;
+import engine.Traveler;
 
 import java.sql.*;
 
@@ -30,5 +31,12 @@ public class DBManager {
     public void closeConnection() throws SQLException
     {
         this.sqlConnection.close();
+    }
+
+    public void insertTravelerToDataBase(Traveler traveler) throws SQLException {
+        String query = "INSERT INTO travelers(EmailAddress, Name, Password, Age)" +"\n" + "VALUES" + "(\"" +
+                traveler.getEmailAddress() + "\"" + ", \"" + traveler.getName() + "\"" + ", \"" + traveler.getPassword() +
+                "\", " + traveler.getAge() + ");";
+        this.statement.executeUpdate(query);
     }
 }

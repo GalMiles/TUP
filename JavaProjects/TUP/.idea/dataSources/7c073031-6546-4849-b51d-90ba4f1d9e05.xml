@@ -910,26 +910,49 @@ SELECT|sys.sys_config
 </ObjectGrants>
     </user>
     <table id="284" parent="2" name="attractionstable"/>
-    <column id="285" parent="284" name="attractionAPI_ID">
+    <table id="285" parent="2" name="travelers"/>
+    <column id="286" parent="284" name="attractionAPI_ID">
       <Position>1</Position>
       <DataType>varchar(45)|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="286" parent="284" name="Name">
+    <column id="287" parent="284" name="Name">
       <Position>2</Position>
       <DataType>varchar(50)|0s</DataType>
     </column>
-    <column id="287" parent="284" name="Address">
+    <column id="288" parent="284" name="Address">
       <Position>3</Position>
       <DataType>varchar(200)|0s</DataType>
     </column>
-    <column id="288" parent="284" name="PhoneNumber">
+    <column id="289" parent="284" name="PhoneNumber">
       <Position>4</Position>
       <DataType>varchar(30)|0s</DataType>
     </column>
-    <key id="289" parent="284" name="PRIMARY">
+    <key id="290" parent="284" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>attractionAPI_ID</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <column id="291" parent="285" name="EmailAddress">
+      <Position>1</Position>
+      <DataType>varchar(200)|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="292" parent="285" name="Name">
+      <Position>2</Position>
+      <DataType>varchar(255)|0s</DataType>
+    </column>
+    <column id="293" parent="285" name="Password">
+      <Position>3</Position>
+      <DataType>varchar(255)|0s</DataType>
+    </column>
+    <column id="294" parent="285" name="Age">
+      <Position>4</Position>
+      <DataType>int|0s</DataType>
+    </column>
+    <key id="295" parent="285" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <ColNames>EmailAddress</ColNames>
       <Primary>1</Primary>
     </key>
   </database-model>

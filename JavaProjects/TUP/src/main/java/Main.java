@@ -1,4 +1,6 @@
+import database.DBManager;
 import engine.Attraction;
+import engine.Traveler;
 import googleAPI.APIManager;
 import googleAPI.JsonAttraction;
 
@@ -6,7 +8,7 @@ import java.io.IOException;
 import java.sql.*;
 
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws SQLException {
 
 
 
@@ -52,21 +54,37 @@ public class Main {
 
 
         //-----------------------------------------------------------------API Manager Test
+//        try
+//        {
+//            APIManager apiManager = new APIManager();
+//           JsonAttraction tempAttraction= apiManager.getAttractionFromAPI("london eye");
+//           Attraction attraction = new Attraction(tempAttraction);
+//           System.out.println(attraction);
+//
+//        }
+//        catch (IOException e)
+//        {
+//            e.printStackTrace();
+//        }
+//
 
-        try
-        {
-            APIManager apiManager = new APIManager();
-           JsonAttraction tempAttraction= apiManager.getAttractionFromAPI("london eye");
-           Attraction attraction = new Attraction(tempAttraction);
-           System.out.println(attraction);
+        //----------------- Traveler Test -------
 
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
-        }
+
+//         Traveler traveler= new Traveler("Matan", "myPassOMG_Iam_So_Great",12,
+//               "matanp103@gmail.com" );
+//
+//        DBManager database = new DBManager(dbURL, userName, password);
+//        database.insertTravelerToDataBase(traveler);
+//
+//        database.closeConnection();
+
+
+
+
 
     }
+
 
 
 
