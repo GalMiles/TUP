@@ -15,6 +15,7 @@ public class Attraction {
     private JsonAttraction.JsonResult.OpeningHours openingHours;
 
 
+
     public Attraction(JsonAttraction jsonAttraction)
     {
         this.address = jsonAttraction.getResult().getFormatted_address();
