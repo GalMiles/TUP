@@ -57,18 +57,18 @@ public class Main {
 
 
         //-----------------------------------------------------------------API Manager Test
-        try
-        {
-           APIManager apiManager = new APIManager();
-           JsonAttraction tempAttraction= apiManager.getAttractionFromAPI("london eye");
-           Attraction attraction = new Attraction(tempAttraction);
-           System.out.println(attraction);
-
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
-        }
+//        try
+//        {
+//            APIManager apiManager = new APIManager();
+//           JsonAttraction tempAttraction= apiManager.getAttractionFromAPI("london eye");
+//           //Attraction attraction = new Attraction(tempAttraction);
+//           //System.out.println(attraction);
+//
+//        }
+//        catch (IOException e)
+//        {
+//            e.printStackTrace();
+//        }
 
 
         //----------------- Traveler Test -------
@@ -81,6 +81,12 @@ public class Main {
 //        database.insertTravelerToDataBase(traveler);
 //
 //        database.closeConnection();
+
+
+
+
+
+
 
 
 

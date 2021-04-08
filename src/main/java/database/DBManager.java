@@ -2,6 +2,7 @@ package database;
 
 import engine.Attraction;
 import engine.Traveler;
+import googleAPI.JsonAttraction;
 
 import java.sql.*;
 
@@ -40,15 +41,21 @@ public class DBManager {
         this.statement.executeUpdate(query);
     }
 
-    public void insertDataToDataBase(Attraction attraction) throws SQLException
+    public void insertDataToDataBase(JsonAttraction attraction) throws SQLException
     {
 
-        String query = "INSERT INTO attractionstable(attractionAPI_ID, Name, Address, PhoneNumber)" + "\n" +
-                "VALUES " + "(\"" + attraction.getPlaceID() + "\"" + ", \""+ attraction.getName() +"\""
-                + ", \""  +attraction.getAddress() + "\", \"" + attraction.getPhoneNumber() + "\");";
-
+        String query = "INSERT INTO attractionstable(attractionAPI_ID, Name, Address, PhoneNumber, Sunday, Monday" +
+                "Tuesday, Wednsday, Thursday, Friday, Saturday)" + "\n" + "VALUES" + "(";
+        query +=  "\"" + attraction.getResult().getPlace_id() + "\", ";
+        query +=  "\"" + attraction.getResult().getName() + "\", ";
+        query +=  "\"" + attraction.getResult().getFormatted_address() + "\", ";
+        query +=  "\"" + attraction.getResult().getFormatted_phone_number() + "\", ";
+//        for(JsonAttraction.JsonResult.OpeningHours.DayOpeningHours day : attraction.getResult().getOpening_hours().getPeriods())
+//        {
+//            query += "\"" + day.getOpen() + "-" + day.getClose() + "\",";
+//        }
+        query += ")";
         this.statement.executeUpdate(query);
-
     }
 
 }

@@ -35,6 +35,8 @@ public class APIManager {
     }
 
     private String getJsonString(String url) throws IOException {
+
+
         URL urlObject = new URL(url);
         HttpURLConnection connection = (HttpURLConnection) urlObject.openConnection();
         BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));

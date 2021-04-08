@@ -13,24 +13,23 @@ public class Attraction {
     private JsonAttraction.JsonResult.Geometry geometry;
     private String placeID;
     private ArrayList<JsonAttraction.AttractionType> types;
-    //private JsonAttraction.JsonResult.OpeningHours openingHours;//String+int
-    private ArrayList<ArrayList<openingHours>> attractionOpeningHours;
+    private JsonAttraction.JsonResult.OpeningHours openingHours;//String+int
+    //private ArrayList<ArrayList<openingHours>> attractionOpeningHours;
 
-
-    public Attraction(String name, String address, String phoneNumber,
-                      JsonAttraction.JsonResult.Geometry geometry, String placeID,
-                      ArrayList<JsonAttraction.AttractionType> types,
-                      ArrayList<ArrayList<openingHours>> attractionOpeningHours)
-    {
-        this.name = name;
-        this.address = address;
-        this.phoneNumber = phoneNumber;
-        this.geometry = geometry;
-        this.placeID = placeID;
-        this.types = types;
-        this.attractionOpeningHours = attractionOpeningHours;
-    }
-
+//
+//    public Attraction(String name, String address, String phoneNumber,
+//                      JsonAttraction.JsonResult.Geometry geometry, String placeID,
+//                      ArrayList<JsonAttraction.AttractionType> types,
+//                      ArrayList<ArrayList<openingHours>> attractionOpeningHours)
+//    {
+//        this.name = name;
+//        this.address = address;
+//        this.phoneNumber = phoneNumber;
+//        this.geometry = geometry;
+//        this.placeID = placeID;
+//        this.types = types;
+//        this.attractionOpeningHours = attractionOpeningHours;
+//    }
 
 
     public Attraction(JsonAttraction jsonAttraction)
