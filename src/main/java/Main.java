@@ -10,8 +10,6 @@ import java.sql.*;
 public class Main {
     public static void main(String[] args) throws SQLException {
 
-//bla bla bla
-
 /*
         //Connect to the database server
         Connection sqlConnection =
@@ -54,19 +52,19 @@ public class Main {
 
 
         //-----------------------------------------------------------------API Manager Test
-//        try
-//        {
-//            APIManager apiManager = new APIManager();
-//           JsonAttraction tempAttraction= apiManager.getAttractionFromAPI("london eye");
-//           Attraction attraction = new Attraction(tempAttraction);
-//           System.out.println(attraction);
-//
-//        }
-//        catch (IOException e)
-//        {
-//            e.printStackTrace();
-//        }
-//
+        try
+        {
+           APIManager apiManager = new APIManager();
+           JsonAttraction tempAttraction= apiManager.getAttractionFromAPI("london eye");
+           Attraction attraction = new Attraction(tempAttraction);
+           System.out.println(attraction);
+
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+
 
         //----------------- Traveler Test -------
 
@@ -81,7 +79,8 @@ public class Main {
 
 
 
-        System.out.println("Bla Bla for Git");
+
+
 
     }
 

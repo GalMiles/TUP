@@ -1,34 +1,10 @@
 package engine;
+
 import googleAPI.JsonAttraction;
 import java.util.ArrayList;
 
 
-enum Type {airport,
-    amusement_park,
-    aquarium,
-    art_gallery,
-    bakery,
-    bar,
-    bowling_alley,
-    cafe,
-    casino,
-    cemetery,
-    church,
-    embassy,
-    hindu_temple,
-    lodging,
-    mosque,
-    museum,
-    night_club,
-    movie_theater,
-    park,
-    restaurant,
-    shopping_mall,
-    stadium,
-    synagogue,
-    spa,
-    tourist_attraction,
-    zoo};
+
 
 public class Attraction {
     private String name;
@@ -36,8 +12,8 @@ public class Attraction {
     private String phoneNumber;
     private JsonAttraction.JsonResult.Geometry geometry;
     private String placeID;
-    private ArrayList<String> types;
-    private JsonAttraction.JsonResult.OpeningHours openingHours;
+    private ArrayList<JsonAttraction.AttractionType> types;
+    private JsonAttraction.JsonResult.OpeningHours openingHours;//String+int
 
 
 
@@ -72,7 +48,7 @@ public class Attraction {
         return placeID;
     }
 
-    public ArrayList<String> getTypes() {
+    public ArrayList<JsonAttraction.AttractionType> getTypes() {
         return types;
     }
 
