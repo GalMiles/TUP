@@ -146,7 +146,7 @@ public class JsonAttraction {
                 return result;
             }
 
-            private class DayOpeningHours {
+            public class DayOpeningHours {
                 DetailsHours close;
                 DetailsHours open;
 
@@ -166,7 +166,7 @@ public class JsonAttraction {
                             '}' +"\n";
                 }
 
-                private class DetailsHours {
+                public class DetailsHours {
                     int day;
                     String time;
 

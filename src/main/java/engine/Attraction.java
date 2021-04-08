@@ -1,5 +1,5 @@
 package engine;
-
+import java.time.LocalTime;
 import googleAPI.JsonAttraction;
 import java.util.ArrayList;
 
@@ -13,7 +13,23 @@ public class Attraction {
     private JsonAttraction.JsonResult.Geometry geometry;
     private String placeID;
     private ArrayList<JsonAttraction.AttractionType> types;
-    private JsonAttraction.JsonResult.OpeningHours openingHours;//String+int
+    //private JsonAttraction.JsonResult.OpeningHours openingHours;//String+int
+    private ArrayList<ArrayList<openingHours>> attractionOpeningHours;
+
+
+    public Attraction(String name, String address, String phoneNumber,
+                      JsonAttraction.JsonResult.Geometry geometry, String placeID,
+                      ArrayList<JsonAttraction.AttractionType> types,
+                      ArrayList<ArrayList<openingHours>> attractionOpeningHours)
+    {
+        this.name = name;
+        this.address = address;
+        this.phoneNumber = phoneNumber;
+        this.geometry = geometry;
+        this.placeID = placeID;
+        this.types = types;
+        this.attractionOpeningHours = attractionOpeningHours;
+    }
 
 
 
@@ -67,5 +83,16 @@ public class Attraction {
                 ", types=" + types +
                 ", openingHours=" + openingHours +
                 '}';
+    }
+
+    private class openingHours{
+        LocalTime open;
+        LocalTime close;
+
+        public openingHours(String open, String close)
+        {
+            this.open=LocalTime.parse(open);
+            this.close=LocalTime.parse(close);
+        }
     }
 }

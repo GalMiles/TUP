@@ -17,16 +17,16 @@ public class DBManager {
         this.statement = sqlConnection.createStatement();
     }
 
-    public void insertDataToDataBase(Attraction attraction) throws SQLException
-    {
-
-        String query = "INSERT INTO attractionstable(attractionAPI_ID, Name, Address, PhoneNumber)" + "\n" +
-                "VALUES " + "(\"" + attraction.getPlaceID() + "\"" + ", \""+ attraction.getName() +"\""
-                    + ", \""  +attraction.getAddress() + "\", \"" + attraction.getPhoneNumber() + "\");";
-
-        this.statement.executeUpdate(query);
-
-    }
+//    public void insertDataToDataBase(Attraction attraction) throws SQLException
+//    {
+//
+//        String query = "INSERT INTO attractionstable(attractionAPI_ID, Name, Address, PhoneNumber)" + "\n" +
+//                "VALUES " + "(\"" + attraction.getPlaceID() + "\"" + ", \""+ attraction.getName() +"\""
+//                    + ", \""  +attraction.getAddress() + "\", \"" + attraction.getPhoneNumber() + "\");";
+//
+//        this.statement.executeUpdate(query);
+//
+//    }
 
     public void closeConnection() throws SQLException
     {
@@ -39,4 +39,16 @@ public class DBManager {
                 "\", " + traveler.getAge() + ");";
         this.statement.executeUpdate(query);
     }
+
+    public void insertDataToDataBase(Attraction attraction) throws SQLException
+    {
+
+        String query = "INSERT INTO attractionstable(attractionAPI_ID, Name, Address, PhoneNumber)" + "\n" +
+                "VALUES " + "(\"" + attraction.getPlaceID() + "\"" + ", \""+ attraction.getName() +"\""
+                + ", \""  +attraction.getAddress() + "\", \"" + attraction.getPhoneNumber() + "\");";
+
+        this.statement.executeUpdate(query);
+
+    }
+
 }

@@ -3,12 +3,17 @@ import engine.Attraction;
 import engine.Traveler;
 import googleAPI.APIManager;
 import googleAPI.JsonAttraction;
-
+import java.time.LocalTime;
 import java.io.IOException;
 import java.sql.*;
 
 public class Main {
     public static void main(String[] args) throws SQLException {
+
+        JsonAttraction a= new JsonAttraction();
+        String time = a.getResult().getOpening_hours().getPeriods().get(0).getOpen().getTime();
+        LocalTime t = LocalTime.parse(time);
+
 
 /*
         //Connect to the database server
