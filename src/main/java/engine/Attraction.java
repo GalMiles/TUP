@@ -3,7 +3,32 @@ import googleAPI.JsonAttraction;
 import java.util.ArrayList;
 
 
-enum Type {HOTEL, EXTREEEEME, MUSEUM, FOOD, NIGHTLIFE};
+enum Type {airport,
+    amusement_park,
+    aquarium,
+    art_gallery,
+    bakery,
+    bar,
+    bowling_alley,
+    cafe,
+    casino,
+    cemetery,
+    church,
+    embassy,
+    hindu_temple,
+    lodging,
+    mosque,
+    museum,
+    night_club,
+    movie_theater,
+    park,
+    restaurant,
+    shopping_mall,
+    stadium,
+    synagogue,
+    spa,
+    tourist_attraction,
+    zoo};
 
 public class Attraction {
     private String name;

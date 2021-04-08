@@ -1,6 +1,8 @@
 package googleAPI;
 
 
+import engine.Attraction;
+
 import java.util.ArrayList;
 import java.util.List;
 
