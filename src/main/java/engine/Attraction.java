@@ -13,23 +13,8 @@ public class Attraction {
     private JsonAttraction.JsonResult.Geometry geometry;
     private String placeID;
     private ArrayList<JsonAttraction.AttractionType> types;
-    private JsonAttraction.JsonResult.OpeningHours openingHours;//String+int
-    //private ArrayList<ArrayList<openingHours>> attractionOpeningHours;
-
-//
-//    public Attraction(String name, String address, String phoneNumber,
-//                      JsonAttraction.JsonResult.Geometry geometry, String placeID,
-//                      ArrayList<JsonAttraction.AttractionType> types,
-//                      ArrayList<ArrayList<openingHours>> attractionOpeningHours)
-//    {
-//        this.name = name;
-//        this.address = address;
-//        this.phoneNumber = phoneNumber;
-//        this.geometry = geometry;
-//        this.placeID = placeID;
-//        this.types = types;
-//        this.attractionOpeningHours = attractionOpeningHours;
-//    }
+    //private JsonAttraction.JsonResult.OpeningHours openingHours;//String+
+    private ArrayList<String> openingHours;
 
 
     public Attraction(JsonAttraction jsonAttraction)
@@ -38,7 +23,7 @@ public class Attraction {
         this.name = jsonAttraction.getResult().getName();
         this.phoneNumber = jsonAttraction.getResult().getFormatted_phone_number();
         this.placeID = jsonAttraction.getResult().getPlace_id();
-        this.openingHours = jsonAttraction.getResult().getOpening_hours();
+        this.openingHours = jsonAttraction.getResult().getOpening_hours().getWeekday_text();
         this.types = jsonAttraction.getResult().getTypes();
         this.geometry = jsonAttraction.getResult().getGeometry();
     }
@@ -67,7 +52,7 @@ public class Attraction {
         return types;
     }
 
-    public JsonAttraction.JsonResult.OpeningHours getOpeningHours() {
+    public ArrayList<String> getOpeningHours() {
         return openingHours;
     }
 
@@ -84,7 +69,7 @@ public class Attraction {
                 '}';
     }
 
-    private class openingHours{
+    public class openingHours{
         LocalTime open;
         LocalTime close;
 

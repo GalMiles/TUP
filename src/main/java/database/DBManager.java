@@ -43,19 +43,28 @@ public class DBManager {
 
     public void insertDataToDataBase(JsonAttraction attraction) throws SQLException
     {
+        PreparedStatement ps = this.sqlConnection.prepareStatement(
+                "INSERT INTO attractionstable(attractionAPI_ID, Name, Address, PhoneNumber, Sunday, " +
+                "Monday, Tuesday, Wednesday, Thursday, Friday, Saturday)" +
+                        "VALUES (?,?,?,?,?,?,?,?,?,?,?)");
+        ps.setString(1, attraction.getResult().getPlace_id());//ID
+        ps.setString(2, attraction.getResult().getName());//NAME
+        ps.setString(3, attraction.getResult().getFormatted_address());//ADDRESS
+        ps.setString(4, attraction.getResult().getFormatted_phone_number());//PHONENUMBER
 
-        String query = "INSERT INTO attractionstable(attractionAPI_ID, Name, Address, PhoneNumber, Sunday, Monday" +
-                "Tuesday, Wednsday, Thursday, Friday, Saturday)" + "\n" + "VALUES" + "(";
-        query +=  "\"" + attraction.getResult().getPlace_id() + "\", ";
-        query +=  "\"" + attraction.getResult().getName() + "\", ";
-        query +=  "\"" + attraction.getResult().getFormatted_address() + "\", ";
-        query +=  "\"" + attraction.getResult().getFormatted_phone_number() + "\", ";
-//        for(JsonAttraction.JsonResult.OpeningHours.DayOpeningHours day : attraction.getResult().getOpening_hours().getPeriods())
-//        {
-//            query += "\"" + day.getOpen() + "-" + day.getClose() + "\",";
-//        }
-        query += ")";
-        this.statement.executeUpdate(query);
+
+
+        ps.setString(5, attraction.getResult().getOpening_hours().getWeekday_text().get(6).split(":",2)[1]);//SUNDAY
+        ps.setString(6, attraction.getResult().getOpening_hours().getWeekday_text().get(0).split(":",2)[1]);//MONDAY
+        ps.setString(7, attraction.getResult().getOpening_hours().getWeekday_text().get(1).split(":",2)[1]);//TUESDAY
+        ps.setString(8, attraction.getResult().getOpening_hours().getWeekday_text().get(2).split(":",2)[1]);//WEDNSDAY
+        ps.setString(9, attraction.getResult().getOpening_hours().getWeekday_text().get(3).split(":",2)[1]);//THURSDAY
+        ps.setString(10, attraction.getResult().getOpening_hours().getWeekday_text().get(4).split(":",2)[1]);//FRIDAY
+        ps.setString(11, attraction.getResult().getOpening_hours().getWeekday_text().get(5).split(":",2)[1]);//SATURDAY
+
+
+
+        ps.executeUpdate();
     }
 
 }

@@ -17,7 +17,9 @@ public class JsonAttraction {
         casino,
         cemetery,
         church,
+        point_of_interest,
         embassy,
+        establishment,
         hindu_temple,
         lodging,
         mosque,
@@ -66,7 +68,7 @@ public class JsonAttraction {
         String place_id;
         OpeningHours opening_hours;
         String business_status;
-        ArrayList<AttractionType> attractionTypes;
+        ArrayList<AttractionType> types = new ArrayList();
         Geometry geometry;
 
         public String getFormatted_address() {
@@ -94,7 +96,7 @@ public class JsonAttraction {
         }
 
         public ArrayList<AttractionType> getTypes() {
-            return attractionTypes;
+            return types;
         }
 
         public Geometry getGeometry() {
@@ -128,6 +130,9 @@ public class JsonAttraction {
             Boolean open_now;
             ArrayList<DayOpeningHours> periods = new ArrayList();
 
+            ArrayList<String> weekday_text = new ArrayList();
+
+            public ArrayList<String> getWeekday_text(){ return weekday_text;}
 
 
             public Boolean getOpen_now() {

@@ -1,3 +1,4 @@
+import com.google.gson.Gson;
 import database.DBManager;
 import engine.Attraction;
 import engine.Traveler;
@@ -6,13 +7,140 @@ import googleAPI.JsonAttraction;
 import java.time.LocalTime;
 import java.io.IOException;
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Main {
     public static void main(String[] args) throws SQLException {
 
-        JsonAttraction a= new JsonAttraction();
-        String time = a.getResult().getOpening_hours().getPeriods().get(0).getOpen().getTime();
-        LocalTime t = LocalTime.parse(time);
+
+        String lines = "{\n" +
+                "    \"html_attributions\": [],\n" +
+                "    \"result\": {\n" +
+                "        \"business_status\": \"OPERATIONAL\",\n" +
+                "        \"formatted_address\": \"Riverside Building, County Hall, South Bank, London SE1 7PB, UK\",\n" +
+                "        \"formatted_phone_number\": \"020 7967 8021\",\n" +
+                "        \"geometry\": {\n" +
+                "            \"location\": {\n" +
+                "                \"lat\": 51.5032973,\n" +
+                "                \"lng\": -0.1195537\n" +
+                "            },\n" +
+                "            \"viewport\": {\n" +
+                "                \"northeast\": {\n" +
+                "                    \"lat\": 51.5046479302915,\n" +
+                "                    \"lng\": -0.1164435999999999\n" +
+                "                },\n" +
+                "                \"southwest\": {\n" +
+                "                    \"lat\": 51.50194996970851,\n" +
+                "                    \"lng\": -0.1205904\n" +
+                "                }\n" +
+                "            }\n" +
+                "        },\n" +
+                "        \"name\": \"lastminute.com London Eye\",\n" +
+                "        \"opening_hours\": {\n" +
+                "            \"open_now\": false,\n" +
+                "            \"periods\": [\n" +
+                "                {\n" +
+                "                    \"close\": {\n" +
+                "                        \"day\": 0,\n" +
+                "                        \"time\": \"1800\"\n" +
+                "                    },\n" +
+                "                    \"open\": {\n" +
+                "                        \"day\": 0,\n" +
+                "                        \"time\": \"1100\"\n" +
+                "                    }\n" +
+                "                },\n" +
+                "                {\n" +
+                "                    \"close\": {\n" +
+                "                        \"day\": 1,\n" +
+                "                        \"time\": \"1800\"\n" +
+                "                    },\n" +
+                "                    \"open\": {\n" +
+                "                        \"day\": 1,\n" +
+                "                        \"time\": \"1100\"\n" +
+                "                    }\n" +
+                "                },\n" +
+                "                {\n" +
+                "                    \"close\": {\n" +
+                "                        \"day\": 2,\n" +
+                "                        \"time\": \"1800\"\n" +
+                "                    },\n" +
+                "                    \"open\": {\n" +
+                "                        \"day\": 2,\n" +
+                "                        \"time\": \"1100\"\n" +
+                "                    }\n" +
+                "                },\n" +
+                "                {\n" +
+                "                    \"close\": {\n" +
+                "                        \"day\": 3,\n" +
+                "                        \"time\": \"1800\"\n" +
+                "                    },\n" +
+                "                    \"open\": {\n" +
+                "                        \"day\": 3,\n" +
+                "                        \"time\": \"1100\"\n" +
+                "                    }\n" +
+                "                },\n" +
+                "                {\n" +
+                "                    \"close\": {\n" +
+                "                        \"day\": 4,\n" +
+                "                        \"time\": \"1800\"\n" +
+                "                    },\n" +
+                "                    \"open\": {\n" +
+                "                        \"day\": 4,\n" +
+                "                        \"time\": \"1100\"\n" +
+                "                    }\n" +
+                "                },\n" +
+                "                {\n" +
+                "                    \"close\": {\n" +
+                "                        \"day\": 5,\n" +
+                "                        \"time\": \"1800\"\n" +
+                "                    },\n" +
+                "                    \"open\": {\n" +
+                "                        \"day\": 5,\n" +
+                "                        \"time\": \"1100\"\n" +
+                "                    }\n" +
+                "                },\n" +
+                "                {\n" +
+                "                    \"close\": {\n" +
+                "                        \"day\": 6,\n" +
+                "                        \"time\": \"1800\"\n" +
+                "                    },\n" +
+                "                    \"open\": {\n" +
+                "                        \"day\": 6,\n" +
+                "                        \"time\": \"1100\"\n" +
+                "                    }\n" +
+                "                }\n" +
+                "            ],\n" +
+                "            \"weekday_text\": [\n" +
+                "                \"Monday: 11:00 AM – 6:00 PM\",\n" +
+                "                \"Tuesday: 11:00 AM – 6:00 PM\",\n" +
+                "                \"Wednesday: 11:00 AM – 6:00 PM\",\n" +
+                "                \"Thursday: 11:00 AM – 6:00 PM\",\n" +
+                "                \"Friday: 11:00 AM – 6:00 PM\",\n" +
+                "                \"Saturday: 11:00 AM – 6:00 PM\",\n" +
+                "                \"Sunday: 11:00 AM – 6:00 PM\"\n" +
+                "            ]\n" +
+                "        },\n" +
+                "        \"place_id\": \"ChIJc2nSALkEdkgRkuoJJBfzkUI\",\n" +
+                "        \"types\": [\n" +
+                "            \"tourist_attraction\",\n" +
+                "            \"point_of_interest\",\n" +
+                "            \"establishment\"\n" +
+                "        ]\n" +
+                "    },\n" +
+                "    \"status\": \"OK\"\n" +
+                "}";
+
+        Gson gson = new Gson();
+        JsonAttraction temp = gson.fromJson(lines, JsonAttraction.class);
+        System.out.println("fin");
+
+
+
+        //DBManager db = new DBManager("jdbc:mysql://localhost:3306/attractions","root","742!GDFMP");
+       // db.insertDataToDataBase(temp);
+      //  db.closeConnection();
+
 
 
 /*
