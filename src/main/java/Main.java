@@ -4,6 +4,8 @@ import engine.Attraction;
 import engine.Traveler;
 import googleAPI.APIManager;
 import googleAPI.JsonAttraction;
+
+import java.text.ParseException;
 import java.time.LocalTime;
 import java.io.IOException;
 import java.sql.*;
@@ -11,10 +13,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class Main {
-    public static void main(String[] args) throws SQLException {
+    public static void main(String[] args) throws SQLException, ParseException {
 
 
-        String lines = "{\n" +
+        String lines1 = "{\n" +
                 "    \"html_attributions\": [],\n" +
                 "    \"result\": {\n" +
                 "        \"business_status\": \"OPERATIONAL\",\n" +
@@ -131,15 +133,164 @@ public class Main {
                 "    \"status\": \"OK\"\n" +
                 "}";
 
+        String lines2 = "{\n" +
+                "    \"html_attributions\": [],\n" +
+                "    \"result\": {\n" +
+                "        \"business_status\": \"OPERATIONAL\",\n" +
+                "        \"formatted_address\": \"Eli Cohen St 24, Bat Yam, 5964419, Israel\",\n" +
+                "        \"formatted_phone_number\": \"1599-500171\",\n" +
+                "        \"geometry\": {\n" +
+                "            \"location\": {\n" +
+                "                \"lat\": 32.0134845,\n" +
+                "                \"lng\": 34.75914360000001\n" +
+                "            },\n" +
+                "            \"viewport\": {\n" +
+                "                \"northeast\": {\n" +
+                "                    \"lat\": 32.0148594302915,\n" +
+                "                    \"lng\": 34.76037738029151\n" +
+                "                },\n" +
+                "                \"southwest\": {\n" +
+                "                    \"lat\": 32.0121614697085,\n" +
+                "                    \"lng\": 34.75767941970851\n" +
+                "                }\n" +
+                "            }\n" +
+                "        },\n" +
+                "        \"name\": \"Israel Post\",\n" +
+                "        \"opening_hours\": {\n" +
+                "            \"open_now\": false,\n" +
+                "            \"periods\": [\n" +
+                "                {\n" +
+                "                    \"close\": {\n" +
+                "                        \"day\": 0,\n" +
+                "                        \"time\": \"1230\"\n" +
+                "                    },\n" +
+                "                    \"open\": {\n" +
+                "                        \"day\": 0,\n" +
+                "                        \"time\": \"0800\"\n" +
+                "                    }\n" +
+                "                },\n" +
+                "                {\n" +
+                "                    \"close\": {\n" +
+                "                        \"day\": 0,\n" +
+                "                        \"time\": \"1800\"\n" +
+                "                    },\n" +
+                "                    \"open\": {\n" +
+                "                        \"day\": 0,\n" +
+                "                        \"time\": \"1530\"\n" +
+                "                    }\n" +
+                "                },\n" +
+                "                {\n" +
+                "                    \"close\": {\n" +
+                "                        \"day\": 1,\n" +
+                "                        \"time\": \"1230\"\n" +
+                "                    },\n" +
+                "                    \"open\": {\n" +
+                "                        \"day\": 1,\n" +
+                "                        \"time\": \"0800\"\n" +
+                "                    }\n" +
+                "                },\n" +
+                "                {\n" +
+                "                    \"close\": {\n" +
+                "                        \"day\": 1,\n" +
+                "                        \"time\": \"1800\"\n" +
+                "                    },\n" +
+                "                    \"open\": {\n" +
+                "                        \"day\": 1,\n" +
+                "                        \"time\": \"1530\"\n" +
+                "                    }\n" +
+                "                },\n" +
+                "                {\n" +
+                "                    \"close\": {\n" +
+                "                        \"day\": 2,\n" +
+                "                        \"time\": \"1300\"\n" +
+                "                    },\n" +
+                "                    \"open\": {\n" +
+                "                        \"day\": 2,\n" +
+                "                        \"time\": \"0800\"\n" +
+                "                    }\n" +
+                "                },\n" +
+                "                {\n" +
+                "                    \"close\": {\n" +
+                "                        \"day\": 3,\n" +
+                "                        \"time\": \"1230\"\n" +
+                "                    },\n" +
+                "                    \"open\": {\n" +
+                "                        \"day\": 3,\n" +
+                "                        \"time\": \"0800\"\n" +
+                "                    }\n" +
+                "                },\n" +
+                "                {\n" +
+                "                    \"close\": {\n" +
+                "                        \"day\": 3,\n" +
+                "                        \"time\": \"1800\"\n" +
+                "                    },\n" +
+                "                    \"open\": {\n" +
+                "                        \"day\": 3,\n" +
+                "                        \"time\": \"1530\"\n" +
+                "                    }\n" +
+                "                },\n" +
+                "                {\n" +
+                "                    \"close\": {\n" +
+                "                        \"day\": 4,\n" +
+                "                        \"time\": \"1230\"\n" +
+                "                    },\n" +
+                "                    \"open\": {\n" +
+                "                        \"day\": 4,\n" +
+                "                        \"time\": \"0800\"\n" +
+                "                    }\n" +
+                "                },\n" +
+                "                {\n" +
+                "                    \"close\": {\n" +
+                "                        \"day\": 4,\n" +
+                "                        \"time\": \"1800\"\n" +
+                "                    },\n" +
+                "                    \"open\": {\n" +
+                "                        \"day\": 4,\n" +
+                "                        \"time\": \"1530\"\n" +
+                "                    }\n" +
+                "                },\n" +
+                "                {\n" +
+                "                    \"close\": {\n" +
+                "                        \"day\": 5,\n" +
+                "                        \"time\": \"1230\"\n" +
+                "                    },\n" +
+                "                    \"open\": {\n" +
+                "                        \"day\": 5,\n" +
+                "                        \"time\": \"0800\"\n" +
+                "                    }\n" +
+                "                }\n" +
+                "            ],\n" +
+                "            \"weekday_text\": [\n" +
+                "                \"Monday: 8:00 AM – 12:30 PM, 3:30 – 6:00 PM\",\n" +
+                "                \"Tuesday: 8:00 AM – 1:00 PM\",\n" +
+                "                \"Wednesday: 8:00 AM – 12:30 PM, 3:30 – 6:00 PM\",\n" +
+                "                \"Thursday: 8:00 AM – 12:30 PM, 3:30 – 6:00 PM\",\n" +
+                "                \"Friday: 8:00 AM – 12:30 PM\",\n" +
+                "                \"Saturday: Closed\",\n" +
+                "                \"Sunday: 8:00 AM – 12:30 PM, 3:30 – 6:00 PM\"\n" +
+                "            ]\n" +
+                "        },\n" +
+                "        \"place_id\": \"ChIJoY1ptW6zAhUR0mWfHj0EG-c\",\n" +
+                "        \"types\": [\n" +
+                "            \"post_office\",\n" +
+                "            \"finance\",\n" +
+                "            \"point_of_interest\",\n" +
+                "            \"establishment\"\n" +
+                "        ]\n" +
+                "    },\n" +
+                "    \"status\": \"OK\"\n" +
+                "}";
+
+
         Gson gson = new Gson();
-        JsonAttraction temp = gson.fromJson(lines, JsonAttraction.class);
+        JsonAttraction temp = gson.fromJson(lines2, JsonAttraction.class);
         System.out.println("fin");
 
 
 
-        //DBManager db = new DBManager("jdbc:mysql://localhost:3306/attractions","root","742!GDFMP");
-       // db.insertDataToDataBase(temp);
-      //  db.closeConnection();
+        DBManager db = new DBManager("jdbc:mysql://localhost:3306/attractions","root","742!GDFMP");
+        db.insertDataToDataBase(temp);
+        db.closeConnection();
 
 
 
