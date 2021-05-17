@@ -2,8 +2,10 @@ package database;
 
 import engine.Attraction;
 import engine.Traveler;
+import googleAPI.APIManager;
 import googleAPI.JsonAttraction;
 
+import java.io.IOException;
 import java.sql.*;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -13,6 +15,7 @@ import java.util.ArrayList;
 
 public class DBManager {
 
+    private APIManager apiManager = new APIManager();
     private Statement statement;
     private Connection sqlConnection;
 
@@ -23,16 +26,6 @@ public class DBManager {
         this.statement = sqlConnection.createStatement();
     }
 
-//    public void insertDataToDataBase(Attraction attraction) throws SQLException
-//    {
-//
-//        String query = "INSERT INTO attractionstable(attractionAPI_ID, Name, Address, PhoneNumber)" + "\n" +
-//                "VALUES " + "(\"" + attraction.getPlaceID() + "\"" + ", \""+ attraction.getName() +"\""
-//                    + ", \""  +attraction.getAddress() + "\", \"" + attraction.getPhoneNumber() + "\");";
-//
-//        this.statement.executeUpdate(query);
-//
-//    }
 
     public void closeConnection() throws SQLException
     {
@@ -47,54 +40,78 @@ public class DBManager {
     }
 
     public void insertDataToDataBase(JsonAttraction attraction) throws SQLException, ParseException {
+
+        StringBuilder typesStr = new StringBuilder();
+
+        ArrayList<StringBuilder> dayStrArr = new ArrayList<>();
+        for(int i = 0; i < 7; ++i)
+        {
+            dayStrArr.add(i, new StringBuilder());
+        }
         PreparedStatement ps = this.sqlConnection.prepareStatement(
-                "INSERT INTO attractionstable(attractionAPI_ID, Name, Address, PhoneNumber)" +
-                        "VALUES (?,?,?,?)");
+                "INSERT INTO attractionstable(attractionAPI_ID, Name, Address, PhoneNumber,Website, Geometry, types," +
+                        "Sunday, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday)" +
+                        "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
 
         ps.setString(1, attraction.getResult().getPlace_id());//ID
         ps.setString(2, attraction.getResult().getName());//NAME
         ps.setString(3, attraction.getResult().getFormatted_address());//ADDRESS
         ps.setString(4, attraction.getResult().getFormatted_phone_number());//PHONENUMBER
-        //Types!
-        //Sunday...
-        ps.executeUpdate();
+        ps.setString(5, attraction.getResult().getWebsite());//Website
+        ps.setString(6, attraction.getResult().getGeometry().getLocation().toString());//Geometry
 
-
-        ps = this.sqlConnection.prepareStatement(
-                "INSERT INTO openinghours(day, Opening_Hours, Closing_Hours, attractionAPI_ID)" +
-                        "VALUES (?,?,?,?)");
-        ArrayList<JsonAttraction.JsonResult.OpeningHours.DayOpeningHours> periods = attraction.getResult().getOpening_hours().getPeriods();
-        for(JsonAttraction.JsonResult.OpeningHours.DayOpeningHours currentPeriod : periods){
-            ps.setString(4,attraction.getResult().getPlace_id() );
-            ps.setInt(1 ,currentPeriod.getOpen().getDay());
-            DateFormat formatter = new SimpleDateFormat("HH:mm");
-            String timeString = currentPeriod.getOpen().getTime();
-            timeString = timeString.substring(0,2) + ":" + timeString.substring(2) + ":00";
-
-            Time time = new Time(formatter.parse(timeString).getTime());
-            ps.setTime(2, time);
-            timeString = currentPeriod.getClose().getTime();
-            timeString = timeString.substring(0,2) + ":" + timeString.substring(2) + ":00";
-            time = new Time(formatter.parse(timeString).getTime());
-            ps.setTime(3, time);
-            ps.executeUpdate();
+        StringBuilder typesIndexesString = new StringBuilder();
+        ps.setString(7, attraction.getResult().AttractionTypesToStr());
+        for (JsonAttraction.JsonResult.OpeningHours.DayOpeningHours currentOpening:attraction.getResult().getOpening_hours().getPeriods()) {
+            int day = currentOpening.getOpen().getDay();//0=Sunday....6=Saturday
+            //if the current day is not empty
+            if(!dayStrArr.get(day).toString().equals(""))
+            {
+                dayStrArr.get(day).append(",");
+            }
+            dayStrArr.get(day).append(currentOpening.toString());
         }
-
-
-
-
-
-
-//        ps.setString(5, attraction.getResult().getOpening_hours().getWeekday_text().get(6).split(":",2)[1]);//SUNDAY
-//        ps.setString(6, attraction.getResult().getOpening_hours().getWeekday_text().get(0).split(":",2)[1]);//MONDAY
-//        ps.setString(7, attraction.getResult().getOpening_hours().getWeekday_text().get(1).split(":",2)[1]);//TUESDAY
-//        ps.setString(8, attraction.getResult().getOpening_hours().getWeekday_text().get(2).split(":",2)[1]);//WEDNSDAY
-//        ps.setString(9, attraction.getResult().getOpening_hours().getWeekday_text().get(3).split(":",2)[1]);//THURSDAY
-//        ps.setString(10, attraction.getResult().getOpening_hours().getWeekday_text().get(4).split(":",2)[1]);//FRIDAY
-//        ps.setString(11, attraction.getResult().getOpening_hours().getWeekday_text().get(5).split(":",2)[1]);//SATURDAY
-
-
-
+        for(int i =0; i < 7;++i)
+        {
+            if(dayStrArr.get(i).toString().equals(""))
+            {
+                dayStrArr.get(i).append("Closed");
+            }
+            ps.setString(i+8, dayStrArr.get(i).toString());
+        }
+        ps.executeUpdate();
     }
+
+    public Attraction getAttractionFromDataBaseByName(String attractionName) throws SQLException, IOException, ParseException {
+        Attraction resAttraction;
+        String query = "SELECT * FROM attractionstable WHERE Name=\"" + attractionName + "\"";
+        ResultSet res = this.statement.executeQuery(query);
+        if(res.next())  //check of there is a result from the query
+        {
+            //if there is a result, make an attraction
+            resAttraction = new Attraction(res);
+        }
+        else {  //there is no result from the query(the attraction doesnt found in the database)
+            JsonAttraction jsonAttraction = apiManager.getAttractionFromAPI(attractionName);
+            this.insertDataToDataBase(jsonAttraction);
+            resAttraction = new Attraction(jsonAttraction);
+        }
+        return resAttraction;
+    }
+
+    public ArrayList<Attraction> getAttractionsByOperationTime(String operationTime)
+    {
+        ArrayList<Attraction> attractionsArr = new ArrayList<>();
+        String[] operationTimeSplitArr = operationTime.split("-");
+        String openingHour =operationTimeSplitArr[0];
+        String closingHour =operationTimeSplitArr[1];
+
+
+
+
+
+        return attractionsArr;
+    }
+
 
 }

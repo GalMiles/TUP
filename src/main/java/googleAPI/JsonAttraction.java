@@ -66,10 +66,36 @@ public class JsonAttraction {
         String formatted_phone_number;
         String name;
         String place_id;
+        String website;
         OpeningHours opening_hours;
         String business_status;
         ArrayList<AttractionType> types = new ArrayList();
         Geometry geometry;
+
+        public String getWebsite() {
+            return website;
+        }
+
+        public void setWebsite(String website) {
+            this.website = website;
+        }
+
+
+        public String AttractionTypesToStr()
+        {
+            StringBuilder stringBuilder = new StringBuilder();
+            int arrSize = this.types.size();
+            for(int i = 0; i < arrSize-1; ++i)
+            {
+                if(types.get(i) != null)
+                {
+                    stringBuilder.append(types.get(i));
+                    stringBuilder.append(',');
+                }
+            }
+            stringBuilder.append(types.get(arrSize-1));
+            return stringBuilder.toString();
+        }
 
         public String getFormatted_address() {
             return formatted_address;
@@ -116,13 +142,37 @@ public class JsonAttraction {
 
         public class Geometry
         {
-            Location location;
-            private class Location
+            private Location location;
+            public class Location
             {
-                String lat;
-                String lng;
+                private String lat;
+                private String lng;
+
+                public String getLat() {
+                    return lat;
+                }
+
+                public void setLat(String lat) {
+                    this.lat = lat;
+                }
+
+                public void setLng(String lng) {
+                    this.lng = lng;
+                }
+
+                public String getLng() {
+                    return lng;
+                }
+
+                @Override
+                public String toString() {
+                    return lat + "," + lng;
+                }
             }
 
+            public Location getLocation() {
+                return location;
+            }
         }
 
 
@@ -142,6 +192,8 @@ public class JsonAttraction {
             public ArrayList<DayOpeningHours> getPeriods() {
                 return periods;
             }
+
+
 
             @Override
             public String toString() {
@@ -165,10 +217,15 @@ public class JsonAttraction {
 
                 @Override
                 public String toString() {
-                    return "DayOpeningHours{" +
-                            "open = " + open +
-                            ", close = " + close +
-                            '}' +"\n";
+                    StringBuilder openingHourStr = new StringBuilder();
+                    StringBuilder closingHourStr = new StringBuilder();
+
+                    openingHourStr.append(this.getOpen().getTime());  //Opening time
+                    openingHourStr.insert(2, ':'); // insert ':'
+
+                    closingHourStr.append(this.getClose().getTime());  //Closing time
+                    closingHourStr.insert(2, ':'); // insert ':'
+                    return openingHourStr + "-" + closingHourStr;
                 }
 
                 public class DetailsHours {
@@ -185,6 +242,8 @@ public class JsonAttraction {
 
                     @Override
                     public String toString() {
+
+
                         return "DetailsHours{" +
                                 "day = " + day +
                                 ", time = '" + time + '\'' +
