@@ -39,7 +39,7 @@ public class APIManager {
         HttpURLConnection connection = (HttpURLConnection) urlObject.openConnection();
         BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
         String lines = reader.lines().collect(Collectors.joining());
-        System.out.println(lines);
+        //System.out.println(lines);
         reader.close();
         return lines;
     }

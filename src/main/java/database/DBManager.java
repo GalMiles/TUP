@@ -1,16 +1,14 @@
 package database;
 
-import engine.Attraction;
+import common.OpeningHours;
+import engine.attraction.Attraction;
 import engine.Traveler;
 import googleAPI.APIManager;
 import googleAPI.JsonAttraction;
 
 import java.io.IOException;
 import java.sql.*;
-import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.LocalTime;
 import java.util.ArrayList;
 
 public class DBManager {
@@ -58,11 +56,11 @@ public class DBManager {
         ps.setString(3, attraction.getResult().getFormatted_address());//ADDRESS
         ps.setString(4, attraction.getResult().getFormatted_phone_number());//PHONENUMBER
         ps.setString(5, attraction.getResult().getWebsite());//Website
-        ps.setString(6, attraction.getResult().getGeometry().getLocation().toString());//Geometry
+        ps.setString(6, attraction.getResult().getGeometryAPI().toString());//Geometry
 
         StringBuilder typesIndexesString = new StringBuilder();
         ps.setString(7, attraction.getResult().AttractionTypesToStr());
-        for (JsonAttraction.JsonResult.OpeningHours.DayOpeningHours currentOpening:attraction.getResult().getOpening_hours().getPeriods()) {
+        for (OpeningHours.DayOpeningHoursJson currentOpening:attraction.getResult().getOpening_hours().getPeriods()) {
             int day = currentOpening.getOpen().getDay();//0=Sunday....6=Saturday
             //if the current day is not empty
             if(!dayStrArr.get(day).toString().equals(""))
