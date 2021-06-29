@@ -5,6 +5,7 @@ import common.Geometry;
 //import common.OpeningHours;
 import common.DayOpeningHours;
 import engine.attraction.AttractionsManager;
+import engine.planTrip.RouteTrip;
 import googleAPI.APIManager;
 
 import engine.attraction.Attraction;
@@ -21,18 +22,21 @@ import java.util.Collections;
 
 
 public class main {
-    void removing(ArrayList<Integer> arr) {
-        arr.remove(1);
-    }
-
     public static void main(String[] args) throws IOException {
-        main ma = new main();
+        ArrayList<AttractionType> typesHotel = new ArrayList<>();
+        typesHotel.add(AttractionType.lodging);
+        Attraction hotel = new Attraction("Baglioni Hotel - London", "60 Hyde Park Gate, South Kensington, London SW7 5BB, UK",
+                "020 7368 5700", null, new Geometry("51.50167580000001", "-0.1847417"), "ChIJFSZeB1kFdkgRTixgFHqP13g",
+                typesHotel, null);
 
-        LocalTime lt1 = LocalTime.parse("10:15:30");
-        LocalTime lt2 = LocalTime.parse("12:21:30");
-        System.out.println("The first LocalTime is: " + lt1);
-        System.out.println("The second LocalTime is: " + lt2);
-        System.out.println("\nThe difference between two LocalTimes in hours is: " + lt2.until(lt1, ChronoUnit.HOURS));
+
+        LocalDate arrivingDate = common.converter.convertStringToLocalDate("01/07/2021");
+        LocalDate leavingDate = common.converter.convertStringToLocalDate("04/06/2021");
+
+        RouteTrip routeTrip = new RouteTrip("London",hotel,arrivingDate,leavingDate);
+        routeTrip.planRouteTrip();
+        System.out.println(routeTrip.getPlanForDays());
+
 
 
 
@@ -45,7 +49,7 @@ public class main {
 /*
 //        AttractionsManager attractionsManager = new AttractionsManager();
 //        APIManager APIManager = new APIManager();
-//        Attraction attraction = new Attraction(APIManager.getAttractionFromAPI("St. Paul's Cathedral"));
+//        Attraction attraction = new Attraction(APIManager.getAttractionFromAPI("Baglioni Hotel - London"));
 //        System.out.println(attraction);
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -52,6 +52,7 @@ public class DayOpeningHours {
 
     public DayOpeningHours(int day) {
         //set the day(0=Sunday....6= Saturday]
+
         this.day = DayOfWeek.of(day);
         this.isOpen = false;
     }

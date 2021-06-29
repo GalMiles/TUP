@@ -25,6 +25,7 @@ public class DayPlan {
     }
 
     public DayPlan(Attraction hotel,LocalDate date) {
+        this.daySchedule = new ArrayList<>();
         this.hotel = hotel;
         this.date = date;
     }
@@ -42,6 +43,7 @@ public class DayPlan {
             durationDay = nextAttraction.getDuration();
 
         }
+        daySchedule.add(new OnePlan(hotel,null));
 
     }
 
@@ -105,5 +107,16 @@ public class DayPlan {
 
 
         return scoreDistance + scoreTime;
+    }
+
+    @Override
+    public String toString() {
+        return "DayPlan{" +
+                "MAX_DURATION=" + MAX_DURATION +
+                ", daySchedule=" + daySchedule +
+                ", date=" + date +
+                ", hotel=" + hotel +
+                ", durationDay=" + durationDay +
+                '}';
     }
 }

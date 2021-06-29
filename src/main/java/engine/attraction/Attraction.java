@@ -101,15 +101,15 @@ public class Attraction {
         Geometry.GeometryAPI.Location location = attractionData.getGeometryAPI().getLocation();
         this.geometry = new Geometry(location.getLat(),location.getLng());
         //initialize the array, create 7 cells (one for each weekday)
-        for(int i = 0; i<7; ++i)
-        {
-            this.OpeningHoursArr.add(new DayOpeningHours(i));
-        }
-        for (OpeningHours.DayOpeningHoursJson period:attractionData.getOpening_hours().getPeriods())
-        {
-            this.OpeningHoursArr.get(period.getClose().getDay()).setOpen(true);
-            this.OpeningHoursArr.get(period.getOpen().getDay()).addOpening(period.getOpen().getTime());
-            this.OpeningHoursArr.get(period.getClose().getDay()).addClosing(period.getClose().getTime());
+        if (!types.contains(AttractionType.lodging)) {
+            for (int i = 1; i < 8; ++i) {
+                this.OpeningHoursArr.add(new DayOpeningHours(i));
+            }
+            for (OpeningHours.DayOpeningHoursJson period : attractionData.getOpening_hours().getPeriods()) {
+                this.OpeningHoursArr.get(period.getClose().getDay()).setOpen(true);
+                this.OpeningHoursArr.get(period.getOpen().getDay()).addOpening(period.getOpen().getTime());
+                this.OpeningHoursArr.get(period.getClose().getDay()).addClosing(period.getClose().getTime());
+            }
         }
         this.setDuration(this.types);
     }
