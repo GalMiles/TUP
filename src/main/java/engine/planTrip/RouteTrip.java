@@ -1,53 +1,67 @@
-package client;
+package engine.planTrip;
+
 
 import common.AttractionType;
-import common.Geometry;
-//import common.OpeningHours;
 import common.DayOpeningHours;
-import engine.attraction.AttractionsManager;
-import googleAPI.APIManager;
-
+import common.Geometry;
 import engine.attraction.Attraction;
 
-import java.io.IOException;
-import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 
+public class RouteTrip {
+    ArrayList<DayPlan> dayPlan;
+    Attraction attractionsForTheTrip;
+    int tripDuration;
+    String destination;
+    Attraction hotel;
+    LocalDate arrivingDate;
+    LocalDate leavingDate;
 
-public class main {
-    void removing(ArrayList<Integer> arr) {
-        arr.remove(1);
+    public RouteTrip(String destination,Attraction hotel,LocalDate arrivingDate, LocalDate leavingDate) {
+        this.tripDuration = leavingDate.getDayOfMonth() - arrivingDate.getDayOfMonth();
+        this.dayPlan =  new ArrayList<DayPlan>(this.tripDuration);
+
+        this.destination = destination;
+        this.hotel = hotel;
+        this.arrivingDate =arrivingDate;
+        this.leavingDate = leavingDate;
     }
 
-    public static void main(String[] args) throws IOException {
-        main ma = new main();
+    RouteTrip planRouteTrip(String destination, Attraction hotel, LocalDate arrivingDate, LocalDate leavingDate){
+        ArrayList<Attraction> possibleAttractions = getPossibleAttractions(destination);
+        RouteTrip route = new RouteTrip(destination,hotel,arrivingDate,leavingDate);
+        int tripDuration = route.tripDuration;
+        LocalDate currentDate = arrivingDate;
+        //Attraction currentLocation = hotel;
 
-        LocalTime lt1 = LocalTime.parse("10:15:30");
-        LocalTime lt2 = LocalTime.parse("12:21:30");
-        System.out.println("The first LocalTime is: " + lt1);
-        System.out.println("The second LocalTime is: " + lt2);
-        System.out.println("\nThe difference between two LocalTimes in hours is: " + lt2.until(lt1, ChronoUnit.HOURS));
+        for (int i = 0; i < tripDuration; i++){
+            DayPlan dayPlan = new DayPlan(hotel,currentDate);
+            dayPlan.calculateDayPlan(possibleAttractions);
+            route.dayPlan.add(dayPlan);
+            currentDate = currentDate.plusDays(1);
+        }
 
 
 
 
 
+
+
+        return route;
     }
 
 
 
-/*
-//        AttractionsManager attractionsManager = new AttractionsManager();
-//        APIManager APIManager = new APIManager();
-//        Attraction attraction = new Attraction(APIManager.getAttractionFromAPI("St. Paul's Cathedral"));
-//        System.out.println(attraction);
 
+
+
+
+
+
+    ArrayList<Attraction> getPossibleAttractions(String destination){
+        ArrayList<Attraction> possibleAttractions = new ArrayList<>();
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         ArrayList<DayOpeningHours> openingHoursArr1 = new ArrayList<>();
         openingHoursArr1.add(new DayOpeningHours(true,0,"1100","1800"));
@@ -222,8 +236,22 @@ public class main {
         Attraction attraction12 = new Attraction("St. Paul's Cathedral", "St. Paul's Churchyard, London EC4M 8AD, UK",
                 "020 7246 8350", null, new Geometry("51.51384530000001", "-0.0983506"), "ChIJh7wHoqwEdkgR3l-vqQE1HTo",
                 new ArrayList<AttractionType>(Arrays.asList(AttractionType.church)), openingHoursArr12);
-*/
 
+        possibleAttractions.add(attraction1);
+        possibleAttractions.add(attraction2);
+        possibleAttractions.add(attraction3);
+        possibleAttractions.add(attraction4);
+        possibleAttractions.add(attraction5);
+        possibleAttractions.add(attraction6);
+        possibleAttractions.add(attraction7);
+        possibleAttractions.add(attraction8);
+        possibleAttractions.add(attraction9);
+        possibleAttractions.add(attraction10);
+        possibleAttractions.add(attraction11);
+        possibleAttractions.add(attraction12);
+
+        return possibleAttractions;
+
+    }
 
 }
-

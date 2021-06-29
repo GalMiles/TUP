@@ -8,6 +8,9 @@ import common.OpeningHours;
 import common.DayOpeningHours;
 import googleAPI.JsonAttraction;
 
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 
 public class Attraction {
@@ -149,6 +152,12 @@ public class Attraction {
     public String getPlaceID() {
         return placeID;
     }
+    public String getWebsite() {return website;}
+    public int getDuration() {return duration;}
+
+    public void setDuration(int duration) {
+        this.duration = duration;
+    }
 
     public void setName(String name) {this.name = name;}
     public void setAddress(String address) {this.address = address;}
@@ -194,6 +203,10 @@ public class Attraction {
         return OpeningHoursArr;
     }
 
+    public DayOpeningHours getOpeningHoursByDay(DayOfWeek day){
+        return OpeningHoursArr.get(day.getValue());
+    }
+
     @Override
     public String toString() {
         return "Attraction{" +
@@ -208,6 +221,8 @@ public class Attraction {
                 ", duration=" + duration +
                 '}';
     }
+
+
 
 
 }
