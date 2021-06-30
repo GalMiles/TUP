@@ -34,16 +34,18 @@ public class DayPlan {
         Attraction currentAttraction = hotel;
         Attraction nextAttraction;
         LocalTime currentTime = LocalTime.parse("10:00" ,DateTimeFormatter.ofPattern("HH:mm"));
+        daySchedule.add(new OnePlan(hotel,currentTime));
+
         while (durationDay <= MAX_DURATION) {
             nextAttraction = chooseBestNextAttraction(currentAttraction, currentTime,possibleAttractions);
             daySchedule.add(new OnePlan(nextAttraction,currentTime));
             possibleAttractions.remove(nextAttraction);
             currentAttraction = nextAttraction;
             currentTime = currentTime.plusHours(nextAttraction.getDuration());
-            durationDay = nextAttraction.getDuration();
-
+            durationDay += nextAttraction.getDuration();
+            if (nextAttraction.getName().equals(hotel.getName()))
+                break;
         }
-        daySchedule.add(new OnePlan(hotel,null));
 
     }
 
@@ -111,12 +113,24 @@ public class DayPlan {
 
     @Override
     public String toString() {
-        return "DayPlan{" +
-                "MAX_DURATION=" + MAX_DURATION +
-                ", daySchedule=" + daySchedule +
-                ", date=" + date +
-                ", hotel=" + hotel +
-                ", durationDay=" + durationDay +
-                '}';
+        printDaySchedule(daySchedule);
+        return "";
+//        return "DayPlan{" +
+//                "MAX_DURATION=" + MAX_DURATION +
+//                ", daySchedule=" + daySchedule +
+//                ", date=" + date +
+//                ", hotel=" + hotel +
+//                ", durationDay=" + durationDay +
+//                '}';
+    }
+
+    private void printDaySchedule(ArrayList<OnePlan> daySchedule)
+    {
+        int i = 0;
+        for (OnePlan plan : daySchedule) {
+            System.out.println("DAY " +String.valueOf(i)+ ":"+ plan.getAttraction().getName());
+            i++;
+        }
+
     }
 }
