@@ -23,20 +23,20 @@ import java.util.Collections;
 
 public class main {
     public static void main(String[] args) throws IOException {
-        ArrayList<AttractionType> typesHotel = new ArrayList<>();
-        typesHotel.add(AttractionType.lodging);
-        Attraction hotel = new Attraction("Baglioni Hotel - London", "60 Hyde Park Gate, South Kensington, London SW7 5BB, UK",
-                "020 7368 5700", null, new Geometry("51.50167580000001", "-0.1847417"), "ChIJFSZeB1kFdkgRTixgFHqP13g",
-                typesHotel, null);
-
-
-        LocalDate arrivingDate = common.converter.convertStringToLocalDate("01/07/2021");
-        LocalDate leavingDate = common.converter.convertStringToLocalDate("04/06/2021");
-
-        RouteTrip routeTrip = new RouteTrip("London",hotel,arrivingDate,leavingDate);
-        routeTrip.planRouteTrip();
-        System.out.println(routeTrip.getPlanForDays());
-
+//        ArrayList<AttractionType> typesHotel = new ArrayList<>();
+//        typesHotel.add(AttractionType.lodging);
+//        Attraction hotel = new Attraction("Baglioni Hotel - London", "60 Hyde Park Gate, South Kensington, London SW7 5BB, UK",
+//                "020 7368 5700", null, new Geometry("51.50167580000001", "-0.1847417"), "ChIJFSZeB1kFdkgRTixgFHqP13g",
+//                typesHotel, null);
+//
+//
+//        LocalDate arrivingDate = common.converter.convertStringToLocalDate("01/07/2021");
+//        LocalDate leavingDate = common.converter.convertStringToLocalDate("04/06/2021");
+//
+//        RouteTrip routeTrip = new RouteTrip("London",hotel,arrivingDate,leavingDate);
+//        routeTrip.planRouteTrip();
+//        System.out.println(routeTrip.getPlanForDays());
+//
 
 
 

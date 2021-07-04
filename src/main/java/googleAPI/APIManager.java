@@ -16,9 +16,7 @@ public class APIManager {
     public JsonAttraction getAttractionFromAPI(String attractionName) throws IOException {
         String placeID = getPlaceIDFromAPI(attractionName);
         String url ="https://maps.googleapis.com/maps/api/place/details/json?place_id=" + placeID +
-                "&fields=name,formatted_address,formatted_phone_number,opening_hours/periods,geometry/location," +
-                "types,business_status,price_level,place_id" +
-                "&key=AIzaSyAujNlik91rOdQwXKVEQgHakotz7hfl9oM";
+                "&fields=name,formatted_address,formatted_phone_number,opening_hours,geometry/location,types,business_status,price_level,place_id,website&key=AIzaSyAujNlik91rOdQwXKVEQgHakotz7hfl9oM";
         Gson gson = new Gson();
         JsonAttraction attraction = gson.fromJson(getJsonString(url), JsonAttraction.class);
         return attraction;

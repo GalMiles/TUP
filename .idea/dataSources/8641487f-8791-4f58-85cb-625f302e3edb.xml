@@ -974,65 +974,69 @@ sys|schema||mysql.sys|localhost|TRIGGER|G</Grants>
       <Plugin>caching_sha2_password</Plugin>
     </user>
     <table id="284" parent="2" name="attractionstable"/>
-    <table id="285" parent="2" name="openinghours"/>
-    <table id="286" parent="2" name="travelers"/>
-    <column id="287" parent="284" name="attractionAPI_ID">
+    <table id="285" parent="2" name="travelers"/>
+    <column id="286" parent="284" name="attractionAPI_ID">
       <Position>1</Position>
       <DataType>varchar(45)|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="288" parent="284" name="Name">
+    <column id="287" parent="284" name="Name">
       <Position>2</Position>
       <DataType>varchar(50)|0s</DataType>
     </column>
-    <column id="289" parent="284" name="Address">
+    <column id="288" parent="284" name="Address">
       <Position>3</Position>
-      <DataType>varchar(200)|0s</DataType>
+      <DataType>varchar(100)|0s</DataType>
     </column>
-    <column id="290" parent="284" name="PhoneNumber">
+    <column id="289" parent="284" name="PhoneNumber">
       <Position>4</Position>
       <DataType>varchar(30)|0s</DataType>
     </column>
-    <column id="291" parent="284" name="Geometry">
+    <column id="290" parent="284" name="Website">
       <Position>5</Position>
+      <DataType>varchar(45)|0s</DataType>
+      <DefaultExpression>&apos;No Website&apos;</DefaultExpression>
+    </column>
+    <column id="291" parent="284" name="Geometry">
+      <Position>6</Position>
       <DataType>varchar(45)|0s</DataType>
     </column>
     <column id="292" parent="284" name="types">
-      <Position>6</Position>
+      <Position>7</Position>
       <DataType>varchar(100)|0s</DataType>
     </column>
     <column id="293" parent="284" name="Sunday">
-      <Position>7</Position>
-      <DataType>varchar(50)|0s</DataType>
-      <DefaultExpression>&apos;Closed&apos;</DefaultExpression>
-    </column>
-    <column id="294" parent="284" name="Monday">
       <Position>8</Position>
       <DataType>varchar(50)|0s</DataType>
       <DefaultExpression>&apos;Closed&apos;</DefaultExpression>
     </column>
-    <column id="295" parent="284" name="Tuesday">
+    <column id="294" parent="284" name="Monday">
       <Position>9</Position>
       <DataType>varchar(50)|0s</DataType>
       <DefaultExpression>&apos;Closed&apos;</DefaultExpression>
     </column>
-    <column id="296" parent="284" name="Wednesday">
+    <column id="295" parent="284" name="Tuesday">
       <Position>10</Position>
       <DataType>varchar(50)|0s</DataType>
       <DefaultExpression>&apos;Closed&apos;</DefaultExpression>
     </column>
-    <column id="297" parent="284" name="Thursday">
+    <column id="296" parent="284" name="Wednesday">
       <Position>11</Position>
       <DataType>varchar(50)|0s</DataType>
       <DefaultExpression>&apos;Closed&apos;</DefaultExpression>
     </column>
-    <column id="298" parent="284" name="Friday">
+    <column id="297" parent="284" name="Thursday">
       <Position>12</Position>
       <DataType>varchar(50)|0s</DataType>
       <DefaultExpression>&apos;Closed&apos;</DefaultExpression>
     </column>
-    <column id="299" parent="284" name="Saturday">
+    <column id="298" parent="284" name="Friday">
       <Position>13</Position>
+      <DataType>varchar(50)|0s</DataType>
+      <DefaultExpression>&apos;Closed&apos;</DefaultExpression>
+    </column>
+    <column id="299" parent="284" name="Saturday">
+      <Position>14</Position>
       <DataType>varchar(50)|0s</DataType>
       <DefaultExpression>&apos;Closed&apos;</DefaultExpression>
     </column>
@@ -1041,62 +1045,24 @@ sys|schema||mysql.sys|localhost|TRIGGER|G</Grants>
       <ColNames>attractionAPI_ID</ColNames>
       <Primary>1</Primary>
     </key>
-    <column id="301" parent="285" name="index">
-      <Position>1</Position>
-      <DataType>int|0s</DataType>
-      <NotNull>1</NotNull>
-      <SequenceIdentity>null</SequenceIdentity>
-    </column>
-    <column id="302" parent="285" name="day">
-      <Position>2</Position>
-      <DataType>int|0s</DataType>
-    </column>
-    <column id="303" parent="285" name="Opening_Hours">
-      <Position>3</Position>
-      <DataType>time|0s</DataType>
-    </column>
-    <column id="304" parent="285" name="Closing_Hours">
-      <Position>4</Position>
-      <DataType>time|0s</DataType>
-    </column>
-    <column id="305" parent="285" name="attractionAPI_ID">
-      <Position>5</Position>
-      <DataType>varchar(45)|0s</DataType>
-    </column>
-    <index id="306" parent="285" name="attractionAPI_ID_idx">
-      <ColNames>attractionAPI_ID</ColNames>
-      <Type>btree</Type>
-    </index>
-    <key id="307" parent="285" name="PRIMARY">
-      <NameSurrogate>1</NameSurrogate>
-      <ColNames>index</ColNames>
-      <Primary>1</Primary>
-    </key>
-    <foreign-key id="308" parent="285" name="attractionAPI_ID">
-      <ColNames>attractionAPI_ID</ColNames>
-      <RefTableName>attractionstable</RefTableName>
-      <RefColNames>attractionAPI_ID</RefColNames>
-      <OnUpdate>cascade</OnUpdate>
-      <OnDelete>cascade</OnDelete>
-    </foreign-key>
-    <column id="309" parent="286" name="EmailAddress">
+    <column id="301" parent="285" name="EmailAddress">
       <Position>1</Position>
       <DataType>varchar(200)|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="310" parent="286" name="Name">
+    <column id="302" parent="285" name="Name">
       <Position>2</Position>
       <DataType>varchar(255)|0s</DataType>
     </column>
-    <column id="311" parent="286" name="Password">
+    <column id="303" parent="285" name="Password">
       <Position>3</Position>
       <DataType>varchar(255)|0s</DataType>
     </column>
-    <column id="312" parent="286" name="Age">
+    <column id="304" parent="285" name="Age">
       <Position>4</Position>
       <DataType>int|0s</DataType>
     </column>
-    <key id="313" parent="286" name="PRIMARY">
+    <key id="305" parent="285" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>EmailAddress</ColNames>
       <Primary>1</Primary>

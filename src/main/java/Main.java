@@ -1,10 +1,16 @@
 import com.google.gson.Gson;
 import database.DBManager;
 import engine.attraction.Attraction;
+import engine.Traveler;
+import googleAPI.APIManager;
+import googleAPI.JsonAttraction;
 
 import java.text.ParseException;
+import java.time.LocalTime;
 import java.io.IOException;
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Main {
     public static void main(String[] args) throws SQLException, ParseException, IOException {
@@ -23,7 +29,7 @@ public class Main {
                 "        },\n" +
                 "        \"name\": \"lastminute.com London Eye\",\n" +
                 "        \"opening_hours\": {\n" +
-                "            \"open_now\": false,\n" +
+                "            \"open_now\": true,\n" +
                 "            \"periods\": [\n" +
                 "                {\n" +
                 "                    \"close\": {\n" +
@@ -120,25 +126,30 @@ public class Main {
 
 
 
-//         String[] AttractionToAdd = {"London Eye", "Kew Gardens", "Madame Tussauds", "The British Museum", "Tower Bridge",
-//                 "Victoria and Albert Museum","Tower of London", "Sherlock Holmes Museum", "Westminster Abbey", "Buckingham Palace",
-//         "Harrods", "London Transport Museum","St. Paul’s Cathedral", "Tate", "Palace of Westminster", "Wembley Stadium", "Leadenhall Market"
-//         , "Hampton Court Palace", "National Gallery", "Trafalgar Square", "Greenwich Royal Observatory", "Covent Garden",
-//         "Kensington Palace", "Hyde Park", "Saturday market hopping", "The Mall, London", "Old Spitalfields Market", "Hampstead Heath",
-//         "Warner Bros. Studio Tour London – The Making of Harry Potter", "Borough Market", "Churchill War Rooms", "Admiralty Arch", "Seven Dials", "Wimbledon Lawn Tennis Museum and Tour",
-//         "Portobello Road Market", "Shakespeare’s Globe", "Somerset House", "River Thames", "Imperial War Museum",
-//         "The West End", "Fortnum & Mason", "Brick Lane", "Oxford Street", "Big Ben","Piccadilly Circus", "Trafalgar Square", "The Shard", "Natural History Museum"
-//         , "London Docklands"};
+        String[] AttractionToAdd = {"London Eye", "Kew Gardens", "Madame Tussauds", "The British Museum", "Tower Bridge",
+                "Victoria and Albert Museum","Tower of London", "Sherlock Holmes Museum", "Westminster Abbey", "Buckingham Palace",
+                "Harrods", "London Transport Museum","St. Paul’s Cathedral", "Tate", "Palace of Westminster", "Wembley Stadium", "Leadenhall Market"
+                , "Hampton Court Palace", "National Gallery", "Trafalgar Square", "Greenwich Royal Observatory", "Covent Garden",
+                "Kensington Palace", "Hyde Park", "Saturday market hopping", "The Mall, London", "Old Spitalfields Market", "Hampstead Heath",
+                "Warner Bros. Studio Tour London – The Making of Harry Potter", "Borough Market", "Churchill War Rooms", "Admiralty Arch", "Seven Dials", "Wimbledon Lawn Tennis Museum and Tour",
+                "Portobello Road Market", "Shakespeare’s Globe", "Somerset House", "River Thames", "Imperial War Museum",
+                "The West End", "Fortnum & Mason", "Brick Lane", "Oxford Street", "Big Ben","Piccadilly Circus", "Trafalgar Square", "The Shard", "Natural History Museum"
+                , "London Docklands"};
+
+//        String[] hotels = {""};
+
         DBManager db = new DBManager("jdbc:mysql://localhost:3306/attractions","root","742!GDFMP");
 
-        Attraction nationalGallery = db.getAttractionFromDataBaseByName("The National Gallery");
+        //Gson gson = new Gson();
+        //JsonAttraction att = gson.fromJson(londonsEye, JsonAttraction.class);
+        //Attraction realAtt = new Attraction(att);
 
+        Attraction newAtt = db.getAttractionFromDataBaseByName("london's Eye");
 
+        System.out.println("fin1");
 
-        Gson gson = new Gson();
 
         db.closeConnection();
-        System.out.println("fin1");
 
 
 

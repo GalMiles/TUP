@@ -18,15 +18,13 @@ public class DBManager {
     private Connection sqlConnection;
 
 
-    public DBManager(String dbUrl, String userName, String password) throws SQLException
-    {
+    public DBManager(String dbUrl, String userName, String password) throws SQLException {
         this.sqlConnection = DriverManager.getConnection(dbUrl, userName, password);
         this.statement = sqlConnection.createStatement();
     }
 
 
-    public void closeConnection() throws SQLException
-    {
+    public void closeConnection() throws SQLException {
         this.sqlConnection.close();
     }
 
@@ -37,8 +35,7 @@ public class DBManager {
         this.statement.executeUpdate(query);
     }
 
-    public void insertDataToDataBase(JsonAttraction attraction) throws SQLException, ParseException {
-
+    public void insertAttractionToDataBase(JsonAttraction attraction) throws SQLException, ParseException {
         StringBuilder typesStr = new StringBuilder();
 
         ArrayList<StringBuilder> dayStrArr = new ArrayList<>();
@@ -91,25 +88,19 @@ public class DBManager {
         }
         else {  //there is no result from the query(the attraction doesnt found in the database)
             JsonAttraction jsonAttraction = apiManager.getAttractionFromAPI(attractionName);
-            this.insertDataToDataBase(jsonAttraction);
+            this.insertAttractionToDataBase(jsonAttraction);
             resAttraction = new Attraction(jsonAttraction);
         }
         return resAttraction;
     }
 
-    public ArrayList<Attraction> getAttractionsByOperationTime(String operationTime)
-    {
+    public ArrayList<Attraction> getAttractionsByOperationTime(String operationTime){
         ArrayList<Attraction> attractionsArr = new ArrayList<>();
         String[] operationTimeSplitArr = operationTime.split("-");
         String openingHour =operationTimeSplitArr[0];
         String closingHour =operationTimeSplitArr[1];
 
-
-
-
-
         return attractionsArr;
     }
-
 
 }

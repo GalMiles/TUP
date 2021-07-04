@@ -84,8 +84,6 @@ public class Attraction {
         this.setGeometry(other.geometry);
         this.setTypes(other.types);
         this.setOpeningHoursArr(other.OpeningHoursArr);
-
-
     }
 
 
@@ -221,9 +219,5 @@ public class Attraction {
                 ", duration=" + duration +
                 '}';
     }
-
-
-
-
 }
 
