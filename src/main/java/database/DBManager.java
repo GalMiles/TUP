@@ -2,7 +2,7 @@ package database;
 
 import common.OpeningHours;
 import engine.attraction.Attraction;
-import engine.Traveler;
+import engine.traveler.Traveler;
 import googleAPI.APIManager;
 import googleAPI.JsonAttraction;
 
@@ -30,8 +30,8 @@ public class DBManager {
 
     public void insertTravelerToDataBase(Traveler traveler) throws SQLException {
         String query = "INSERT INTO travelers(EmailAddress, Name, Password, Age)" +"\n" + "VALUES" + "(\"" +
-                traveler.getEmailAddress() + "\"" + ", \"" + traveler.getName() + "\"" + ", \"" + traveler.getPassword() +
-                "\", " + traveler.getAge() + ");";
+                traveler.getEmailAddress() + "\"" + ", \"" + traveler.getFirstName() + ", \"" + traveler.getLastName() + "\"" + ", \""
+                + traveler.getPassword() + ");";
         this.statement.executeUpdate(query);
     }
 

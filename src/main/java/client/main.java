@@ -5,7 +5,9 @@ import common.Geometry;
 //import common.OpeningHours;
 import common.DayOpeningHours;
 import engine.attraction.AttractionsManager;
+import engine.managers.TravelerManager;
 import engine.planTrip.RouteTrip;
+import engine.traveler.Traveler;
 import googleAPI.APIManager;
 
 import engine.attraction.Attraction;
@@ -23,6 +25,7 @@ import java.util.Collections;
 
 public class main {
     public static void main(String[] args) throws IOException {
+
 //        ArrayList<AttractionType> typesHotel = new ArrayList<>();
 //        typesHotel.add(AttractionType.lodging);
 //        Attraction hotel = new Attraction("Baglioni Hotel - London", "60 Hyde Park Gate, South Kensington, London SW7 5BB, UK",
