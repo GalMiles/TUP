@@ -122,6 +122,7 @@ public class Main {
                 "    },\n" +
                 "    \"status\": \"OK\"\n" +
                 "}";
+        //String IsraelPost =
 
 
 
@@ -144,13 +145,14 @@ public class Main {
         //JsonAttraction att = gson.fromJson(londonsEye, JsonAttraction.class);
         //Attraction realAtt = new Attraction(att);
 
-        Attraction newAtt = db.getAttractionFromDataBaseByName("london's Eye");
-
+        Attraction newAtt = db.getAttractionFromDataBaseByName("lastminute.com London Eye");
+        //Attraction newAtt = db.getAttractionFromDataBaseByName("The British Museum");
         System.out.println("fin1");
 
 
         db.closeConnection();
-
+        System.out.println(newAtt.attractionToJson());
+        
 
 
     }

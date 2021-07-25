@@ -2,6 +2,7 @@ package engine.attraction;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import com.google.gson.Gson;
 import common.AttractionType;
 import common.Geometry;
 import common.OpeningHours;
@@ -22,7 +23,7 @@ public class Attraction {
     private Geometry geometry;
     private String placeID;
     private ArrayList<AttractionType> types = new ArrayList<>();
-    private ArrayList<DayOpeningHours> OpeningHoursArr = new ArrayList<>();//
+    private ArrayList<DayOpeningHours> OpeningHoursArr = new ArrayList<>();
     private int duration = 0;
 
     public Attraction(String name, String address, String phoneNumber, String website, Geometry geometry, String placeID,
@@ -54,18 +55,24 @@ public class Attraction {
         }
         String[] geometryArr = geometryStr.split(",");
         this.geometry = new Geometry(geometryArr[0], geometryArr[1]);
-        String[] daysColumns = {"Sunday","Monday", "Tuesday", "Wednesday", "Thursday", "Friday","Saturday"};
-        for (int i=0;i<7;++i) {
+        String[] daysColumns = {null,"Monday", "Tuesday", "Wednesday", "Thursday", "Friday","Saturday","Sunday"};
+        for(int i =0; i < 7;++i)
+        {
+            this.OpeningHoursArr.add(null);
+        }
+        for (int i=1;i<=7;++i) {
             String day = daysColumns[i]; // get the day opening time
             String DayOpeningHours = resultSet.getString(day);
-            this.OpeningHoursArr.add(new DayOpeningHours(i));
+            DayOpeningHours currentDayOpeningHours = new DayOpeningHours(false, i);
+            this.OpeningHoursArr.set(i%7,currentDayOpeningHours);
             if(!DayOpeningHours.equals("Closed"))
             {
+                currentDayOpeningHours.setOpen(true);
                 String[] dayOperationTimesArray = DayOpeningHours.split(",");
                 for (String operationTime: dayOperationTimesArray) {
                     String[] openingAndClosingTimes = operationTime.split("-");
-                    this.OpeningHoursArr.get(i).addOpening(openingAndClosingTimes[0]);
-                    this.OpeningHoursArr.get(i).addClosing(openingAndClosingTimes[1]);
+                    currentDayOpeningHours.addOpening(openingAndClosingTimes[0]);
+                    currentDayOpeningHours.addClosing(openingAndClosingTimes[1]);
                 }
             }
         }
@@ -218,6 +225,13 @@ public class Attraction {
                 ", OpeningHoursArr=" + OpeningHoursArr +
                 ", duration=" + duration +
                 '}';
+    }
+
+
+    public String attractionToJson() {
+        Gson gson = new Gson();
+        String jSonString = gson.toJson(this);
+        return  jSonString;
     }
 }
 
