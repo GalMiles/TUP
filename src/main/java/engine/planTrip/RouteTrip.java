@@ -26,7 +26,7 @@ public class RouteTrip {
 
         this.destination = destination;
         this.hotel = hotel;
-        this.arrivingDate =arrivingDate;
+        this.arrivingDate = arrivingDate;
         this.leavingDate = leavingDate;
     }
 
