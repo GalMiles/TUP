@@ -82,7 +82,7 @@ public class DayPlan {
 
         for (int i = 0; i < sizeHoursNext; i++) {
 
-            closeAttraction = hourOnClock.isAfter(closingHoursNext.get(i));
+            closeAttraction = hourOnClock.isBefore(openingHoursNext.get(i));
             overPossibleDuration = closingHoursNext.get(i).isBefore(hourOnClockAfterEnjoying);
             if (closeAttraction || overPossibleDuration) {
                 openingHoursNext.remove(openingHoursNext.get(i));
