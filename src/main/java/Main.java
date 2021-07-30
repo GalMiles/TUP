@@ -1,16 +1,9 @@
-import com.google.gson.Gson;
 import database.DBManager;
 import engine.attraction.Attraction;
-import engine.Traveler;
-import googleAPI.APIManager;
-import googleAPI.JsonAttraction;
 
 import java.text.ParseException;
-import java.time.LocalTime;
 import java.io.IOException;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.Arrays;
 
 public class Main {
     public static void main(String[] args) throws SQLException, ParseException, IOException {

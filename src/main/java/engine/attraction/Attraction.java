@@ -180,15 +180,15 @@ public class Attraction {
                 || types.contains(AttractionType.point_of_interest) || types.contains(AttractionType.park)
                 || types.contains(AttractionType.shopping_mall) || types.contains(AttractionType.spa)
                 || types.contains(AttractionType.tourist_attraction) || types.contains(AttractionType.zoo)) {
-            duration = 6;
+            duration = 3;
         }else if (types.contains(AttractionType.airport) || types.contains(AttractionType.embassy)
                 || types.contains(AttractionType.establishment) || types.contains(AttractionType.cemetery)
                 || types.contains(AttractionType.church) || types.contains(AttractionType.hindu_temple)
                 || types.contains(AttractionType.mosque) || types.contains(AttractionType.synagogue)) {
-            duration = 4;
+            duration = 2;
         } else if (types.contains(AttractionType.art_gallery) || types.contains(AttractionType.museum)
                 || types.contains(AttractionType.movie_theater) || types.contains(AttractionType.stadium)) {
-            duration = 3;
+            duration = 2;
         } else if (types.contains(AttractionType.bakery)) {
             duration = 1;
         } else if (types.contains(AttractionType.bar) || types.contains(AttractionType.cafe)
