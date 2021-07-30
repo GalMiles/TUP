@@ -28,5 +28,8 @@ public enum AttractionType {
     synagogue,
     spa,
     tourist_attraction,
-    zoo
+    zoo,
+    sublocality_level_1,
+    sublocality,
+    political
 }

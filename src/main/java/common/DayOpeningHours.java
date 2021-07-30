@@ -8,21 +8,43 @@ import java.util.ArrayList;
 // change ti it because it's easier to convert from localDate
 public class DayOpeningHours {
 
+    private boolean isAllDayLongOpened;
     private boolean isOpen;
     private DayOfWeek day;
     private ArrayList<String> openingHours = new ArrayList<>();
     private ArrayList<String> closingHours = new ArrayList<>();
 
-    public DayOpeningHours(boolean isOpen, int day, String openingHours, String closingHours) {
+    public DayOpeningHours(boolean isAllDayLongOpened,boolean isOpen, int day, String openingHours, String closingHours) {
+        this.isAllDayLongOpened = isAllDayLongOpened;
         this.isOpen = isOpen;
         this.day = DayOfWeek.of(day);
         this.addOpening(openingHours);
         this.addClosing(closingHours);
     }
 
-    public DayOpeningHours(boolean isOpen, int day) {
+    public DayOpeningHours(boolean isAllDayLongOpened, boolean isOpen, int day)
+    {
+        this.isAllDayLongOpened = isAllDayLongOpened;
         this.isOpen = isOpen;
         this.day = DayOfWeek.of(day);
+        this.openingHours = null;
+        this.closingHours = null;
+    }
+
+    public DayOpeningHours(boolean isOpen, int day) {
+        this.isAllDayLongOpened = false;
+        this.isOpen = isOpen;
+        this.day = DayOfWeek.of(day);
+    }
+
+
+
+    public boolean isAllDayLongOpened() {
+        return isAllDayLongOpened;
+    }
+
+    public void setAllDayLongOpened(boolean allDayLongOpened) {
+        isAllDayLongOpened = allDayLongOpened;
     }
 
     public DayOfWeek getDay() {

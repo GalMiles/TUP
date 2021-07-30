@@ -63,17 +63,25 @@ public class Attraction {
         for (int i=1;i<=7;++i) {
             String day = daysColumns[i]; // get the day opening time
             String DayOpeningHours = resultSet.getString(day);
-            DayOpeningHours currentDayOpeningHours = new DayOpeningHours(false, i);
-            this.OpeningHoursArr.set(i%7,currentDayOpeningHours);
-            if(!DayOpeningHours.equals("Closed"))
+            if(!DayOpeningHours.equals("All day Long"))
             {
-                currentDayOpeningHours.setOpen(true);
-                String[] dayOperationTimesArray = DayOpeningHours.split(",");
-                for (String operationTime: dayOperationTimesArray) {
-                    String[] openingAndClosingTimes = operationTime.split("-");
-                    currentDayOpeningHours.addOpening(openingAndClosingTimes[0]);
-                    currentDayOpeningHours.addClosing(openingAndClosingTimes[1]);
+                DayOpeningHours currentDayOpeningHours = new DayOpeningHours(false, i);
+                this.OpeningHoursArr.set(i%7,currentDayOpeningHours);
+                if(!DayOpeningHours.equals("Closed"))
+                {
+                    currentDayOpeningHours.setOpen(true);
+                    String[] dayOperationTimesArray = DayOpeningHours.split(",");
+                    for (String operationTime: dayOperationTimesArray) {
+                        String[] openingAndClosingTimes = operationTime.split("-");
+                        currentDayOpeningHours.addOpening(openingAndClosingTimes[0]);
+                        currentDayOpeningHours.addClosing(openingAndClosingTimes[1]);
+                    }
                 }
+            }
+            else
+            {
+                DayOpeningHours currentDayOpeningHours = new DayOpeningHours(true,true, i);
+                this.OpeningHoursArr.set(i%7,currentDayOpeningHours);
             }
         }
 
@@ -106,14 +114,23 @@ public class Attraction {
         Geometry.GeometryAPI.Location location = attractionData.getGeometryAPI().getLocation();
         this.geometry = new Geometry(location.getLat(),location.getLng());
         //initialize the array, create 7 cells (one for each weekday)
-        if (!types.contains(AttractionType.lodging)) {
-            for (int i = 1; i < 8; ++i) {
-                this.OpeningHoursArr.add(new DayOpeningHours(i));
+        if(attractionData.getOpening_hours() != null)
+        {
+            if (!types.contains(AttractionType.lodging)) {
+                for (int i = 1; i < 8; ++i) {
+                    this.OpeningHoursArr.add(new DayOpeningHours(i));
+                }
+                for (OpeningHours.DayOpeningHoursJson period : attractionData.getOpening_hours().getPeriods()) {
+                    this.OpeningHoursArr.get(period.getClose().getDay()).setOpen(true);
+                    this.OpeningHoursArr.get(period.getOpen().getDay()).addOpening(period.getOpen().getTime());
+                    this.OpeningHoursArr.get(period.getClose().getDay()).addClosing(period.getClose().getTime());
+                }
             }
-            for (OpeningHours.DayOpeningHoursJson period : attractionData.getOpening_hours().getPeriods()) {
-                this.OpeningHoursArr.get(period.getClose().getDay()).setOpen(true);
-                this.OpeningHoursArr.get(period.getOpen().getDay()).addOpening(period.getOpen().getTime());
-                this.OpeningHoursArr.get(period.getClose().getDay()).addClosing(period.getClose().getTime());
+        }
+        else
+        {
+            for (int i = 1; i < 8; ++i) {
+                this.OpeningHoursArr.add(new DayOpeningHours(true, true, i));
             }
         }
         this.setDuration(this.types);

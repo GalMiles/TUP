@@ -120,8 +120,7 @@ public class Main {
 
 
 
-        String[] AttractionToAdd = {"London Eye", "Kew Gardens", "Madame Tussauds", "The British Museum", "Tower Bridge",
-                "Victoria and Albert Museum","Tower of London", "Sherlock Holmes Museum", "Westminster Abbey", "Buckingham Palace",
+        String[] AttractionToAdd = {"Buckingham Palace",
                 "Harrods", "London Transport Museum","St. Paul’s Cathedral", "Tate", "Palace of Westminster", "Wembley Stadium", "Leadenhall Market"
                 , "Hampton Court Palace", "National Gallery", "Trafalgar Square", "Greenwich Royal Observatory", "Covent Garden",
                 "Kensington Palace", "Hyde Park", "Saturday market hopping", "The Mall, London", "Old Spitalfields Market", "Hampstead Heath",
@@ -134,17 +133,21 @@ public class Main {
 
         DBManager db = new DBManager("jdbc:mysql://localhost:3306/attractions","root","742!GDFMP");
 
+        for(String currentAttractionName: AttractionToAdd)
+        {
+            Attraction attraction = db.getAttractionFromDataBaseByName(currentAttractionName + "London");
+        }
+
         //Gson gson = new Gson();
         //JsonAttraction att = gson.fromJson(londonsEye, JsonAttraction.class);
         //Attraction realAtt = new Attraction(att);
 
-        Attraction newAtt = db.getAttractionFromDataBaseByName("lastminute.com London Eye");
         //Attraction newAtt = db.getAttractionFromDataBaseByName("The British Museum");
         System.out.println("fin1");
 
 
         db.closeConnection();
-        System.out.println(newAtt.attractionToJson());
+        //System.out.println(newAtt.attractionToJson());
         
 
 
