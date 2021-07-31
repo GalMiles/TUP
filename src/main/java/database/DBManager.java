@@ -36,47 +36,58 @@ public class DBManager {
     }
 
     public void insertAttractionToDataBase(JsonAttraction attraction) throws SQLException, ParseException {
-        StringBuilder typesStr = new StringBuilder();
 
+        JsonAttraction.JsonResult result = attraction.getResult();
+        StringBuilder typesStr = new StringBuilder();
         ArrayList<StringBuilder> dayStrArr = new ArrayList<>();
-        for(int i = 0; i < 7; ++i)
-        {
+        for (int i = 0; i < 7; ++i) {
             dayStrArr.add(i, new StringBuilder());
         }
         PreparedStatement ps = this.sqlConnection.prepareStatement(
                 "INSERT INTO attractionstable(attractionAPI_ID, Name, Address, PhoneNumber,Website, Geometry, types," +
                         "Sunday, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday)" +
                         "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
-
         ps.setString(1, attraction.getResult().getPlace_id());//ID
         ps.setString(2, attraction.getResult().getName());//NAME
         ps.setString(3, attraction.getResult().getFormatted_address());//ADDRESS
-        ps.setString(4, attraction.getResult().getFormatted_phone_number());//PHONENUMBER
-        ps.setString(5, attraction.getResult().getWebsite());//Website
+        if (result.getFormatted_phone_number() != null) {
+            ps.setString(4, attraction.getResult().getFormatted_phone_number());//PHONENUMBER
+        } else {
+            ps.setString(4, "N\\A");//PHONENUMBER
+        }
+        if (result.getWebsite() != null) {
+            ps.setString(5, attraction.getResult().getWebsite());//Website
+        } else {
+            ps.setString(5, "N\\A");//Website
+
+        }
         ps.setString(6, attraction.getResult().getGeometryAPI().toString());//Geometry
 
         StringBuilder typesIndexesString = new StringBuilder();
         ps.setString(7, attraction.getResult().AttractionTypesToStr());
-        for (OpeningHours.DayOpeningHoursJson currentOpening:attraction.getResult().getOpening_hours().getPeriods()) {
-            int day = currentOpening.getOpen().getDay();//0=Sunday....6=Saturday
-            //if the current day is not empty
-            if(!dayStrArr.get(day).toString().equals(""))
-            {
-                dayStrArr.get(day).append(",");
+        if (result.getOpening_hours() != null) {
+            for (OpeningHours.DayOpeningHoursJson currentOpening : attraction.getResult().getOpening_hours().getPeriods()) {
+                int day = currentOpening.getOpen().getDay();//0=Sunday....6=Saturday
+                //if the current day is not empty
+                if (!dayStrArr.get(day).toString().equals("")) {
+                    dayStrArr.get(day).append(",");
+                }
+                dayStrArr.get(day).append(currentOpening.toString());
             }
-            dayStrArr.get(day).append(currentOpening.toString());
-        }
-        for(int i =0; i < 7;++i)
-        {
-            if(dayStrArr.get(i).toString().equals(""))
-            {
-                dayStrArr.get(i).append("Closed");
+            for (int i = 0; i < 7; ++i) {
+                if (dayStrArr.get(i).toString().equals("")) {
+                    dayStrArr.get(i).append("Closed");
+                }
+                ps.setString(i + 8, dayStrArr.get(i).toString());
             }
-            ps.setString(i+8, dayStrArr.get(i).toString());
+        } else {
+            for (int i = 0; i < 7; ++i) {
+                dayStrArr.get(i).append("All Day Long");
+                ps.setString(i + 8, dayStrArr.get(i).toString());
+            }
+            ps.executeUpdate();
         }
-        ps.executeUpdate();
     }
-
     public Attraction getAttractionFromDataBaseByName(String attractionName) throws SQLException, IOException, ParseException {
         Attraction resAttraction;
         String query = "SELECT * FROM attractionstable WHERE Name=\"" + attractionName + "\"";
