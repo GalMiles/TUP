@@ -36,10 +36,10 @@ public class DayPlan {
         LocalTime currentTime = LocalTime.parse("10:00" ,DateTimeFormatter.ofPattern("HH:mm"));
         daySchedule.add(new OnePlan(hotel,currentTime));
 
-        while (durationDay <= MAX_DURATION) {
+        while (durationDay < MAX_DURATION) {
             nextAttraction = chooseBestNextAttraction(currentAttraction, currentTime,possibleAttractions);
             daySchedule.add(new OnePlan(nextAttraction,currentTime));
-            possibleAttractions.remove(nextAttraction);
+            possibleAttractions.remove(nextAttraction); // -object of any class are reference so this action delete chosen attraction so we dont add visited attraction to rhe next day
             currentAttraction = nextAttraction;
             currentTime = currentTime.plusHours(nextAttraction.getDuration());
             durationDay += nextAttraction.getDuration();
@@ -66,7 +66,7 @@ public class DayPlan {
     }
 
 
-    public double calculateScore(Attraction currentAttraction,Attraction nextAttraction, LocalTime hourOnClock, LocalDate date) {
+    private double calculateScore(Attraction currentAttraction,Attraction nextAttraction, LocalTime hourOnClock, LocalDate date) {
         double scoreDistance = currentAttraction.calcDistanceBetweenAttractions(nextAttraction);
         long differenceBetweenClockAndStartTime;
         long minValue = Integer.MAX_VALUE;
@@ -81,15 +81,17 @@ public class DayPlan {
         LocalTime hourOnClockAfterEnjoying = hourOnClock.plusHours(nextAttraction.getDuration());
 
         for (int i = 0; i < sizeHoursNext; i++) {
-            closeAttraction = hourOnClock.isAfter(openingHoursNext.get(i));
+
+            closeAttraction = hourOnClock.isBefore(openingHoursNext.get(i));
             overPossibleDuration = closingHoursNext.get(i).isBefore(hourOnClockAfterEnjoying);
             if (closeAttraction || overPossibleDuration) {
                 openingHoursNext.remove(openingHoursNext.get(i));
                 closingHoursNext.remove(closingHoursNext.get(i));
             }
+            if (openingHoursNext.size() == 0)
+                return Integer.MAX_VALUE;
         }
-        if (openingHoursNext.size() == 0)
-            return Integer.MAX_VALUE;
+
 
 
         // the hourClock = 10:00
@@ -99,6 +101,7 @@ public class DayPlan {
         //why minValue?
         // in case there are for one attraction 7:00-14:00 and 15:00-19:00
         //  we want to choose 7:00
+        sizeHoursNext = openingHoursNext.size();
 
         for (int i = 0; i < sizeHoursNext; i++) {
             differenceBetweenClockAndStartTime = openingHoursNext.get(i).until(hourOnClock, ChronoUnit.HOURS);

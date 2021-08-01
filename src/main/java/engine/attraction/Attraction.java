@@ -2,6 +2,7 @@ package engine.attraction;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import com.google.gson.Gson;
 import common.AttractionType;
 import common.Geometry;
 import common.OpeningHours;
@@ -22,7 +23,7 @@ public class Attraction {
     private Geometry geometry;
     private String placeID;
     private ArrayList<AttractionType> types = new ArrayList<>();
-    private ArrayList<DayOpeningHours> OpeningHoursArr = new ArrayList<>();//
+    private ArrayList<DayOpeningHours> OpeningHoursArr = new ArrayList<>();
     private int duration = 0;
 
     public Attraction(String name, String address, String phoneNumber, String website, Geometry geometry, String placeID,
@@ -54,19 +55,33 @@ public class Attraction {
         }
         String[] geometryArr = geometryStr.split(",");
         this.geometry = new Geometry(geometryArr[0], geometryArr[1]);
-        String[] daysColumns = {"Sunday","Monday", "Tuesday", "Wednesday", "Thursday", "Friday","Saturday"};
-        for (int i=0;i<7;++i) {
+        String[] daysColumns = {null,"Monday", "Tuesday", "Wednesday", "Thursday", "Friday","Saturday","Sunday"};
+        for(int i =0; i < 7;++i)
+        {
+            this.OpeningHoursArr.add(null);
+        }
+        for (int i=1;i<=7;++i) {
             String day = daysColumns[i]; // get the day opening time
             String DayOpeningHours = resultSet.getString(day);
-            this.OpeningHoursArr.add(new DayOpeningHours(i));
-            if(!DayOpeningHours.equals("Closed"))
+            if(!DayOpeningHours.equals("All day Long"))
             {
-                String[] dayOperationTimesArray = DayOpeningHours.split(",");
-                for (String operationTime: dayOperationTimesArray) {
-                    String[] openingAndClosingTimes = operationTime.split("-");
-                    this.OpeningHoursArr.get(i).addOpening(openingAndClosingTimes[0]);
-                    this.OpeningHoursArr.get(i).addClosing(openingAndClosingTimes[1]);
+                DayOpeningHours currentDayOpeningHours = new DayOpeningHours(false, i);
+                this.OpeningHoursArr.set(i%7,currentDayOpeningHours);
+                if(!DayOpeningHours.equals("Closed"))
+                {
+                    currentDayOpeningHours.setOpen(true);
+                    String[] dayOperationTimesArray = DayOpeningHours.split(",");
+                    for (String operationTime: dayOperationTimesArray) {
+                        String[] openingAndClosingTimes = operationTime.split("-");
+                        currentDayOpeningHours.addOpening(openingAndClosingTimes[0]);
+                        currentDayOpeningHours.addClosing(openingAndClosingTimes[1]);
+                    }
                 }
+            }
+            else
+            {
+                DayOpeningHours currentDayOpeningHours = new DayOpeningHours(true,true, i);
+                this.OpeningHoursArr.set(i%7,currentDayOpeningHours);
             }
         }
 
@@ -84,8 +99,6 @@ public class Attraction {
         this.setGeometry(other.geometry);
         this.setTypes(other.types);
         this.setOpeningHoursArr(other.OpeningHoursArr);
-
-
     }
 
 
@@ -101,14 +114,23 @@ public class Attraction {
         Geometry.GeometryAPI.Location location = attractionData.getGeometryAPI().getLocation();
         this.geometry = new Geometry(location.getLat(),location.getLng());
         //initialize the array, create 7 cells (one for each weekday)
-        if (!types.contains(AttractionType.lodging)) {
-            for (int i = 1; i < 8; ++i) {
-                this.OpeningHoursArr.add(new DayOpeningHours(i));
+        if(attractionData.getOpening_hours() != null)
+        {
+            if (!types.contains(AttractionType.lodging)) {
+                for (int i = 1; i < 8; ++i) {
+                    this.OpeningHoursArr.add(new DayOpeningHours(i));
+                }
+                for (OpeningHours.DayOpeningHoursJson period : attractionData.getOpening_hours().getPeriods()) {
+                    this.OpeningHoursArr.get(period.getClose().getDay()).setOpen(true);
+                    this.OpeningHoursArr.get(period.getOpen().getDay()).addOpening(period.getOpen().getTime());
+                    this.OpeningHoursArr.get(period.getClose().getDay()).addClosing(period.getClose().getTime());
+                }
             }
-            for (OpeningHours.DayOpeningHoursJson period : attractionData.getOpening_hours().getPeriods()) {
-                this.OpeningHoursArr.get(period.getClose().getDay()).setOpen(true);
-                this.OpeningHoursArr.get(period.getOpen().getDay()).addOpening(period.getOpen().getTime());
-                this.OpeningHoursArr.get(period.getClose().getDay()).addClosing(period.getClose().getTime());
+        }
+        else
+        {
+            for (int i = 1; i < 8; ++i) {
+                this.OpeningHoursArr.add(new DayOpeningHours(true, true, i));
             }
         }
         this.setDuration(this.types);
@@ -175,15 +197,15 @@ public class Attraction {
                 || types.contains(AttractionType.point_of_interest) || types.contains(AttractionType.park)
                 || types.contains(AttractionType.shopping_mall) || types.contains(AttractionType.spa)
                 || types.contains(AttractionType.tourist_attraction) || types.contains(AttractionType.zoo)) {
-            duration = 6;
+            duration = 3;
         }else if (types.contains(AttractionType.airport) || types.contains(AttractionType.embassy)
                 || types.contains(AttractionType.establishment) || types.contains(AttractionType.cemetery)
                 || types.contains(AttractionType.church) || types.contains(AttractionType.hindu_temple)
                 || types.contains(AttractionType.mosque) || types.contains(AttractionType.synagogue)) {
-            duration = 4;
+            duration = 2;
         } else if (types.contains(AttractionType.art_gallery) || types.contains(AttractionType.museum)
                 || types.contains(AttractionType.movie_theater) || types.contains(AttractionType.stadium)) {
-            duration = 3;
+            duration = 2;
         } else if (types.contains(AttractionType.bakery)) {
             duration = 1;
         } else if (types.contains(AttractionType.bar) || types.contains(AttractionType.cafe)
@@ -223,7 +245,10 @@ public class Attraction {
     }
 
 
-
-
+    public String attractionToJson() {
+        Gson gson = new Gson();
+        String jSonString = gson.toJson(this);
+        return  jSonString;
+    }
 }
 

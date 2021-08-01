@@ -34,5 +34,10 @@ public class Geometry {
                 super(lat, lng);
             }
         }
+
+        @Override
+        public String toString() {
+            return this.location.getLat() + "," + this.getLocation().getLng();
+        }
     }
 }
