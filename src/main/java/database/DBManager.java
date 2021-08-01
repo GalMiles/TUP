@@ -29,11 +29,31 @@ public class DBManager {
     }
 
     public void insertTravelerToDataBase(Traveler traveler) throws SQLException {
-        String query = "INSERT INTO travelers(EmailAddress, Name, Password, Age)" +"\n" + "VALUES" + "(\"" +
-                traveler.getEmailAddress() + "\"" + ", \"" + traveler.getFirstName() + ", \"" + traveler.getLastName() + "\"" + ", \""
-                + traveler.getPassword() + ");";
+        String query = "INSERT INTO travelers(Email, Password, FirstName, LastName) VALUES ( " + 
+                traveler.getEmailAddress() + "," + traveler.getPassword() + "," + traveler.getFirstName() +
+                "," + traveler.getLastName()+ ")";
         this.statement.executeUpdate(query);
     }
+
+    public Traveler getTravelerFromB(String Email, String Password) throws SQLException {
+        Traveler traveler = null;
+        String query = "SELECT Email, Password FROM attractionstable.travelers WHERE Email=? and Password=?";
+        PreparedStatement ps = this.sqlConnection.prepareStatement(query);
+        ps.setString(1, Email);
+        ps.setString(2, Password);
+        ResultSet results = ps.executeQuery();
+        if(results.next())
+        {
+            String userName = results.getString("Email");
+            String password = results.getString("Password");
+            String firstName = results.getString("FirstName");
+            String lastName = results.getString("LastName");
+            traveler = new Traveler(userName, password, firstName, lastName);
+        }
+        return traveler;
+    }
+
+
 
     public void insertAttractionToDataBase(JsonAttraction attraction) throws SQLException, ParseException {
 

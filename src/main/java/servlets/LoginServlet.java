@@ -18,31 +18,26 @@ public class LoginServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Gson gson = new Gson();
-
         BufferedReader reader = req.getReader();
         String lines = reader.lines().collect(Collectors.joining());
 
-        User newUser = gson.fromJson(lines, User.class);
+        //User newUser = gson.fromJson(lines, User.class);
         ResponseJson responseJson = new ResponseJson();
 
-//        try {
-//            SessionUtils.setUser(req, resp, newUser.email, newUser.password);
-//        } catch (Member.InvalidUsernameOrPasswordException e) {
-//            responseJson.status = "error";
-//            responseJson.message = "Invalid email or password";
-//        }
+
+
 
         responseJson.status = "GOOD";
         responseJson.message = "Matan PPP";
+        responseJson.status = "Bad";
 
         try (PrintWriter out = resp.getWriter()) {
             out.println(gson.toJson(responseJson));
         }
     }
 
-    static class User {
-        String email;
-        String password;
-    }
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
+    }
 }
