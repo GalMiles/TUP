@@ -9,7 +9,7 @@ import java.net.Socket;
 
 public class TupServerMain {
     public static void main(String[] args) {
-        int port = 1989;
+        int port = 2321;
         new TupServer().startServer(port);
     }
 
