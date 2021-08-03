@@ -29,14 +29,10 @@ public class LoginServlet extends HttpServlet {
         Engine engine = (Engine)req.getServletContext().getAttribute("engine");
         try {
             Traveler user = (Traveler)engine.getTraveler(newUser.email);
-            //
-
-
-            CHECK password
-
-
-
-            ////
+            if(newUser.password != user.getPassword()){
+                responseJson.status = "error";
+                responseJson.message = "Invalid email or password";
+            }
         } catch (Traveler.NotFoundException e) {
             responseJson.status = "error";
             responseJson.message = "Invalid email or password";
