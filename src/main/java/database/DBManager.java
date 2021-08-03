@@ -108,6 +108,7 @@ public class DBManager {
             ps.executeUpdate();
         }
     }
+
     public Attraction getAttractionFromDataBaseByName(String attractionName) throws SQLException, IOException, ParseException {
         Attraction resAttraction;
         String query = "SELECT * FROM attractionstable WHERE Name=\"" + attractionName + "\"";
@@ -123,6 +124,32 @@ public class DBManager {
             resAttraction = new Attraction(jsonAttraction);
         }
         return resAttraction;
+    }
+
+
+    public Attraction getAttractionFromDBByID(String id) throws SQLException {
+        Attraction resAttracion = null;
+        String query = "SELECT * FROM attractionstable WHERE attractionid = \" " + id + "\"";
+        ResultSet resultSet = this.statement.executeQuery(query);
+        if(resultSet.next())
+        {
+            resAttracion = new Attraction(resultSet);
+        }
+        return resAttracion;
+
+    }
+
+
+    public boolean checkIfEmailIsFound(String email) throws SQLException {
+        boolean res = false;
+        String query = "SELECT * FROM travelers WHERE Email = \" " + email + "\"";
+        ResultSet resultSet = this.statement.executeQuery(query);
+        if(resultSet.next())
+        {
+            res = true;
+        }
+        return res;
+
     }
 
     public ArrayList<Attraction> getAttractionsByOperationTime(String operationTime){
