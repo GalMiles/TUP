@@ -32,8 +32,11 @@ public class TupServerThread extends Thread {
 
         //in - get massage from the client
         //out - send massage to the client
+
         try (ObjectInputStream in = new ObjectInputStream(new BufferedInputStream(socket.getInputStream()));
+             
              ObjectOutputStream out = new ObjectOutputStream(new BufferedOutputStream(socket.getOutputStream()))) {
+
 
             Request request = (Request) in.readObject();
             method = objectForInvoke.getClass().getMethod(request.getMethodName(), request.getTypes()); // the method to run on App

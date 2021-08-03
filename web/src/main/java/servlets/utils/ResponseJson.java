@@ -2,7 +2,8 @@ package servlets.utils;
 
 public class ResponseJson{
     public String status;
-    public Object message;
+    public String message;
+
 
     public ResponseJson(){
         status = "ok";
