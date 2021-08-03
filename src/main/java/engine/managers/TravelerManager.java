@@ -14,7 +14,9 @@ public class TravelerManager {
         return travelers;
     }
 
-    public void addTraveler(Traveler traveler) throws Traveler.IllegalValueException, Traveler.AlreadyExistsException {
+
+
+    public void addTraveler(Traveler traveler) throws Traveler.IllegalValueException, Traveler.AlreadyExistsException, Traveler.NotFoundException {
         String email = traveler.getEmailAddress();
         validateTravelerEmail(email);
         travelers.add(new Traveler(traveler));
@@ -27,17 +29,17 @@ public class TravelerManager {
         travelers.remove(traveler);
     }
 
-    private void validateTravelerEmail(String email) throws Traveler.AlreadyExistsException {
+    private void validateTravelerEmail(String email) throws Traveler.AlreadyExistsException, Traveler.NotFoundException {
         if (getTraveler(email) != null)
             throw new Traveler.AlreadyExistsException("Member with email '" + email + "' already exist");
     }
 
-    private Traveler getTraveler(String email) {
+    public Traveler getTraveler(String email) throws Traveler.NotFoundException {
         for(Traveler traveler: getTravelers()){
             if(traveler.getEmailAddress().equalsIgnoreCase(email))
                 return traveler;
         }
-        return null;
+        throw new Traveler.NotFoundException("Traveler Not Found");
 
     }
 

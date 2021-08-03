@@ -244,11 +244,17 @@ public class Attraction {
                 '}';
     }
 
+    public static class NotFoundException extends Exception {
+        public NotFoundException(String message) {
+            super(message);
+        }
+    }
 
     public String attractionToJson() {
         Gson gson = new Gson();
         String jSonString = gson.toJson(this);
         return  jSonString;
     }
+
 }
 

@@ -3,24 +3,13 @@ package client;
 import common.AttractionType;
 import common.Geometry;
 //import common.OpeningHours;
-import common.DayOpeningHours;
-import engine.attraction.AttractionsManager;
-import engine.managers.TravelerManager;
 import engine.planTrip.RouteTrip;
-import engine.traveler.Traveler;
-import googleAPI.APIManager;
 
 import engine.attraction.Attraction;
 
 import java.io.IOException;
-import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 
 
 public class main {

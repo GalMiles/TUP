@@ -1,7 +1,8 @@
 package servlets;
-
-
 import com.google.gson.Gson;
+import engine.Engine;
+import engine.traveler.Traveler;
+import servlets.utils.ResponseJson;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -16,7 +17,7 @@ import java.util.stream.Collectors;
 @WebServlet(name="LoginServlet", urlPatterns = "/login")
 public class LoginServlet extends HttpServlet {
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Gson gson = new Gson();
 
         BufferedReader reader = req.getReader();
@@ -25,24 +26,36 @@ public class LoginServlet extends HttpServlet {
         User newUser = gson.fromJson(lines, User.class);
         ResponseJson responseJson = new ResponseJson();
 
-//        try {
-//            SessionUtils.setUser(req, resp, newUser.email, newUser.password);
-//        } catch (Member.InvalidUsernameOrPasswordException e) {
-//            responseJson.status = "error";
-//            responseJson.message = "Invalid email or password";
-//        }
+        Engine engine = (Engine)req.getServletContext().getAttribute("engine");
+        try {
+            Traveler user = (Traveler)engine.getTraveler(newUser.email);
+            //
 
-        responseJson.status = "GOOD";
-        responseJson.message = "Matan PPP";
 
-        try (PrintWriter out = resp.getWriter()) {
+            CHECK password
+
+
+
+            ////
+        } catch (Traveler.NotFoundException e) {
+            responseJson.status = "error";
+            responseJson.message = "Invalid email or password";
+        }
+
+        try(PrintWriter out = resp.getWriter()) {
             out.println(gson.toJson(responseJson));
         }
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        doGet(req, resp);
     }
 
     static class User {
         String email;
         String password;
     }
+
 
 }

@@ -1,4 +1,4 @@
-package servlets;
+package servlets.utils;
 
 public class ResponseJson{
     public String status;

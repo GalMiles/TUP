@@ -97,4 +97,8 @@ public class Traveler {
                 ", routeTrip=" + routeTrip +
                 '}';
     }
+
+    public static class InvalidUsernameOrPasswordException extends Exception {
+        public InvalidUsernameOrPasswordException(String message) {super(message);}
+    }
 }
