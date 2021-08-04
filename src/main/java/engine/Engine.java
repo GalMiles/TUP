@@ -1,9 +1,12 @@
 package engine;
 
+import database.DBManager;
 import engine.attraction.Attraction;
 import engine.managers.AttractionsManager;
 import engine.managers.TravelerManager;
 import engine.traveler.Traveler;
+
+import java.sql.SQLException;
 
 public class Engine {
     TravelerManager travelers = new TravelerManager();
@@ -24,8 +27,9 @@ public class Engine {
 
     //here we need to implements all the action we wand the app will have
 
-    public Traveler getTraveler(String emailAddress) throws Traveler.NotFoundException {
-       return travelers.getTraveler(emailAddress);
+    public Traveler getTraveler(String emailAddress, String password) throws Traveler.NotFoundException, SQLException {
+        DBManager db = new DBManager();
+        return db.getTravelerFromB(emailAddress,password);
     }
 
 

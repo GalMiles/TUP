@@ -131,7 +131,7 @@ public class Main {
 
 //        String[] hotels = {""};
 
-        DBManager db = new DBManager("jdbc:mysql://localhost:3306/attractions","root","742!GDFMP");
+        DBManager db = new DBManager();
 
         for(String currentAttractionName: AttractionToAdd)
         {

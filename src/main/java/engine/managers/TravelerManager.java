@@ -42,6 +42,4 @@ public class TravelerManager {
         throw new Traveler.NotFoundException("Traveler Not Found");
 
     }
-
-
 }

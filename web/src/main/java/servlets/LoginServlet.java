@@ -2,6 +2,7 @@ package servlets;
 import com.google.gson.Gson;
 import engine.Engine;
 import engine.traveler.Traveler;
+import servlets.utils.ContextServletUtils;
 import servlets.utils.ResponseJson;
 
 import javax.servlet.ServletException;
@@ -12,27 +13,27 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.SQLException;
 import java.util.stream.Collectors;
 
 @WebServlet(name="LoginServlet", urlPatterns = "/login")
 public class LoginServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        Gson gson = new Gson();
 
+        Gson gson = new Gson();
         BufferedReader reader = req.getReader();
         String lines = reader.lines().collect(Collectors.joining());
-
         User newUser = gson.fromJson(lines, User.class);
         ResponseJson responseJson = new ResponseJson();
+        Engine engine = ContextServletUtils.getEngine(req);
 
-        Engine engine = (Engine)req.getServletContext().getAttribute("engine");
         try {
-            Traveler user = engine.getTraveler(newUser.email);
-            if(newUser.password != user.getPassword()){
-                responseJson.status = "error";
-                responseJson.message = "Invalid email or password";
-            }
+            Traveler user = engine.getTraveler(newUser.email,newUser.password);
+        }catch (SQLException e){
+            responseJson.status = "error";
+            responseJson.message = "SQL error";
+
         } catch (Traveler.NotFoundException e) {
             responseJson.status = "error";
             responseJson.message = "Invalid email or password";

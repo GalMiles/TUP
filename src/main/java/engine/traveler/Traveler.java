@@ -86,6 +86,10 @@ public class Traveler {
         public NotFoundException(String message) {super(message);}
     }
 
+    public static class InvalidUsernameOrPasswordException extends Exception {
+        public InvalidUsernameOrPasswordException(String message) {super(message);}
+    }
+
 
     @Override
     public String toString() {
@@ -98,7 +102,5 @@ public class Traveler {
                 '}';
     }
 
-    public static class InvalidUsernameOrPasswordException extends Exception {
-        public InvalidUsernameOrPasswordException(String message) {super(message);}
-    }
+
 }

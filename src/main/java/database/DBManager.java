@@ -18,9 +18,8 @@ public class DBManager {
     private Connection sqlConnection;
 
 
-    public DBManager(String dbUrl, String userName, String password) throws SQLException {
-        this.sqlConnection = DriverManager.getConnection(dbUrl, userName, password);
-        this.statement = sqlConnection.createStatement();
+    public DBManager() throws SQLException {
+        this.sqlConnection = DriverManager.getConnection("jdbc:mysql://localhost:3306/attractions", "root", "742!GDFMP");
     }
 
 
@@ -34,8 +33,8 @@ public class DBManager {
                 "," + traveler.getLastName()+ ")";
         this.statement.executeUpdate(query);
     }
-
-    public Traveler getTravelerFromB(String Email, String Password) throws SQLException {
+    //login
+    public Traveler getTravelerFromB(String Email, String Password) throws SQLException, Traveler.NotFoundException {
         Traveler traveler = null;
         String query = "SELECT Email, Password FROM attractionstable.travelers WHERE Email=? and Password=?";
         PreparedStatement ps = this.sqlConnection.prepareStatement(query);
@@ -49,6 +48,10 @@ public class DBManager {
             String firstName = results.getString("FirstName");
             String lastName = results.getString("LastName");
             traveler = new Traveler(userName, password, firstName, lastName);
+        }
+        else
+        {
+            throw new Traveler.NotFoundException("Traveler not found");
         }
         return traveler;
     }
