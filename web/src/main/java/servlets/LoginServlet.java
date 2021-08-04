@@ -33,7 +33,7 @@ public class LoginServlet extends HttpServlet {
             responseJson.message = gson.toJson(user);
         }catch (SQLException e){
             responseJson.status = "error";
-            responseJson.message = "SQL error";
+            responseJson.message = "SQL error--" + e.getMessage();
 
         } catch (Traveler.NotFoundException e) {
             responseJson.status = "error";
