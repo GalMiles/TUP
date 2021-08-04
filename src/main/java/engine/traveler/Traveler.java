@@ -9,7 +9,7 @@ public class Traveler {
     private String lastName;
     private String emailAddress;
     private String password;
-    private RouteTrip routeTrip;
+    //private RouteTrip routeTrip;
 
     public Traveler(String firstName, String lastName, String emailAddress, String password) {
         this.firstName = firstName;
@@ -37,7 +37,7 @@ public class Traveler {
     public String getPassword() {
         return password;
     }
-    public RouteTrip getRouteTrip() { return routeTrip; }
+    //public RouteTrip getRouteTrip() { return routeTrip; }
 
     public void setFirstName(String firstName) throws IllegalValueException {
         if (firstName.trim().isEmpty())
@@ -66,9 +66,9 @@ public class Traveler {
         this.password = password;
     }
 
-    public void setRouteTrip(RouteTrip routeTrip){
-        this.routeTrip = routeTrip;
-    }
+    //public void setRouteTrip(RouteTrip routeTrip){
+    //    this.routeTrip = routeTrip;
+    //}
 
     public static class IllegalValueException extends Exception{
         public IllegalValueException(String message) {
@@ -98,7 +98,7 @@ public class Traveler {
                 ", lastName='" + lastName + '\'' +
                 ", emailAddress='" + emailAddress + '\'' +
                 ", password='" + password + '\'' +
-                ", routeTrip=" + routeTrip +
+                //", routeTrip=" + routeTrip +
                 '}';
     }
 

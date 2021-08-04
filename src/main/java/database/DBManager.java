@@ -19,7 +19,7 @@ public class DBManager {
 
 
     public DBManager() throws SQLException {
-        this.sqlConnection = DriverManager.getConnection("jdbc:mysql://localhost:3306/attractions", "root", "742!GDFMP");
+        this.sqlConnection = DriverManager.getConnection("jdbc:mysql://localhost:3306/tup", "root", "");
     }
 
 
@@ -36,7 +36,7 @@ public class DBManager {
     //login
     public Traveler getTravelerFromB(String Email, String Password) throws SQLException, Traveler.NotFoundException {
         Traveler traveler = null;
-        String query = "SELECT Email, Password FROM attractionstable.travelers WHERE Email=? and Password=?";
+        String query = "SELECT Email, Password FROM travelers WHERE Email=? and Password=?";
         PreparedStatement ps = this.sqlConnection.prepareStatement(query);
         ps.setString(1, Email);
         ps.setString(2, Password);
