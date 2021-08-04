@@ -1,5 +1,6 @@
 package servlets;
 
+import com.google.gson.Gson;
 import engine.Engine;
 import engine.traveler.Traveler;
 import servlets.utils.ContextServletUtils;
@@ -17,6 +18,7 @@ import java.util.stream.Collectors;
 
 @WebServlet(name = "RegisterServlet", urlPatterns = {"/register"})
 public class RegisterServlet extends HttpServlet {
+    Gson gson = new Gson();
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -26,10 +28,10 @@ public class RegisterServlet extends HttpServlet {
         BufferedReader reader = req.getReader();
         String lines = reader.lines().collect(Collectors.joining());
 
-//        Traveler jsonMember = gson.fromJson(lines, Traveler.class);
-//
+        Traveler jsonMember = gson.fromJson(lines, Traveler.class);
+
 //        try {
-//            Member newMember = memberFromJson(jsonMember, req);
+//            Traveler newMember = TravelerFromJson(jsonMember, req);
 //            engine.addMember(newMember);
 //        } catch (Member.AlreadyExistsException e) {
 //            responseJson.status = "error";
@@ -42,7 +44,8 @@ public class RegisterServlet extends HttpServlet {
 //        try(PrintWriter out = resp.getWriter()) {
 //            out.println(gson.toJson(responseJson));
 //        }
+//    }
+
+
     }
-
-
 }
