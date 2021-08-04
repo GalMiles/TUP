@@ -29,7 +29,7 @@ public class Engine {
 
     public Traveler getTraveler(String emailAddress, String password) throws Traveler.NotFoundException, SQLException {
         DBManager db = new DBManager();
-        return db.getTravelerFromB(emailAddress,password);
+        return db.getTravelerFromDB(emailAddress,password);
     }
 
 

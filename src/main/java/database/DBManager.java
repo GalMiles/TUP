@@ -34,7 +34,7 @@ public class DBManager {
         this.statement.executeUpdate(query);
     }
     //login
-    public Traveler getTravelerFromB(String Email, String Password) throws SQLException, Traveler.NotFoundException {
+    public Traveler getTravelerFromDB(String Email, String Password) throws SQLException, Traveler.NotFoundException {
         Traveler traveler = null;
         String query = "SELECT Email, Password FROM travelers WHERE Email=? and Password=?";
         PreparedStatement ps = this.sqlConnection.prepareStatement(query);
@@ -143,15 +143,13 @@ public class DBManager {
     }
 
 
-    public boolean checkIfEmailIsFound(String email) throws SQLException {
-        boolean res = false;
+    public void checkIfEmailIsFound(String email) throws SQLException, Traveler.NotFoundException {
         String query = "SELECT * FROM travelers WHERE Email = \" " + email + "\"";
         ResultSet resultSet = this.statement.executeQuery(query);
-        if(resultSet.next())
+        if(!resultSet.next())
         {
-            res = true;
+            throw new Traveler.NotFoundException("Invalid Username\\Password");
         }
-        return res;
 
     }
 
