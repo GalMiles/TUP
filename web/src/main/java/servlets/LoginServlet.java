@@ -28,7 +28,7 @@ public class LoginServlet extends HttpServlet {
 
         Engine engine = (Engine)req.getServletContext().getAttribute("engine");
         try {
-            Traveler user = (Traveler)engine.getTraveler(newUser.email);
+            Traveler user = engine.getTraveler(newUser.email);
             if(newUser.password != user.getPassword()){
                 responseJson.status = "error";
                 responseJson.message = "Invalid email or password";
