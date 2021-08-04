@@ -27,7 +27,7 @@ public class DBManager {
         this.sqlConnection.close();
     }
 
-    public void Register(Traveler traveler) throws SQLException, Traveler.AlreadyExistsException, Traveler.NotFoundException {
+    public void Register(Traveler traveler) throws SQLException, Traveler.AlreadyExistsException {
         checkIfEmailIsFound(traveler.getEmailAddress());
         String query = "INSERT INTO travelers(Email, Password, FirstName, LastName) VALUES ( " +
                     traveler.getEmailAddress() + "," + traveler.getPassword() + "," + traveler.getFirstName() +
@@ -147,7 +147,7 @@ public class DBManager {
     }
 
 
-    public void checkIfEmailIsFound(String email) throws SQLException, Traveler.NotFoundException, Traveler.AlreadyExistsException {
+    public void checkIfEmailIsFound(String email) throws SQLException, Traveler.AlreadyExistsException {
         String query = "SELECT * FROM travelers WHERE Email = \" " + email + "\"";
         ResultSet resultSet = this.statement.executeQuery(query);
         if(resultSet.next())

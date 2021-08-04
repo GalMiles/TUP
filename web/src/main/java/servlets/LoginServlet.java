@@ -29,7 +29,7 @@ public class LoginServlet extends HttpServlet {
         Engine engine = ContextServletUtils.getEngine(req);
 
         try {
-            Traveler user = engine.getTraveler(newUser.email,newUser.password);
+            Traveler user = engine.login(newUser.email,newUser.password);
             responseJson.message = gson.toJson(user);
         }catch (SQLException e){
             responseJson.status = "error";

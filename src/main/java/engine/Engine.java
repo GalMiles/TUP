@@ -8,6 +8,8 @@ import engine.traveler.Traveler;
 
 import java.sql.SQLException;
 
+import java.util.Collection;
+
 public class Engine {
     TravelerManager travelers = new TravelerManager();
     AttractionsManager attractions;
@@ -28,12 +30,16 @@ public class Engine {
 
 
     //here we need to implements all the action we wand the app will have
-
-    public Traveler getTraveler(String emailAddress, String password) throws Traveler.NotFoundException, SQLException {
-        return db.getTravelerFromB(emailAddress,password);
+    public Traveler login(String emailAddress, String password) throws Traveler.NotFoundException, SQLException {
+        return db.Login(emailAddress,password);
     }
 
-    public void addTraveler(Traveler traveler) throws SQLException {
-        db.insertTravelerToDataBase(traveler);
+    public void Register(Traveler traveler) throws SQLException, Traveler.AlreadyExistsException {
+        db.Register(traveler);
+    }
+
+    public Collection<Attraction> getAttractions(String destination) {
+        return null;
+        //return db.getAttractionsByDestination(destination);
     }
 }

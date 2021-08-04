@@ -20,7 +20,6 @@ import java.util.stream.Collectors;
 @WebServlet(name = "RegisterServlet", urlPatterns = {"/register"})
 public class RegisterServlet extends HttpServlet {
     Gson gson = new Gson();
-
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
@@ -32,19 +31,17 @@ public class RegisterServlet extends HttpServlet {
         Traveler jsonMember = gson.fromJson(lines, Traveler.class);
 
         try {
-
             Traveler newMember = ResponseJson.travelerFromJson(jsonMember, req);
-            engine.addTraveler(newMember);
+            engine.Register(newMember);
         } catch (SQLException e) {
             e.printStackTrace();
-
         } catch (Traveler.IllegalValueException e) {
             responseJson.status = "error";
             responseJson.message = e.getMessage();
+        }catch (Traveler.AlreadyExistsException e) {
+            responseJson.status = "error";
+            responseJson.message = "Member Already Exists";
         }
-//        catch (Traveler.AlreadyExistsException e) {
-//            responseJson.status = "error";
-//            responseJson.message = "Member Already Exists";
 
         try(PrintWriter out = resp.getWriter()) {
             out.println(gson.toJson(responseJson));

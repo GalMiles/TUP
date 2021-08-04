@@ -7,7 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 
 public class ResponseJson{
     public String status;
-    public String message;
+    public Object message;
 
 
     public ResponseJson(){
