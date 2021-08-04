@@ -18,9 +18,8 @@ public class DBManager {
     private Connection sqlConnection;
 
 
-    public DBManager(String dbUrl, String userName, String password) throws SQLException {
-        this.sqlConnection = DriverManager.getConnection(dbUrl, userName, password);
-        this.statement = sqlConnection.createStatement();
+    public DBManager() throws SQLException {
+        this.sqlConnection = DriverManager.getConnection("jdbc:mysql://mysql.db.server:3306/tup", "root", "");
     }
 
 
@@ -28,12 +27,40 @@ public class DBManager {
         this.sqlConnection.close();
     }
 
-    public void insertTravelerToDataBase(Traveler traveler) throws SQLException {
-        String query = "INSERT INTO travelers(EmailAddress, Name, Password, Age)" +"\n" + "VALUES" + "(\"" +
-                traveler.getEmailAddress() + "\"" + ", \"" + traveler.getFirstName() + ", \"" + traveler.getLastName() + "\"" + ", \""
-                + traveler.getPassword() + ");";
+    public void Register(Traveler traveler) throws SQLException, Traveler.AlreadyExistsException {
+        checkIfEmailIsFound(traveler.getEmailAddress());
+        String query = "INSERT INTO travelers(Email, Password, FirstName, LastName) VALUES ( " +
+                    traveler.getEmailAddress() + "," + traveler.getPassword() + "," + traveler.getFirstName() +
+                    "," + traveler.getLastName()+ ")";
         this.statement.executeUpdate(query);
     }
+    //login
+
+
+    public Traveler Login(String Email, String Password) throws SQLException, Traveler.NotFoundException {
+        Traveler traveler = null;
+        String query = "SELECT Email, Password FROM travelers WHERE Email=? and Password=?";
+        PreparedStatement ps = this.sqlConnection.prepareStatement(query);
+        ps.setString(1, Email);
+        ps.setString(2, Password);
+        ResultSet results = ps.executeQuery();
+        if(results.next())
+        {
+            String userName = results.getString("Email");
+            String password = results.getString("Password");
+            String firstName = results.getString("FirstName");
+            String lastName = results.getString("LastName");
+            traveler = new Traveler(userName, password, firstName, lastName);
+        }
+        else
+        {
+            throw new Traveler.NotFoundException("Traveler not found");
+        }
+        return traveler;
+    }
+
+
+
 
     public void insertAttractionToDataBase(JsonAttraction attraction) throws SQLException, ParseException {
 
@@ -88,6 +115,7 @@ public class DBManager {
             ps.executeUpdate();
         }
     }
+
     public Attraction getAttractionFromDataBaseByName(String attractionName) throws SQLException, IOException, ParseException {
         Attraction resAttraction;
         String query = "SELECT * FROM attractionstable WHERE Name=\"" + attractionName + "\"";
@@ -103,6 +131,30 @@ public class DBManager {
             resAttraction = new Attraction(jsonAttraction);
         }
         return resAttraction;
+    }
+
+
+    public Attraction getAttractionFromDBByID(String id) throws SQLException {
+        Attraction resAttracion = null;
+        String query = "SELECT * FROM attractionstable WHERE attractionid = \" " + id + "\"";
+        ResultSet resultSet = this.statement.executeQuery(query);
+        if(resultSet.next())
+        {
+            resAttracion = new Attraction(resultSet);
+        }
+        return resAttracion;
+
+    }
+
+
+    public void checkIfEmailIsFound(String email) throws SQLException, Traveler.AlreadyExistsException {
+        String query = "SELECT * FROM travelers WHERE Email = \" " + email + "\"";
+        ResultSet resultSet = this.statement.executeQuery(query);
+        if(resultSet.next())
+        {
+            //throw new Traveler.NotFoundException("Invalid Username\\Password");
+            throw new Traveler.AlreadyExistsException("Traveler is exist in the DB");
+        }
     }
 
     public ArrayList<Attraction> getAttractionsByOperationTime(String operationTime){

@@ -1,15 +1,45 @@
 package engine;
 
+import database.DBManager;
+import engine.attraction.Attraction;
+import engine.managers.AttractionsManager;
 import engine.managers.TravelerManager;
 import engine.traveler.Traveler;
 
+import java.sql.SQLException;
+
+import java.util.Collection;
+
 public class Engine {
-    Traveler currentTraveler = null;
     TravelerManager travelers = new TravelerManager();
+    AttractionsManager attractions;
+    DBManager db = new DBManager();
+
+    public Engine() throws SQLException {}
+
+//    public Attraction getAttractionByName(String name) {
+//        try {
+//            attractions.getAttraction(name);
+//        } catch (Attraction.NotFoundException e) {
+//            e.printStackTrace();
+//        }
+//
+//    }
 
 
 
 
     //here we need to implements all the action we wand the app will have
+    public Traveler login(String emailAddress, String password) throws Traveler.NotFoundException, SQLException {
+        return db.Login(emailAddress,password);
+    }
 
+    public void Register(Traveler traveler) throws SQLException, Traveler.AlreadyExistsException {
+        db.Register(traveler);
+    }
+
+    public Collection<Attraction> getAttractions(String destination) {
+        return null;
+        //return db.getAttractionsByDestination(destination);
+    }
 }
