@@ -30,6 +30,7 @@ public class LoginServlet extends HttpServlet {
 
         try {
             Traveler user = engine.getTraveler(newUser.email,newUser.password);
+            responseJson.message = gson.toJson(user);
         }catch (SQLException e){
             responseJson.status = "error";
             responseJson.message = "SQL error";
@@ -52,6 +53,7 @@ public class LoginServlet extends HttpServlet {
     static class User {
         String email;
         String password;
+
     }
 
 
