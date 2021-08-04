@@ -14,6 +14,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.stream.Collectors;
 
@@ -30,9 +32,19 @@ public class LoginServlet extends HttpServlet {
         User newUser = gson.fromJson(lines, User.class);
         ResponseJson responseJson = new ResponseJson();
         Engine engine = ContextServletUtils.getEngine(req);
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection connection = DriverManager.getConnection("jdbc:mysql://mysql.db.server:3306/tup", "root", "");
+    } catch (ClassNotFoundException | SQLException e) {
+            e.printStackTrace();
+            responseJson.message = e.getMessage();
+            responseJson.status = "error";
+        }
+/*
+
 
         try {
-            DBManager db = new DBManager();
+            //DBManager db = new DBManager();
             Traveler traveler = db.Login(newUser.email, newUser.password);
             responseJson.status = "ok";
             responseJson.message = gson.toJson(traveler);
@@ -44,8 +56,8 @@ public class LoginServlet extends HttpServlet {
         catch (Traveler.NotFoundException e) {
             responseJson.message = e.getMessage();
             responseJson.status = "error";
-
         }
+    */
 
         /*
 
