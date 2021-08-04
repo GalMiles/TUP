@@ -18,7 +18,7 @@ public class TupServerThread extends Thread {
     public TupServerThread(TupServer server, Socket socket){
         this.socket = socket;
         this.server = server;
-        this.engine = server.getEngine();
+        //this.engine = server.getEngine();
         //this.clientId = clientId;
 
     }

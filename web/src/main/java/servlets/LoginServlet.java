@@ -1,5 +1,6 @@
 package servlets;
 import com.google.gson.Gson;
+import database.DBManager;
 import engine.Engine;
 import engine.traveler.Traveler;
 import servlets.utils.ContextServletUtils;
@@ -16,6 +17,8 @@ import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.stream.Collectors;
 
+
+
 @WebServlet(name="LoginServlet", urlPatterns = "/login")
 public class LoginServlet extends HttpServlet {
     @Override
@@ -29,16 +32,40 @@ public class LoginServlet extends HttpServlet {
         Engine engine = ContextServletUtils.getEngine(req);
 
         try {
+            DBManager db = new DBManager();
+            Traveler traveler = db.Login(newUser.email, newUser.password);
+            responseJson.status = "ok";
+            responseJson.message = gson.toJson(traveler);
+        } catch (SQLException throwables) {
+            //throwables.printStackTrace();
+            responseJson.message = throwables.getMessage();
+            responseJson.status = "error";
+        }
+        catch (Traveler.NotFoundException e) {
+            responseJson.message = e.getMessage();
+            responseJson.status = "error";
+
+        }
+
+        /*
+
+        try {
             Traveler user = engine.login(newUser.email,newUser.password);
             responseJson.message = gson.toJson(user);
         }catch (SQLException e){
             responseJson.status = "error";
-            responseJson.message = "SQL error--" + e.getMessage();
+            responseJson.message = "SQL error- " + e.getMessage();
 
         } catch (Traveler.NotFoundException e) {
             responseJson.status = "error";
             responseJson.message = "Invalid email or password";
         }
+        catch (Exception e)
+        {
+            responseJson.status = "error";
+            responseJson.message = e.getMessage();
+        }
+         */
 
         try(PrintWriter out = resp.getWriter()) {
             out.println(gson.toJson(responseJson));

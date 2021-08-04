@@ -19,7 +19,7 @@ public class DBManager {
 
 
     public DBManager() throws SQLException {
-        this.sqlConnection = DriverManager.getConnection("jdbc:mysql://localhost:3306/tup", "root", "");
+        this.sqlConnection = DriverManager.getConnection("jdbc:mysql://mysql.db.server:3306/tup", "root", "");
     }
 
 

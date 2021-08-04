@@ -130,12 +130,21 @@ public class Main {
                 , "London Docklands"};
 
 //        String[] hotels = {""};
-
+        /*
+        try
+        {
         DBManager db = new DBManager();
+        }
+        catch (Exception e)
+        {
+
+        }
+
+         */
 
         for(String currentAttractionName: AttractionToAdd)
         {
-            Attraction attraction = db.getAttractionFromDataBaseByName(currentAttractionName + "London");
+           // Attraction attraction = db.getAttractionFromDataBaseByName(currentAttractionName + "London");
         }
 
         //Gson gson = new Gson();
@@ -146,7 +155,7 @@ public class Main {
         System.out.println("fin1");
 
 
-        db.closeConnection();
+       // db.closeConnection();
         //System.out.println(newAtt.attractionToJson());
         
 
