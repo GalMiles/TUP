@@ -12,7 +12,7 @@ import java.net.Socket;
 
 public class TupServer {
     private UsersManager usersManager;
-    private Engine engine = new Engine(); // need the engine for the Thread - with it we can run the functions
+    //private Engine engine = new Engine(); // need the engine for the Thread - with it we can run the functions
 
     public TupServer() {
         //usersManager = new UsersManager(engine);
@@ -33,9 +33,7 @@ public class TupServer {
         }
     }
 
-    public Engine getEngine() {
-        return engine;
-    }
+
 
 
 

@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.SQLException;
 import java.util.stream.Collectors;
 
 @WebServlet(name = "RegisterServlet", urlPatterns = {"/register"})
@@ -30,22 +31,26 @@ public class RegisterServlet extends HttpServlet {
 
         Traveler jsonMember = gson.fromJson(lines, Traveler.class);
 
-//        try {
-//            Traveler newMember = TravelerFromJson(jsonMember, req);
-//            engine.addMember(newMember);
-//        } catch (Member.AlreadyExistsException e) {
+        try {
+
+            Traveler newMember = ResponseJson.travelerFromJson(jsonMember, req);
+            engine.addTraveler(newMember);
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+        } catch (Traveler.IllegalValueException e) {
+            responseJson.status = "error";
+            responseJson.message = e.getMessage();
+        }
+//        catch (Traveler.AlreadyExistsException e) {
 //            responseJson.status = "error";
 //            responseJson.message = "Member Already Exists";
-//        } catch (Member.IllegalValueException e) {
-//            responseJson.status = "error";
-//            responseJson.message = e.getMessage();
-//        }
-//
-//        try(PrintWriter out = resp.getWriter()) {
-//            out.println(gson.toJson(responseJson));
-//        }
-//    }
 
-
+        try(PrintWriter out = resp.getWriter()) {
+            out.println(gson.toJson(responseJson));
+        }
     }
+
+
 }
+

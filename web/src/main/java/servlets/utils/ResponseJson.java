@@ -14,9 +14,18 @@ public class ResponseJson{
         status = "ok";
     }
 
-//
-//    Traveler travelerFromJson(Traveler jsonTraveler, HttpServletRequest req) throws Traveler.IllegalValueException {
+
+    public static Traveler travelerFromJson(Traveler jsonTraveler, HttpServletRequest req) throws Traveler.IllegalValueException {
+        Traveler newTraveler;
+        newTraveler = new Traveler(jsonTraveler.getFirstName(), jsonTraveler.getLastName(), jsonTraveler.getEmailAddress(), jsonTraveler.getPassword());
+        newTraveler.setFirstName(jsonTraveler.getFirstName());
+        newTraveler.setLastName(jsonTraveler.getLastName());
+        newTraveler.setEmailAddress(jsonTraveler.getEmailAddress());
+        newTraveler.setPassword(jsonTraveler.getPassword());
+        return newTraveler;
+
 //        Engine engine = ContextServletUtils.getEngine(req);
+
 //        boolean editProfile = req.getServletPath().startsWith("/user/");
 //        Traveler originalMember = editProfile ? getCurrentUser(req) : engine.getMember(jsonTraveler.getSerialNumber());
 //        Traveler newTraveler;
@@ -35,18 +44,12 @@ public class ResponseJson{
 //            newTraveler = new Traveler(jsonTraveler.getFirstName(), jsonTraveler.getLastName(), jsonTraveler.getEmailAddress(), jsonTraveler.getPassword());
 //            newTraveler.setFirstName(jsonTraveler.getFirstName());
 //            newTraveler.setLastName(jsonTraveler.getLastName());
-//            newTraveler.setEmail(jsonTraveler.getEmail());
-//
-//            newTraveler.setAge(jsonTraveler.getAge());
-//            newTraveler.setNotes(jsonTraveler.getNotes());
-//            newTraveler.setLevel(jsonTraveler.getLevel());
-//            newTraveler.setBoatSerialNumber(jsonTraveler.getBoatSerialNumber());
-//            newTraveler.setPhoneNumber(jsonTraveler.getPhoneNumber());
-//            newTraveler.setManager(jsonTraveler.getManager());
-//        }
-//
-//        return newTraveler;
-//    }
+//            newTraveler.setEmailAddress(jsonTraveler.getEmailAddress());
+//            newTraveler.setPassword(jsonTraveler.getPassword());
+//        //}
+
+        //return newTraveler;
+    }
 
 
 }

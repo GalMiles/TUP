@@ -11,7 +11,9 @@ import java.sql.SQLException;
 public class Engine {
     TravelerManager travelers = new TravelerManager();
     AttractionsManager attractions;
+    DBManager db = new DBManager();
 
+    public Engine() throws SQLException {}
 
 //    public Attraction getAttractionByName(String name) {
 //        try {
@@ -28,10 +30,10 @@ public class Engine {
     //here we need to implements all the action we wand the app will have
 
     public Traveler getTraveler(String emailAddress, String password) throws Traveler.NotFoundException, SQLException {
-        DBManager db = new DBManager();
         return db.getTravelerFromB(emailAddress,password);
     }
 
-
-
+    public void addTraveler(Traveler traveler) throws SQLException {
+        db.insertTravelerToDataBase(traveler);
+    }
 }
