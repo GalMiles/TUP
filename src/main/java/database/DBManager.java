@@ -27,14 +27,17 @@ public class DBManager {
         this.sqlConnection.close();
     }
 
-    public void insertTravelerToDataBase(Traveler traveler) throws SQLException {
-        String query = "INSERT INTO travelers(Email, Password, FirstName, LastName) VALUES ( " + 
-                traveler.getEmailAddress() + "," + traveler.getPassword() + "," + traveler.getFirstName() +
-                "," + traveler.getLastName()+ ")";
+    public void Register(Traveler traveler) throws SQLException, Traveler.AlreadyExistsException, Traveler.NotFoundException {
+        checkIfEmailIsFound(traveler.getEmailAddress());
+        String query = "INSERT INTO travelers(Email, Password, FirstName, LastName) VALUES ( " +
+                    traveler.getEmailAddress() + "," + traveler.getPassword() + "," + traveler.getFirstName() +
+                    "," + traveler.getLastName()+ ")";
         this.statement.executeUpdate(query);
     }
     //login
-    public Traveler getTravelerFromDB(String Email, String Password) throws SQLException, Traveler.NotFoundException {
+
+
+    public Traveler Login(String Email, String Password) throws SQLException, Traveler.NotFoundException {
         Traveler traveler = null;
         String query = "SELECT Email, Password FROM travelers WHERE Email=? and Password=?";
         PreparedStatement ps = this.sqlConnection.prepareStatement(query);
@@ -55,6 +58,7 @@ public class DBManager {
         }
         return traveler;
     }
+
 
 
 
@@ -143,14 +147,14 @@ public class DBManager {
     }
 
 
-    public void checkIfEmailIsFound(String email) throws SQLException, Traveler.NotFoundException {
+    public void checkIfEmailIsFound(String email) throws SQLException, Traveler.NotFoundException, Traveler.AlreadyExistsException {
         String query = "SELECT * FROM travelers WHERE Email = \" " + email + "\"";
         ResultSet resultSet = this.statement.executeQuery(query);
-        if(!resultSet.next())
+        if(resultSet.next())
         {
-            throw new Traveler.NotFoundException("Invalid Username\\Password");
+            //throw new Traveler.NotFoundException("Invalid Username\\Password");
+            throw new Traveler.AlreadyExistsException("Traveler is exist in the DB");
         }
-
     }
 
     public ArrayList<Attraction> getAttractionsByOperationTime(String operationTime){
