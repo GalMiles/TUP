@@ -32,34 +32,7 @@ public class LoginServlet extends HttpServlet {
         User newUser = gson.fromJson(lines, User.class);
         ResponseJson responseJson = new ResponseJson();
         Engine engine = ContextServletUtils.getEngine(req);
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            Connection connection = DriverManager.getConnection("jdbc:mysql://mysql.db.server:3306/tup", "root", "");
-    } catch (ClassNotFoundException | SQLException e) {
-            e.printStackTrace();
-            responseJson.message = e.getMessage();
-            responseJson.status = "error";
-        }
-/*
 
-
-        try {
-            //DBManager db = new DBManager();
-            Traveler traveler = db.Login(newUser.email, newUser.password);
-            responseJson.status = "ok";
-            responseJson.message = gson.toJson(traveler);
-        } catch (SQLException throwables) {
-            //throwables.printStackTrace();
-            responseJson.message = throwables.getMessage();
-            responseJson.status = "error";
-        }
-        catch (Traveler.NotFoundException e) {
-            responseJson.message = e.getMessage();
-            responseJson.status = "error";
-        }
-    */
-
-        /*
 
         try {
             Traveler user = engine.login(newUser.email,newUser.password);
@@ -77,7 +50,7 @@ public class LoginServlet extends HttpServlet {
             responseJson.status = "error";
             responseJson.message = e.getMessage();
         }
-         */
+
 
         try(PrintWriter out = resp.getWriter()) {
             out.println(gson.toJson(responseJson));
