@@ -1,5 +1,8 @@
 package database;
 
+import common.AttractionType;
+import common.DayOpeningHours;
+import common.Destinations;
 import common.OpeningHours;
 import engine.attraction.Attraction;
 import engine.traveler.Traveler;
@@ -19,7 +22,7 @@ public class DBManager {
 
 
     public DBManager() throws SQLException {
-        this.sqlConnection = DriverManager.getConnection("jdbc:mysql://mysql.db.server:3306/tup", "root", "");
+        this.sqlConnection = DriverManager.getConnection("jdbc:mysql://localhost:3306/tup", "root", "742!GDFMP");
     }
 
 
@@ -61,8 +64,69 @@ public class DBManager {
 
 
 
+    public void insertAttractionTODB(Attraction attraction, Destinations destination) throws SQLException {
+        StringBuilder typesStr = new StringBuilder();
+        ArrayList<StringBuilder> dayStrArr = new ArrayList<>();
+        for(int i = 0; i < 7 ;++i)
+        {
+            dayStrArr.add(i, new StringBuilder());
+        }
+        PreparedStatement ps = this.sqlConnection.prepareStatement(
+                "INSERT INTO " + destination.name() + " (attractionAPI_ID, Name, Address, PhoneNumber,Website, Geometry, types," +
+                        "Sunday, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday)" +
+                        "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+        ps.setString(1, attraction.getPlaceID());
+        ps.setString(2, attraction.getName());
+        ps.setString(3, attraction.getAddress());//ADDRESS
+        if(attraction.getPhoneNumber() != null)
+        {
+            ps.setString(4, attraction.getPhoneNumber());//PHONENUMBER
+        }
+        else
+        {
+            ps.setString(4, "N\\A");//PHONENUMBER
+        }
+        if (attraction.getWebsite() != null) {
+            ps.setString(5, attraction.getWebsite());//Website
+        } else {
+            ps.setString(5, "N\\A");//Website
+        }
+        ps.setString(6, attraction.getGeometry().toString());//Geometry
+        int typesArrSize = attraction.getTypes().size();
+        for(int i = 0; i < typesArrSize-1; ++i)
+        {
+            typesStr.append(attraction.getTypes().get(i).toString() + ",");
+        }
+        typesStr.append(attraction.getTypes().get(typesArrSize-1).toString());
+        ps.setString(7, typesStr.toString());
+        //attraction.getOpeningHoursArr();
+        int index = 8;
+        for(DayOpeningHours day: attraction.getOpeningHoursArr())
+        {
+            if(day.isAllDayLongOpened())
+            {
+                ps.setString(index, "All Day Long");
 
-    public void insertAttractionToDataBase(JsonAttraction attraction) throws SQLException, ParseException {
+            }
+            else
+            {
+                if(!day.isOpen())
+                {
+                    ps.setString(index, "Closed");
+                }
+                else
+                {
+
+                }
+
+            }
+        }
+
+
+    }
+
+
+    public void insertAttractionToDataBase(JsonAttraction attraction, Destinations destination) throws SQLException, ParseException {
 
         JsonAttraction.JsonResult result = attraction.getResult();
         StringBuilder typesStr = new StringBuilder();
@@ -71,7 +135,7 @@ public class DBManager {
             dayStrArr.add(i, new StringBuilder());
         }
         PreparedStatement ps = this.sqlConnection.prepareStatement(
-                "INSERT INTO attractionstable(attractionAPI_ID, Name, Address, PhoneNumber,Website, Geometry, types," +
+                "INSERT INTO " + destination.name() + " (attractionAPI_ID, Name, Address, PhoneNumber,Website, Geometry, types," +
                         "Sunday, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday)" +
                         "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
         ps.setString(1, attraction.getResult().getPlace_id());//ID
@@ -116,7 +180,7 @@ public class DBManager {
         }
     }
 
-    public Attraction getAttractionFromDataBaseByName(String attractionName) throws SQLException, IOException, ParseException {
+    public Attraction getAttractionFromDataBaseByName(String attractionName, Destinations destination) throws SQLException, IOException, ParseException {
         Attraction resAttraction;
         String query = "SELECT * FROM attractionstable WHERE Name=\"" + attractionName + "\"";
         ResultSet res = this.statement.executeQuery(query);
@@ -127,11 +191,17 @@ public class DBManager {
         }
         else {  //there is no result from the query(the attraction doesnt found in the database)
             JsonAttraction jsonAttraction = apiManager.getAttractionFromAPI(attractionName);
-            this.insertAttractionToDataBase(jsonAttraction);
+            this.insertAttractionToDataBase(jsonAttraction, destination);
             resAttraction = new Attraction(jsonAttraction);
         }
         return resAttraction;
     }
+
+    public void insetAttractionToDBByID(String id, Destinations destination) throws IOException, SQLException, ParseException {
+        JsonAttraction attraction = apiManager.getAttractionByID(id);
+        this.insertAttractionToDataBase(attraction, destination);
+    }
+
 
 
     public Attraction getAttractionFromDBByID(String id) throws SQLException {

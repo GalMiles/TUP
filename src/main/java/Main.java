@@ -1,3 +1,4 @@
+import common.Destinations;
 import database.DBManager;
 import engine.attraction.Attraction;
 
@@ -7,6 +8,8 @@ import java.sql.*;
 
 public class Main {
     public static void main(String[] args) throws SQLException, ParseException, IOException {
+/*
+
 
         String londonsEye = "{\n" +
                 "    \"html_attributions\": [],\n" +
@@ -116,9 +119,9 @@ public class Main {
                 "    \"status\": \"OK\"\n" +
                 "}";
         //String IsraelPost =
+ */
 
-
-
+        DBManager db = new DBManager();
 
         String[] AttractionToAdd = {"Buckingham Palace",
                 "Harrods", "London Transport Museum","St. Paul’s Cathedral", "Tate", "Palace of Westminster", "Wembley Stadium", "Leadenhall Market"
@@ -129,22 +132,20 @@ public class Main {
                 "The West End", "Fortnum & Mason", "Brick Lane", "Oxford Street", "Big Ben","Piccadilly Circus", "Trafalgar Square", "The Shard", "Natural History Museum"
                 , "London Docklands"};
 
-//        String[] hotels = {""};
-        /*
-        try
-        {
-        DBManager db = new DBManager();
-        }
-        catch (Exception e)
-        {
 
-        }
 
-         */
+        //for(String currentAttractionName: AttractionToAdd)
+        //{
+        //   Attraction attraction = db.insetAttractionToDBByID();
+        //}
 
-        for(String currentAttractionName: AttractionToAdd)
+        //db.insetAttractionToDBByID("ChIJtV5bzSAFdkgRpwLZFPWrJgo", Destinations.london);
+        try{
+
+        db.insetAttractionToDBByID("ChIJ_zAq7TgFdkgRQg1OSw1j7hU", Destinations.london);
+        } catch (Exception e)
         {
-           // Attraction attraction = db.getAttractionFromDataBaseByName(currentAttractionName + "London");
+            System.out.println(e.getMessage());
         }
 
         //Gson gson = new Gson();
