@@ -140,13 +140,13 @@ public class Main {
         //}
 
         //db.insetAttractionToDBByID("ChIJtV5bzSAFdkgRpwLZFPWrJgo", Destinations.london);
-        try{
+        //try{
 
         db.insetAttractionToDBByID("ChIJ_zAq7TgFdkgRQg1OSw1j7hU", Destinations.london);
-        } catch (Exception e)
-        {
-            System.out.println(e.getMessage());
-        }
+ //       } catch (Exception e)
+ //       {
+ //           System.out.println(e.getMessage());
+  //      }
 
         //Gson gson = new Gson();
         //JsonAttraction att = gson.fromJson(londonsEye, JsonAttraction.class);
@@ -156,7 +156,7 @@ public class Main {
         System.out.println("fin1");
 
 
-       // db.closeConnection();
+       db.closeConnection();
         //System.out.println(newAtt.attractionToJson());
         
 

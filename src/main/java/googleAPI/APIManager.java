@@ -51,6 +51,8 @@ public class APIManager {
         return lines;
     }
 
+
+
 //    private String getAttractionWikiID(String attractionName) throws IOException {
 //        attractionName = attractionName.replace(" ", "%20");
 //        String url = "http://en.wikipedia.org/w/api.php?format=json&action=query&prop=extracts&explaintext&exintro&titles=" + attractionName;

@@ -1,5 +1,7 @@
 package database;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import common.AttractionType;
 import common.DayOpeningHours;
 import common.Destinations;
@@ -30,6 +32,7 @@ public class DBManager {
     public void closeConnection() throws SQLException {
         this.sqlConnection.close();
     }
+
 
 
 
@@ -81,8 +84,7 @@ public class DBManager {
 
 
 
-    public void insertAttractionTODB(Attraction attraction, Destinations destination) throws SQLException {
-        StringBuilder typesStr = new StringBuilder();
+    public void insertAttractionToDB(Attraction attraction, Destinations destination) throws SQLException {
         ArrayList<StringBuilder> dayStrArr = new ArrayList<>();
         for(int i = 0; i < 7 ;++i)
         {
@@ -98,13 +100,7 @@ public class DBManager {
         ps.setString(4, this.checkParameter(attraction.getPhoneNumber()));//PHONENUMBER
         ps.setString(5, this.checkParameter(attraction.getWebsite()));//Website
         ps.setString(6, attraction.getGeometry().toString());//Geometry
-        int typesArrSize = attraction.getTypes().size();
-        for(int i = 0; i < typesArrSize-1; ++i)
-        {
-            typesStr.append(attraction.getTypes().get(i).toString() + ",");
-        }
-        typesStr.append(attraction.getTypes().get(typesArrSize-1).toString());
-        ps.setString(7, typesStr.toString());
+        ps.setString(7, this.getTypesStr(attraction.getTypes()));
         int index = 8;
         for(DayOpeningHours day: attraction.getOpeningHoursArr())
         {
@@ -135,6 +131,24 @@ public class DBManager {
             index++;
         }
         ps.executeUpdate();
+    }
+
+    private String getTypesStr(ArrayList<AttractionType> types)
+    {
+        StringBuilder typesStr = new StringBuilder();
+        int typesArrSize = types.size();
+        for(int i = 0; i < typesArrSize-1; ++i)
+        {
+            if(types.get(i) != null)
+            {
+                typesStr.append(types.get(i).toString() + ",");
+            }
+        }
+        if(types.get(typesArrSize-1) != null)
+        {
+            typesStr.append(types.get(typesArrSize-1).toString());
+        }
+        return typesStr.toString();
     }
 
 
@@ -216,15 +230,16 @@ public class DBManager {
         }
         else {  //there is no result from the query(the attraction doesnt found in the database)
             JsonAttraction jsonAttraction = apiManager.getAttractionFromAPI(attractionName);
-            this.insertAttractionToDataBase(jsonAttraction, destination);
             resAttraction = new Attraction(jsonAttraction);
+            this.insertAttractionToDB(resAttraction, destination);
         }
         return resAttraction;
     }
 
     public void insetAttractionToDBByID(String id, Destinations destination) throws IOException, SQLException, ParseException {
         JsonAttraction attraction = apiManager.getAttractionByID(id);
-        this.insertAttractionToDataBase(attraction, destination);
+        Attraction finalAttraction = new Attraction(attraction);
+        this.insertAttractionToDB( finalAttraction, destination);
     }
 
 

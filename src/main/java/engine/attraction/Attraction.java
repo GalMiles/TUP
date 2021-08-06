@@ -66,7 +66,6 @@ public class Attraction {
             if(!DayOpeningHours.equals("All day Long"))
             {
                 DayOpeningHours currentDayOpeningHours = new DayOpeningHours(false, i);
-                this.OpeningHoursArr.set(i%7,currentDayOpeningHours);
                 if(!DayOpeningHours.equals("Closed"))
                 {
                     currentDayOpeningHours.setOpen(true);
@@ -77,6 +76,7 @@ public class Attraction {
                         currentDayOpeningHours.addClosing(openingAndClosingTimes[1]);
                     }
                 }
+                this.OpeningHoursArr.set(i%7,currentDayOpeningHours);
             }
             else
             {
@@ -117,8 +117,12 @@ public class Attraction {
         if(attractionData.getOpening_hours() != null)
         {
             if (!types.contains(AttractionType.lodging)) {
-                for (int i = 1; i < 8; ++i) {
-                    this.OpeningHoursArr.add(new DayOpeningHours(i));
+                for (int i = 0; i < 7; ++i) {
+                    this.OpeningHoursArr.add(null);
+                }
+                for(int i = 1; i < 8; ++i)
+                {
+                    this.getOpeningHoursArr().set(i%7, new DayOpeningHours(i));
                 }
                 for (OpeningHours.DayOpeningHoursJson period : attractionData.getOpening_hours().getPeriods()) {
                     this.OpeningHoursArr.get(period.getClose().getDay()).setOpen(true);
