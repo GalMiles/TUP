@@ -126,8 +126,13 @@ public class Attraction {
                 }
                 for (OpeningHours.DayOpeningHoursJson period : attractionData.getOpening_hours().getPeriods()) {
                     this.OpeningHoursArr.get(period.getClose().getDay()).setOpen(true);
-                    this.OpeningHoursArr.get(period.getOpen().getDay()).addOpening(period.getOpen().getTime());
-                    this.OpeningHoursArr.get(period.getClose().getDay()).addClosing(period.getClose().getTime());
+                    String openingTime = period.getOpen().getTime();
+                    String closingTime = period.getClose().getTime();
+                    openingTime = openingTime.substring(0, 2) + ":" + openingTime.substring(2);
+                    closingTime = closingTime.substring(0, 2) + ":" + closingTime.substring(2);
+                    this.OpeningHoursArr.get(period.getOpen().getDay()).addOpening(openingTime);
+                    this.OpeningHoursArr.get(period.getClose().getDay()).addClosing(closingTime);
+
                 }
             }
         }

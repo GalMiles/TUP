@@ -36,9 +36,8 @@ public class DBManager {
 
 
 
-    public ArrayList<Attraction> getAllAttractionsByDestination(Destinations destination) throws SQLException {
+    public ArrayList<Attraction> getAllAttractionsByDestination(String destination) throws SQLException {
         ArrayList<Attraction> attractions = new ArrayList<>();
-
         String sql = "SELECT * FROM tup." + destination.toString();
         PreparedStatement ps = this.sqlConnection.prepareStatement(sql);
         ResultSet results = ps.executeQuery();
@@ -57,9 +56,9 @@ public class DBManager {
                     "," + traveler.getLastName()+ ")";
         this.statement.executeUpdate(query);
     }
+
+
     //login
-
-
     public Traveler Login(String Email, String Password) throws SQLException, Traveler.NotFoundException {
         Traveler traveler = null;
         String query = "SELECT * FROM travelers WHERE Email=? and Password=?";
@@ -218,6 +217,8 @@ public class DBManager {
             ps.executeUpdate();
         }
     }
+
+
 
     public Attraction getAttractionFromDataBaseByName(String attractionName, Destinations destination) throws SQLException, IOException, ParseException {
         Attraction resAttraction;
