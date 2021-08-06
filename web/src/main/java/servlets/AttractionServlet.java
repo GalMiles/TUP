@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.SQLException;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
@@ -28,7 +29,12 @@ public class AttractionServlet extends HttpServlet {
         BufferedReader reader = req.getReader();
         String lines = reader.lines().collect(Collectors.joining());
 
-        Collection<Attraction> attractions = engine.getAttractions(lines);
+        Collection<Attraction> attractions = null;
+        try {
+            attractions = engine.getAttractions(lines);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
 
         responseJson.message = attractions;
 

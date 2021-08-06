@@ -1,5 +1,6 @@
 package engine;
 
+import common.Destinations;
 import database.DBManager;
 import engine.attraction.Attraction;
 import engine.managers.AttractionsManager;
@@ -45,8 +46,9 @@ public class Engine {
         db.Register(traveler);
     }
 
-    public Collection<Attraction> getAttractions(String destination) {
-        return null;
-        //return db.getAttractionsByDestination(destination);
+    public Collection<Attraction> getAttractions(String destination) throws SQLException {
+        //return null;
+        DBManager db = new DBManager();
+        return db.getAllAttractionsByDestination(Destinations.valueOf(destination));
     }
 }
