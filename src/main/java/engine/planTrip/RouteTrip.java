@@ -3,6 +3,7 @@ package engine.planTrip;
 
 import common.AttractionType;
 import common.DayOpeningHours;
+import common.Destinations;
 import common.Geometry;
 import engine.attraction.Attraction;
 
@@ -12,9 +13,11 @@ import java.util.Arrays;
 
 public class RouteTrip {
     ArrayList<DayPlan> planForDays;
-    Attraction attractionsForTheTrip;
+    //there is no need to the to save the attractions for trip twice(in planForDays and here)
+    //Attraction attractionsForTheTrip;
     int tripDuration;
-    String destination;
+    //an Enum that saves destinations(include Paris, London)
+    Destinations destination;
     Attraction hotel;
     LocalDate arrivingDate;
     LocalDate leavingDate;
@@ -24,7 +27,7 @@ public class RouteTrip {
         this.tripDuration = leavingDate.getDayOfMonth() - arrivingDate.getDayOfMonth();
         this.planForDays =  new ArrayList<>(this.tripDuration);
 
-        this.destination = destination;
+        this.destination = Destinations.valueOf(destination);
         this.hotel = hotel;
         this.arrivingDate = arrivingDate;
         this.leavingDate = leavingDate;
@@ -35,7 +38,7 @@ public class RouteTrip {
     }
 
     public void planRouteTrip(){
-        ArrayList<Attraction> possibleAttractions = getPossibleAttractions(destination);
+        ArrayList<Attraction> possibleAttractions = getPossibleAttractions(destination.toString());
         LocalDate currentDate = arrivingDate;
         DayPlan dayPlan;
         for (int i = 0; i < tripDuration; i++){
@@ -51,7 +54,7 @@ public class RouteTrip {
     public String toString() {
         return "RouteTrip{" +
                 "planForDays=" + planForDays +
-                ", attractionsForTheTrip=" + attractionsForTheTrip +
+                //", attractionsForTheTrip=" + attractionsForTheTrip +
                 ", tripDuration=" + tripDuration +
                 ", destination='" + destination + '\'' +
                 ", hotel=" + hotel +

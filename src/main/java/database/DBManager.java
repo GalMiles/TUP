@@ -22,6 +22,7 @@ public class DBManager {
 
 
     public DBManager() throws SQLException {
+
         this.sqlConnection = DriverManager.getConnection("jdbc:mysql://localhost:3306/tup", "root", "742!GDFMP");
     }
 
@@ -29,6 +30,22 @@ public class DBManager {
     public void closeConnection() throws SQLException {
         this.sqlConnection.close();
     }
+
+
+
+    public ArrayList<Attraction> getAllAttractionsByDestination(Destinations destination) throws SQLException {
+        ArrayList<Attraction> attractions = new ArrayList<>();
+
+        String sql = "SELECT * FROM tup." + destination.toString();
+        PreparedStatement ps = this.sqlConnection.prepareStatement(sql);
+        ResultSet results = ps.executeQuery();
+        while(results.next())
+        {
+            attractions.add(new Attraction(results));
+        }
+        return attractions;
+    }
+
 
     public void Register(Traveler traveler) throws SQLException, Traveler.AlreadyExistsException {
         checkIfEmailIsFound(traveler.getEmailAddress());
@@ -42,7 +59,7 @@ public class DBManager {
 
     public Traveler Login(String Email, String Password) throws SQLException, Traveler.NotFoundException {
         Traveler traveler = null;
-        String query = "SELECT Email, Password FROM travelers WHERE Email=? and Password=?";
+        String query = "SELECT * FROM travelers WHERE Email=? and Password=?";
         PreparedStatement ps = this.sqlConnection.prepareStatement(query);
         ps.setString(1, Email);
         ps.setString(2, Password);
@@ -53,7 +70,7 @@ public class DBManager {
             String password = results.getString("Password");
             String firstName = results.getString("FirstName");
             String lastName = results.getString("LastName");
-            traveler = new Traveler(userName, password, firstName, lastName);
+            traveler = new Traveler(firstName, lastName, userName, password);
         }
         else
         {
@@ -78,19 +95,8 @@ public class DBManager {
         ps.setString(1, attraction.getPlaceID());
         ps.setString(2, attraction.getName());
         ps.setString(3, attraction.getAddress());//ADDRESS
-        if(attraction.getPhoneNumber() != null)
-        {
-            ps.setString(4, attraction.getPhoneNumber());//PHONENUMBER
-        }
-        else
-        {
-            ps.setString(4, "N\\A");//PHONENUMBER
-        }
-        if (attraction.getWebsite() != null) {
-            ps.setString(5, attraction.getWebsite());//Website
-        } else {
-            ps.setString(5, "N\\A");//Website
-        }
+        ps.setString(4, this.checkParameter(attraction.getPhoneNumber()));//PHONENUMBER
+        ps.setString(5, this.checkParameter(attraction.getWebsite()));//Website
         ps.setString(6, attraction.getGeometry().toString());//Geometry
         int typesArrSize = attraction.getTypes().size();
         for(int i = 0; i < typesArrSize-1; ++i)
@@ -99,14 +105,12 @@ public class DBManager {
         }
         typesStr.append(attraction.getTypes().get(typesArrSize-1).toString());
         ps.setString(7, typesStr.toString());
-        //attraction.getOpeningHoursArr();
         int index = 8;
         for(DayOpeningHours day: attraction.getOpeningHoursArr())
         {
             if(day.isAllDayLongOpened())
             {
                 ps.setString(index, "All Day Long");
-
             }
             else
             {
@@ -116,13 +120,34 @@ public class DBManager {
                 }
                 else
                 {
-
+                    int arraySize = day.getOpeningHours().size();
+                    String dayOpeningHours = "";
+                    for(int j=0;j < arraySize-1; ++j )
+                    {
+                        String currentOpeningHour = day.getOpeningHours().get(j) + "-" + day.getClosingHours().get(j);
+                        dayOpeningHours += currentOpeningHour + ", ";
+                    }
+                    String currentOpeningHour = day.getOpeningHours().get(arraySize-1) + "-" + day.getClosingHours().get(arraySize-1);
+                    dayOpeningHours += currentOpeningHour;
+                    ps.setString(index, dayOpeningHours);
                 }
-
             }
+            index++;
         }
+        ps.executeUpdate();
+    }
 
 
+    private String checkParameter(String param)
+    {
+        if(param == null)
+        {
+            return "N\\A";
+        }
+        else
+        {
+            return param;
+        }
     }
 
 

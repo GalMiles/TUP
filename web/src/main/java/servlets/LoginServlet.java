@@ -33,9 +33,16 @@ public class LoginServlet extends HttpServlet {
         ResponseJson responseJson = new ResponseJson();
         Engine engine = ContextServletUtils.getEngine(req);
 
+        /*
 
+         */
         try {
-            Traveler user = engine.login(newUser.email,newUser.password);
+            /*
+                DBManager db = new DBManager();
+                Traveler user = db.Login(newUser.emailAddress, newUser.password);
+             */
+            Traveler user = engine.login(newUser.emailAddress,newUser.password);
+
             responseJson.message = gson.toJson(user);
         }catch (SQLException e){
             responseJson.status = "error";
@@ -45,11 +52,7 @@ public class LoginServlet extends HttpServlet {
             responseJson.status = "error";
             responseJson.message = "Invalid email or password";
         }
-        catch (Exception e)
-        {
-            responseJson.status = "error";
-            responseJson.message = e.getMessage();
-        }
+
 
 
         try(PrintWriter out = resp.getWriter()) {
@@ -63,7 +66,7 @@ public class LoginServlet extends HttpServlet {
     }
 
     static class User {
-        String email;
+        String emailAddress;
         String password;
 
     }

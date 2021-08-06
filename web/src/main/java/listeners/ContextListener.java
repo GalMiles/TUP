@@ -14,11 +14,8 @@ public class ContextListener implements ServletContextListener {
         System.out.println("contextInitialized");
 
         Engine engine = null;
-        try {
-            engine = new Engine();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        engine = new Engine();
+
         servletContextEvent.getServletContext().setAttribute("engine", engine);
     }
 }
