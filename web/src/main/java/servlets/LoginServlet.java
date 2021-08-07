@@ -55,9 +55,9 @@ public class LoginServlet extends HttpServlet {
 
 
 
-        try(PrintWriter out = resp.getWriter()) {
-            out.println(gson.toJson(responseJson));
-        }
+        PrintWriter out = resp.getWriter();
+        out.println(gson.toJson(responseJson));
+
     }
 
     @Override

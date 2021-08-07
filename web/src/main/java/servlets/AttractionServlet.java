@@ -15,21 +15,24 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
+//choose attractions
 @WebServlet(name = "AttractionServlet", urlPatterns = {"/activities"})
 public class AttractionServlet extends HttpServlet {
     Gson gson = new Gson();
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Engine engine = ContextServletUtils.getEngine(req);
         ResponseJson responseJson = new ResponseJson();
         BufferedReader reader = req.getReader();
         String lines = reader.lines().collect(Collectors.joining());
 
         Collection<Attraction> attractions = null;
+
         try {
             attractions = engine.getAttractions(lines);
         } catch (SQLException throwables) {
@@ -42,7 +45,7 @@ public class AttractionServlet extends HttpServlet {
             out.println(gson.toJson(responseJson));
         }
     }
-
+//delete attractions from favorite
 //        @Override
 //        protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 //

@@ -10,6 +10,8 @@ import engine.attraction.Attraction;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Iterator;
 
 public class RouteTrip {
     ArrayList<DayPlan> planForDays;
@@ -21,6 +23,7 @@ public class RouteTrip {
     Attraction hotel;
     LocalDate arrivingDate;
     LocalDate leavingDate;
+    static int tripId = 0;
 
 
     public RouteTrip(String destination,Attraction hotel,LocalDate arrivingDate, LocalDate leavingDate) {
@@ -31,6 +34,8 @@ public class RouteTrip {
         this.hotel = hotel;
         this.arrivingDate = arrivingDate;
         this.leavingDate = leavingDate;
+        (this.tripId)++;
+
     }
 
     public ArrayList<DayPlan> getPlanForDays() {
@@ -256,5 +261,18 @@ public class RouteTrip {
         return possibleAttractions;
 
     }
+    public RouteTrip findTripById(Collection<RouteTrip> trips, int id){
+        Iterator itr = trips.iterator();
+        RouteTrip element = null;
+        boolean isFound = false;
+
+        while(itr.hasNext() && !isFound){
+            element = (RouteTrip) itr.next();
+            if(element.tripId == id)
+                isFound = true;
+        }
+        return element;
+    }
+
 
 }
