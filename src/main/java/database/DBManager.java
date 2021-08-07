@@ -26,6 +26,7 @@ public class DBManager {
     public DBManager() throws SQLException {
 
         this.sqlConnection = DriverManager.getConnection("jdbc:mysql://localhost:3306/tup", "root", "742!GDFMP");
+        this.statement = this.sqlConnection.createStatement();
     }
 
 
@@ -222,7 +223,7 @@ public class DBManager {
 
     public Attraction getAttractionFromDataBaseByName(String attractionName, Destinations destination) throws SQLException, IOException, ParseException {
         Attraction resAttraction;
-        String query = "SELECT * FROM attractionstable WHERE Name=\"" + attractionName + "\"";
+        String query = "SELECT * FROM tup."+destination.toString()+" WHERE Name=\"" + attractionName + "\"";
         ResultSet res = this.statement.executeQuery(query);
         if(res.next())  //check of there is a result from the query
         {
@@ -231,6 +232,7 @@ public class DBManager {
         }
         else {  //there is no result from the query(the attraction doesnt found in the database)
             JsonAttraction jsonAttraction = apiManager.getAttractionFromAPI(attractionName);
+           //jsonAttraction.getResult().setOpening_hours(null);
             resAttraction = new Attraction(jsonAttraction);
             this.insertAttractionToDB(resAttraction, destination);
         }

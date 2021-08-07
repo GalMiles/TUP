@@ -31,5 +31,7 @@ public enum AttractionType {
     zoo,
     sublocality_level_1,
     sublocality,
-    political
+    political,
+    route,
+
 }

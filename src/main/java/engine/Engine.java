@@ -49,6 +49,6 @@ public class Engine {
     public Collection<Attraction> getAttractions(String destination) throws SQLException {
         //return null;
         DBManager db = new DBManager();
-        return db.getAllAttractionsByDestination(Destinations.valueOf(destination));
+        return db.getAllAttractionsByDestination("london");
     }
 }

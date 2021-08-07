@@ -39,6 +39,8 @@ public class JsonAttraction {
         String formatted_address;
         String formatted_phone_number;
         String name;
+
+
         String place_id;
         String website;
         OpeningHours opening_hours;
@@ -46,6 +48,9 @@ public class JsonAttraction {
         ArrayList<AttractionType> types = new ArrayList();
         Geometry.GeometryAPI geometry;
 
+        public void setOpening_hours(OpeningHours opening_hours) {
+            this.opening_hours = opening_hours;
+        }
         public String getWebsite() {
             return website;
         }
