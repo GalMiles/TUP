@@ -52,9 +52,9 @@ public class DBManager {
 
     public void Register(Traveler traveler) throws SQLException, Traveler.AlreadyExistsException {
         checkIfEmailIsFound(traveler.getEmailAddress());
-        String query = "INSERT INTO travelers(Email, Password, FirstName, LastName) VALUES ( " +
-                    traveler.getEmailAddress() + "," + traveler.getPassword() + "," + traveler.getFirstName() +
-                    "," + traveler.getLastName()+ ")";
+        String query = "INSERT INTO travelers(Email, Password, FirstName, LastName) VALUES ( "
+                + "\"" +traveler.getEmailAddress() + "\", \"" + traveler.getPassword() + "\", \"" + traveler.getFirstName() +
+                    "\", \"" + traveler.getLastName()+ "\")";
         this.statement.executeUpdate(query);
     }
 

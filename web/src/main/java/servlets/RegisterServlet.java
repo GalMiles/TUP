@@ -33,6 +33,7 @@ public class RegisterServlet extends HttpServlet {
         try {
             Traveler newMember = ResponseJson.travelerFromJson(jsonMember, req);
             engine.Register(newMember);
+            responseJson.message = gson.toJson(newMember);
         } catch (SQLException e) {
             e.printStackTrace();
         } catch (Traveler.IllegalValueException e) {

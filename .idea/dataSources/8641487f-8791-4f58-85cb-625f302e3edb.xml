@@ -1179,7 +1179,7 @@ sys|schema||mysql.sys|localhost|TRIGGER|G</Grants>
       <Position>1</Position>
       <DataType>int|0s</DataType>
       <NotNull>1</NotNull>
-      <DefaultExpression>0</DefaultExpression>
+      <SequenceIdentity>null</SequenceIdentity>
     </column>
     <column id="332" parent="288" name="Email">
       <Position>2</Position>
@@ -1197,5 +1197,10 @@ sys|schema||mysql.sys|localhost|TRIGGER|G</Grants>
       <Position>5</Position>
       <DataType>varchar(50)|0s</DataType>
     </column>
+    <key id="336" parent="288" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <ColNames>id</ColNames>
+      <Primary>1</Primary>
+    </key>
   </database-model>
 </dataSource>
