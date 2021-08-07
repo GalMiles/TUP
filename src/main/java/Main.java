@@ -124,15 +124,37 @@ public class Main {
         DBManager db = new DBManager();
 
         String[] AttractionToAdd = {
-          "Brick Lane", "Piccadilly Circus"
+                "Capel Manor Gardens",
+                "Carew Manor & Dovecote",
+                "Carlyle's House",
+                "Charles Dickens Museum",
+                "Charlton House",
+                "Chelsea Bridge",
+                "Chelsea Old Church (All Saints)",
+                "Chelsea Physic Garden",
+                "Chiswick House",
+                "Christchurch Greyfriars Church and Garden",
+                "Churchill War Rooms",
+                "Cinema Museum",
+                "Clarence House",
+               "Cleopatra's Needle",
+                "Clerk's Well",
+                "Clink Prison Museum",
+                "Clockmakers' Museum",
+                "College of Arms",
+                "Courtauld Gallery",
+                "Covent Garden Market",
+                "Cross Bones Graveyard",
+                "Crossness Pumping Station",
+                "Cutty Sark"
 
-              };
+        };
 
 
 
         for(String currentAttractionName: AttractionToAdd)
         {
-           Attraction attraction = db.getAttractionFromDataBaseByName(currentAttractionName + " London", Destinations.london);
+           Attraction attraction = db.getAttractionFromDataBaseByName(currentAttractionName, Destinations.london);
         }
 
         //db.insetAttractionToDBByID("ChIJtV5bzSAFdkgRpwLZFPWrJgo", Destinations.london);

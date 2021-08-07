@@ -19,6 +19,7 @@ public class APIManager {
                 "&fields=name,formatted_address,formatted_phone_number,opening_hours,geometry/location,types,business_status,price_level,place_id,website&key=AIzaSyAujNlik91rOdQwXKVEQgHakotz7hfl9oM";
         Gson gson = new Gson();
         JsonAttraction attraction = gson.fromJson(getJsonString(url), JsonAttraction.class);
+
         return attraction;
     }
 
@@ -27,12 +28,13 @@ public class APIManager {
         String url ="https://maps.googleapis.com/maps/api/place/details/json?place_id=" + id +
                 "&fields=name,formatted_address,formatted_phone_number,opening_hours,geometry/location,types,business_status,price_level,place_id,website&key=AIzaSyAujNlik91rOdQwXKVEQgHakotz7hfl9oM";
         Gson gson = new Gson();
-        JsonAttraction attraction = gson.fromJson(getJsonString(url), JsonAttraction.class);
+        JsonAttraction attraction;
+        attraction = gson.fromJson(getJsonString(url), JsonAttraction.class);
         return attraction;
     }
 
 
-    private String getPlaceIDFromAPI(String attractionName) throws IOException {
+    public String getPlaceIDFromAPI(String attractionName) throws IOException {
         String searchedPlace = attractionName.replace(" ","%20");
         String url = "https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=" + searchedPlace +
              "&inputtype=textquery&fields=place_id&key=AIzaSyAujNlik91rOdQwXKVEQgHakotz7hfl9oM";

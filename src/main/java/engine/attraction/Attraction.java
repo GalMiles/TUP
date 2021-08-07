@@ -63,7 +63,7 @@ public class Attraction {
         for (int i=1;i<=7;++i) {
             String day = daysColumns[i]; // get the day opening time
             String DayOpeningHours = resultSet.getString(day);
-            if(!DayOpeningHours.equals("All day Long"))
+            if(!DayOpeningHours.equals("All Day Long"))
             {
                 DayOpeningHours currentDayOpeningHours = new DayOpeningHours(false, i);
                 if(!DayOpeningHours.equals("Closed"))

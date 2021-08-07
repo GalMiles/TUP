@@ -133,6 +133,8 @@ public class DBManager {
         ps.executeUpdate();
     }
 
+
+
     private String getTypesStr(ArrayList<AttractionType> types)
     {
         StringBuilder typesStr = new StringBuilder();
@@ -152,6 +154,8 @@ public class DBManager {
     }
 
 
+
+
     private String checkParameter(String param)
     {
         if(param == null)
@@ -163,66 +167,28 @@ public class DBManager {
             return param;
         }
     }
-
-
-    public void insertAttractionToDataBase(JsonAttraction attraction, Destinations destination) throws SQLException, ParseException {
-
-        JsonAttraction.JsonResult result = attraction.getResult();
-        StringBuilder typesStr = new StringBuilder();
-        ArrayList<StringBuilder> dayStrArr = new ArrayList<>();
-        for (int i = 0; i < 7; ++i) {
-            dayStrArr.add(i, new StringBuilder());
+    private Attraction getAttractionByID(String id, Destinations destination) throws SQLException, IOException {
+        JsonAttraction jsonAttraction;
+        String sql = "SELECT * From tup." + destination.toString() + " WHERE attractionAPI_ID= \"" + id + "\"";
+        ResultSet results = this.statement.executeQuery(sql);
+        Attraction attraction;
+        if(results.next())
+        {
+            attraction =  new Attraction(results);
         }
-        PreparedStatement ps = this.sqlConnection.prepareStatement(
-                "INSERT INTO " + destination.name() + " (attractionAPI_ID, Name, Address, PhoneNumber,Website, Geometry, types," +
-                        "Sunday, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday)" +
-                        "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
-        ps.setString(1, attraction.getResult().getPlace_id());//ID
-        ps.setString(2, attraction.getResult().getName());//NAME
-        ps.setString(3, attraction.getResult().getFormatted_address());//ADDRESS
-        if (result.getFormatted_phone_number() != null) {
-            ps.setString(4, attraction.getResult().getFormatted_phone_number());//PHONENUMBER
-        } else {
-            ps.setString(4, "N\\A");//PHONENUMBER
+        else
+        {
+            jsonAttraction = apiManager.getAttractionByID(id);
+            attraction = new Attraction(jsonAttraction);
         }
-        if (result.getWebsite() != null) {
-            ps.setString(5, attraction.getResult().getWebsite());//Website
-        } else {
-            ps.setString(5, "N\\A");//Website
-
-        }
-        ps.setString(6, attraction.getResult().getGeometryAPI().toString());//Geometry
-
-        StringBuilder typesIndexesString = new StringBuilder();
-        ps.setString(7, attraction.getResult().AttractionTypesToStr());
-        if (result.getOpening_hours() != null) {
-            for (OpeningHours.DayOpeningHoursJson currentOpening : attraction.getResult().getOpening_hours().getPeriods()) {
-                int day = currentOpening.getOpen().getDay();//0=Sunday....6=Saturday
-                //if the current day is not empty
-                if (!dayStrArr.get(day).toString().equals("")) {
-                    dayStrArr.get(day).append(",");
-                }
-                dayStrArr.get(day).append(currentOpening.toString());
-            }
-            for (int i = 0; i < 7; ++i) {
-                if (dayStrArr.get(i).toString().equals("")) {
-                    dayStrArr.get(i).append("Closed");
-                }
-                ps.setString(i + 8, dayStrArr.get(i).toString());
-            }
-        } else {
-            for (int i = 0; i < 7; ++i) {
-                dayStrArr.get(i).append("All Day Long");
-                ps.setString(i + 8, dayStrArr.get(i).toString());
-            }
-            ps.executeUpdate();
-        }
+        return attraction;
     }
 
 
 
     public Attraction getAttractionFromDataBaseByName(String attractionName, Destinations destination) throws SQLException, IOException, ParseException {
         Attraction resAttraction;
+        JsonAttraction json;
         String query = "SELECT * FROM tup."+destination.toString()+" WHERE Name=\"" + attractionName + "\"";
         ResultSet res = this.statement.executeQuery(query);
         if(res.next())  //check of there is a result from the query
@@ -230,16 +196,16 @@ public class DBManager {
             //if there is a result, make an attraction
             resAttraction = new Attraction(res);
         }
-        else {  //there is no result from the query(the attraction doesnt found in the database)
-            JsonAttraction jsonAttraction = apiManager.getAttractionFromAPI(attractionName);
-           //jsonAttraction.getResult().setOpening_hours(null);
-            resAttraction = new Attraction(jsonAttraction);
-            this.insertAttractionToDB(resAttraction, destination);
+        else {  //there is no result from the query(the attraction by this name doesnt found in the database)
+            //get the id of the attraction from API
+            String placeID = this.apiManager.getPlaceIDFromAPI(attractionName + " " +destination.toString());
+            //get the attraction by ID
+            resAttraction = getAttractionByID(placeID, destination);
         }
         return resAttraction;
     }
 
-    public void insetAttractionToDBByID(String id, Destinations destination) throws IOException, SQLException, ParseException {
+    public void insetAttractionToDBByID(String id, Destinations destination) throws Exception {
         JsonAttraction attraction = apiManager.getAttractionByID(id);
         Attraction finalAttraction = new Attraction(attraction);
         this.insertAttractionToDB( finalAttraction, destination);
@@ -270,13 +236,9 @@ public class DBManager {
         }
     }
 
-    public ArrayList<Attraction> getAttractionsByOperationTime(String operationTime){
-        ArrayList<Attraction> attractionsArr = new ArrayList<>();
-        String[] operationTimeSplitArr = operationTime.split("-");
-        String openingHour =operationTimeSplitArr[0];
-        String closingHour =operationTimeSplitArr[1];
 
-        return attractionsArr;
+    public void insertHotelToDB(Attraction hotel, Destinations destination)
+    {
+        
     }
-
 }
