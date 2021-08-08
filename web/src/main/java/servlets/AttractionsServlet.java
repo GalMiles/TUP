@@ -22,7 +22,7 @@ import java.util.Collection;
 import java.util.stream.Collectors;
 
 //favorite attractions
-@WebServlet(name = "FavAttractionsServlet", urlPatterns = {"/attractions/favorites", "/attractions/all"})
+@WebServlet(name = "AttractionsServlet", urlPatterns = {"/attractions/favorites", "/attractions/all"})
 public class AttractionsServlet extends HttpServlet {
     Gson gson = new Gson();
 
@@ -43,11 +43,11 @@ public class AttractionsServlet extends HttpServlet {
         BufferedReader reader = req.getReader();
         String lines = reader.lines().collect(Collectors.joining()); ///destination
 
-        Collection<Attraction> favAttractions = null;
+        Collection<Attraction> attractions = null;
 
         try {
-            favAttractions = engine.getAttractions(lines);
-            responseJson.message = favAttractions;
+            attractions = engine.getAttractions(lines);
+            responseJson.message = attractions;
 
         } catch (SQLException e) {
             responseJson.status = "error";

@@ -97,13 +97,18 @@ public class TripServlet extends HttpServlet {
         }
     }
 
-    static class TripDetails
-    {
+    static class TripDetails {
         String destination;
         String hotelID;
         String arrivingDate;
         String leavingDate;
         ArrayList<String> mustSeenAttractionsID;
-        ArrayList<Pair<String,String>> hoursEveryday;
+        ArrayList<Pair<String, String>> hoursEveryday;
+
+        static class DesiredHoursInDay {
+            private String date;
+            private String startTime;
+            private String endTime;
+        }
     }
 }
