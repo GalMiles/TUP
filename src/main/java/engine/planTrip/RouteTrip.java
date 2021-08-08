@@ -68,7 +68,7 @@ public class RouteTrip {
                 '}';
     }
 
-    ArrayList<Attraction> getPossibleAttractions(String destination){
+    public ArrayList<Attraction> getPossibleAttractions(String destination){
         ArrayList<Attraction> possibleAttractions = new ArrayList<>();
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         ArrayList<DayOpeningHours> openingHoursArr1 = new ArrayList<>();
@@ -272,6 +272,12 @@ public class RouteTrip {
                 isFound = true;
         }
         return element;
+    }
+
+    public static class NotFoundException extends Exception {
+        public NotFoundException(String message) {
+            super(message);
+        }
     }
 
 

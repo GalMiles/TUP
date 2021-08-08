@@ -6,6 +6,8 @@ import common.Geometry;
 import engine.planTrip.RouteTrip;
 
 import engine.attraction.Attraction;
+import googleAPI.APIManager;
+import javafx.util.Pair;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -14,6 +16,14 @@ import java.util.ArrayList;
 
 public class main {
     public static void main(String[] args) throws IOException {
+
+//        ArrayList<Pair<String,String>> att = new ArrayList<>();
+//        Pair pair = new Pair<String,String>(("maya"),("meshi"));
+//        att.add(pair);
+//        System.out.println(att.get(0).getValue()); // print meshi
+//        System.out.println(att.get(0).getKey()); //print maya
+
+
 
         ArrayList<AttractionType> typesHotel = new ArrayList<>();
         typesHotel.add(AttractionType.lodging);
@@ -25,9 +35,20 @@ public class main {
         LocalDate arrivingDate = common.converter.convertStringToLocalDate("01/09/2021");
         LocalDate leavingDate = common.converter.convertStringToLocalDate("04/09/2021");
 
-        RouteTrip routeTrip = new RouteTrip("London",hotel,arrivingDate,leavingDate);
+       RouteTrip routeTrip = new RouteTrip("london",hotel,arrivingDate,leavingDate);
         routeTrip.planRouteTrip();
         System.out.println(routeTrip.getPlanForDays());
+
+
+        ArrayList<Attraction> possibleAttractions = routeTrip.getPossibleAttractions("london");
+        for(Attraction att : possibleAttractions){
+            System.out.println(att.getName() );
+            System.out.println(  hotel.calcDistanceBetweenAttractions(att));
+        }
+
+
+
+
     }
 
 

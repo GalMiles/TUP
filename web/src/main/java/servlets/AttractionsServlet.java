@@ -22,30 +22,63 @@ import java.util.Collection;
 import java.util.stream.Collectors;
 
 //favorite attractions
-@WebServlet(name = "FavAttractionsServlet", urlPatterns = {"/favorite_attractions"})
-public class FavAttractionsServlet extends HttpServlet {
+@WebServlet(name = "FavAttractionsServlet", urlPatterns = {"/attractions/favorites", "/attractions/all"})
+public class AttractionsServlet extends HttpServlet {
     Gson gson = new Gson();
 
-    //getting favorite attraction
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        if(req.getServletPath().startsWith("/all/"))
+            processGetRequestAllAttractions(req, resp);
+
+        if(req.getServletPath().endsWith("/favorites/"))
+            processGetRequestFavoritesAttractions(req, resp);
+
+
+    }
+
+    private void processGetRequestAllAttractions(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException{
         Engine engine = ContextServletUtils.getEngine(req);
         ResponseJson responseJson = new ResponseJson();
         BufferedReader reader = req.getReader();
-        String lines = reader.lines().collect(Collectors.joining());
+        String lines = reader.lines().collect(Collectors.joining()); ///destination
 
         Collection<Attraction> favAttractions = null;
 
         try {
-            favAttractions = engine.getFavAttractions();
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
+            favAttractions = engine.getAttractions(lines);
+            responseJson.message = favAttractions;
+
+        } catch (SQLException e) {
+            responseJson.status = "error";
+            responseJson.message = "SQL error- " + e.getMessage();
         }
 
-        responseJson.message = favAttractions;
+        try (PrintWriter out = resp.getWriter()) {
+            out.println(gson.toJson(responseJson));
+        }
+    }
 
-        PrintWriter out = resp.getWriter();
-        out.println(gson.toJson(responseJson));
+    private void processGetRequestFavoritesAttractions(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException{
+        Engine engine = ContextServletUtils.getEngine(req);
+        ResponseJson responseJson = new ResponseJson();
+        BufferedReader reader = req.getReader();
+        String lines = reader.lines().collect(Collectors.joining()); ///destination
+
+        Collection<Attraction> favAttractions = null;
+
+        try {
+            favAttractions = engine.getAttractions(lines);
+            responseJson.message = favAttractions;
+
+        } catch (SQLException e) {
+            responseJson.status = "error";
+            responseJson.message = "SQL error- " + e.getMessage();
+        }
+
+        try (PrintWriter out = resp.getWriter()) {
+            out.println(gson.toJson(responseJson));
+        }
     }
 
     //delete attraction from favorite attraction
@@ -54,24 +87,21 @@ public class FavAttractionsServlet extends HttpServlet {
         Engine engine = ContextServletUtils.getEngine(req);
         ResponseJson responseJson = new ResponseJson();
         BufferedReader reader = req.getReader();
-
-        //getting here which attraction want to delete
-        String lines = reader.lines().collect(Collectors.joining());
-
-        //creating new favAttraction after deleting
-        Collection<Attraction> favAttractions = null;
+        String lines = reader.lines().collect(Collectors.joining()); /// id
 
         try {
-            favAttractions = engine.deleteFromFavAttractions(lines);
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        responseJson.message = favAttractions;
+            engine.deleteFavoriteAttractionsById(lines);
+        } catch (SQLException e) {
+            responseJson.status = "error";
+            responseJson.message = "SQL error- " + e.getMessage();
+        } catch (Attraction.NotFoundException e) {
+            responseJson.status = "error";
+            responseJson.message = "Attraction not found";
 
-        PrintWriter out = resp.getWriter();
-        out.println(gson.toJson(responseJson));
+            try (PrintWriter out = resp.getWriter()) {
+                out.println(gson.toJson(responseJson));
+            }
+        }
     }
 
     //add attraction to favorite attraction

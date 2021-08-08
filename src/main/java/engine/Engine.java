@@ -1,10 +1,14 @@
 package engine;
 
+import com.google.gson.Gson;
+import common.AttractionType;
 import common.Destinations;
+import common.Geometry;
 import database.DBManager;
 import engine.attraction.Attraction;
 import engine.managers.AttractionsManager;
 import engine.managers.TravelerManager;
+import engine.planTrip.DayPlan;
 import engine.planTrip.RouteTrip;
 import engine.traveler.Traveler;
 
@@ -12,6 +16,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 
 import java.text.ParseException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -19,22 +24,10 @@ public class Engine {
     TravelerManager travelers = new TravelerManager();
     AttractionsManager attractions;
 
-/*
 
-    public Engine() throws SQLException {
 
-    }
+   // public Engine() throws SQLException { }
 
- */
-
-//    public Attraction getAttractionByName(String name) {
-//        try {
-//            attractions.getAttraction(name);
-//        } catch (Attraction.NotFoundException e) {
-//            e.printStackTrace();
-//        }
-//
-//    }
 
 
 
@@ -93,38 +86,40 @@ public class Engine {
         return newFavAttraction;
     }
 
-    public Collection<RouteTrip> getMyTrips() throws SQLException {
-        Collection<RouteTrip> myTrips = null;
+    public Collection<RouteTrip> getUserTrips() throws SQLException, RouteTrip.NotFoundException {
         DBManager db = new DBManager();
-
-        myTrips = db.getMyTripsFromDB();
-        return myTrips;
+        //return db.getUserTripsFromDB();
+        return null;
     }
 
-    public Collection<RouteTrip> DeleteFromMyTrips(String tripId) throws SQLException {
-        //parsing string to int
-        int tripIdNum = Integer.parseInt(tripId);
-        Collection<RouteTrip> myTrips = null;
-
-        //using engine.getMyTrips
-        myTrips = getMyTrips();
-        RouteTrip tripToDelete = null;
-        tripToDelete = tripToDelete.findTripById(myTrips, tripIdNum);
-        myTrips.remove(tripToDelete);
-
-        /////need to update in data base!!!!!////
-        return myTrips;
+    public void deleteTripFromUserTrips(String tripId) throws SQLException {
+        DBManager db = new DBManager();
+        //db.deleteTripFromUserTripsInDB(tripId);
     }
 
-    public RouteTrip getTrip(String tripId) throws SQLException {
-        //parsing string to int
-        int tripIdNum = Integer.parseInt(tripId);
+    public ArrayList<DayPlan> createTripForUser(String destination, String stringHotelID, String stringArrivingDate, String stringLeavingDate) throws SQLException{
         DBManager db = new DBManager();
-        RouteTrip trip = null;
+        //Attraction hotel  = db.getAttractionFromDBByID(stringHotelID);
 
-        Collection<RouteTrip> myTrips = db.getMyTripsFromDB();
-        trip = trip.findTripById(myTrips,tripIdNum);
+        ArrayList<AttractionType> typesHotel = new ArrayList<>();
+        typesHotel.add(AttractionType.lodging);
+        Attraction hotel = new Attraction("Baglioni Hotel - London", "60 Hyde Park Gate, South Kensington, London SW7 5BB, UK",
+                "020 7368 5700", null, new Geometry("51.50167580000001", "-0.1847417"), "ChIJFSZeB1kFdkgRTixgFHqP13g",
+                typesHotel, null);
 
-        return trip;
+
+
+        LocalDate arrivingDate = LocalDate.parse(stringArrivingDate);
+        LocalDate leavingDate = LocalDate.parse(stringLeavingDate);
+        RouteTrip routeTrip = new RouteTrip(destination,hotel,arrivingDate,leavingDate);
+        routeTrip.planRouteTrip();
+        return routeTrip.getPlanForDays();
+    }
+
+
+    public void deleteFavoriteAttractionsById(String attractionId) throws SQLException,Attraction.NotFoundException {
+        DBManager db = new DBManager();
+        //db.deleteAttractionfromFavoriteList(attractionId);
+
     }
 }
