@@ -77,10 +77,10 @@ public class DayPlan {
         DayOpeningHours dayOpeningHoursNext = nextAttraction.getOpeningHoursByDay(date.getDayOfWeek());
         ArrayList<LocalTime> openingHoursNext = new ArrayList<>(dayOpeningHoursNext.getOpeningHoursLocalTime());
         ArrayList<LocalTime> closingHoursNext = new ArrayList<>(dayOpeningHoursNext.getClosingHoursLocalTime());
-        int sizeHoursNext = openingHoursNext.size();
+        int sizeOpeningHoursNext = openingHoursNext.size();
         LocalTime hourOnClockAfterEnjoying = hourOnClock.plusHours(nextAttraction.getDuration());
 
-        for (int i = 0; i < sizeHoursNext; i++) {
+        for (int i = 0; i < sizeOpeningHoursNext; i++) {
 
             closeAttraction = hourOnClock.isBefore(openingHoursNext.get(i));
             overPossibleDuration = closingHoursNext.get(i).isBefore(hourOnClockAfterEnjoying);
@@ -101,9 +101,9 @@ public class DayPlan {
         //why minValue?
         // in case there are for one attraction 7:00-14:00 and 15:00-19:00
         //  we want to choose 7:00
-        sizeHoursNext = openingHoursNext.size();
+        sizeOpeningHoursNext = openingHoursNext.size();
 
-        for (int i = 0; i < sizeHoursNext; i++) {
+        for (int i = 0; i < sizeOpeningHoursNext; i++) {
             differenceBetweenClockAndStartTime = openingHoursNext.get(i).until(hourOnClock, ChronoUnit.HOURS);
             if (minValue > differenceBetweenClockAndStartTime)
                 minValue = differenceBetweenClockAndStartTime;

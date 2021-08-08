@@ -29,6 +29,7 @@ public class TripServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        //req.getCookies()
         Engine engine = ContextServletUtils.getEngine(req);
         ResponseJson responseJson = new ResponseJson();
         BufferedReader reader = req.getReader();
@@ -84,7 +85,8 @@ public class TripServlet extends HttpServlet {
         ArrayList<DayPlan> trip = null;
 
         try {
-            trip = engine.createTripForUser(tripDetails.destination,tripDetails.hotelID, tripDetails.arrivingDate,tripDetails.leavingDate);
+            trip = engine.createTripForUser(tripDetails.destination,tripDetails.hotelID, tripDetails.arrivingDate,
+                    tripDetails.leavingDate,tripDetails.mustSeenAttractionsID);
             responseJson.message = trip;
         } catch (SQLException e) {
             responseJson.status = "error";

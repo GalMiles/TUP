@@ -21,15 +21,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 public class Engine {
-    TravelerManager travelers = new TravelerManager();
-    AttractionsManager attractions;
-
-
-
-   // public Engine() throws SQLException { }
-
-
-
 
 
     //here we need to implements all the action we wand the app will have
@@ -97,7 +88,8 @@ public class Engine {
         //db.deleteTripFromUserTripsInDB(tripId);
     }
 
-    public ArrayList<DayPlan> createTripForUser(String destination, String stringHotelID, String stringArrivingDate, String stringLeavingDate) throws SQLException{
+    public ArrayList<DayPlan> createTripForUser(String destination, String stringHotelID,
+                                                String stringArrivingDate, String stringLeavingDate,ArrayList<String> mustSeenAttractionsID) throws SQLException{
         DBManager db = new DBManager();
         //Attraction hotel  = db.getAttractionFromDBByID(stringHotelID);
 
@@ -111,11 +103,17 @@ public class Engine {
 
         LocalDate arrivingDate = LocalDate.parse(stringArrivingDate);
         LocalDate leavingDate = LocalDate.parse(stringLeavingDate);
-        RouteTrip routeTrip = new RouteTrip(destination,hotel,arrivingDate,leavingDate);
+        ArrayList<Attraction> mustSeenAttractions = createArrayListOfMustSeenAttractions(mustSeenAttractionsID, db);
+        RouteTrip routeTrip = new RouteTrip(destination,hotel,arrivingDate,leavingDate, mustSeenAttractions);
         routeTrip.planRouteTrip();
         return routeTrip.getPlanForDays();
     }
-
+    private ArrayList<Attraction> createArrayListOfMustSeenAttractions(ArrayList<String> mustSeenAttractionsID,DBManager db) throws SQLException {
+        ArrayList<Attraction> mustSeenAttractions = new ArrayList<>();
+        for (String attractionID: mustSeenAttractionsID)
+            mustSeenAttractions.add(db.getAttractionFromDBByID(attractionID));
+        return mustSeenAttractions;
+    }
 
     public void deleteFavoriteAttractionsById(String attractionId) throws SQLException,Attraction.NotFoundException {
         DBManager db = new DBManager();

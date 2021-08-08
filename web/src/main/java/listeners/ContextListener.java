@@ -14,7 +14,8 @@ public class ContextListener implements ServletContextListener {
         System.out.println("contextInitialized");
 
         Engine engine = null;
-        engine = new Engine();
+            engine = new Engine();
+
 
         servletContextEvent.getServletContext().setAttribute("engine", engine);
     }

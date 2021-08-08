@@ -23,13 +23,14 @@ public class RouteTrip {
     Attraction hotel;
     LocalDate arrivingDate;
     LocalDate leavingDate;
+    ArrayList<Attraction> mustSeenAttractions;
     static int tripId = 0;
 
 
-    public RouteTrip(String destination,Attraction hotel,LocalDate arrivingDate, LocalDate leavingDate) {
+    public RouteTrip(String destination,Attraction hotel,LocalDate arrivingDate, LocalDate leavingDate,ArrayList<Attraction> mustSeenAttractions) {
         this.tripDuration = leavingDate.getDayOfMonth() - arrivingDate.getDayOfMonth();
         this.planForDays =  new ArrayList<>(this.tripDuration);
-
+        this.mustSeenAttractions = new ArrayList<>(mustSeenAttractions);
         this.destination = Destinations.valueOf(destination);
         this.hotel = hotel;
         this.arrivingDate = arrivingDate;

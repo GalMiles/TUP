@@ -35,7 +35,7 @@ public class main {
         LocalDate arrivingDate = common.converter.convertStringToLocalDate("01/09/2021");
         LocalDate leavingDate = common.converter.convertStringToLocalDate("04/09/2021");
 
-       RouteTrip routeTrip = new RouteTrip("london",hotel,arrivingDate,leavingDate);
+       RouteTrip routeTrip = new RouteTrip("london",hotel,arrivingDate,leavingDate,null);
         routeTrip.planRouteTrip();
         System.out.println(routeTrip.getPlanForDays());
 
