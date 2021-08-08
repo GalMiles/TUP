@@ -33,5 +33,6 @@ public enum AttractionType {
     sublocality,
     political,
     route,
+    premise,
 
 }

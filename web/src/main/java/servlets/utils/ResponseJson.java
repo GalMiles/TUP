@@ -17,7 +17,7 @@ public class ResponseJson{
 
     public static Traveler travelerFromJson(Traveler jsonTraveler, HttpServletRequest req) throws Traveler.IllegalValueException {
         Traveler newTraveler;
-        newTraveler = new Traveler(jsonTraveler.getFirstName(), jsonTraveler.getLastName(), jsonTraveler.getEmailAddress(), jsonTraveler.getPassword());
+        newTraveler = new Traveler(jsonTraveler.getFirstName(), jsonTraveler.getLastName(), jsonTraveler.getEmailAddress(), jsonTraveler.getPassword(), jsonTraveler.getId());
         newTraveler.setFirstName(jsonTraveler.getFirstName());
         newTraveler.setLastName(jsonTraveler.getLastName());
         newTraveler.setEmailAddress(jsonTraveler.getEmailAddress());

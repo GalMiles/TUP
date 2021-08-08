@@ -26,7 +26,7 @@ public class DBManager {
 
 
     public DBManager() throws SQLException {
-        this.sqlConnection = DriverManager.getConnection("jdbc:mysql://localhost:3306/tup", "root", "123456ma");
+        this.sqlConnection = DriverManager.getConnection("jdbc:mysql://localhost:3306/tup", "root", "Galmiles31051960");
     }
 
 
@@ -73,7 +73,8 @@ public class DBManager {
             String password = results.getString("Password");
             String firstName = results.getString("FirstName");
             String lastName = results.getString("LastName");
-            traveler = new Traveler(firstName, lastName, userName, password);
+            String id = Integer.toString(results.getInt("id"));
+            traveler = new Traveler(firstName, lastName, userName, password, id);
         }
         else
         {

@@ -3,6 +3,7 @@ package client;
 import common.AttractionType;
 import common.Geometry;
 //import common.OpeningHours;
+import database.DBManager;
 import engine.planTrip.RouteTrip;
 
 import engine.attraction.Attraction;
@@ -10,12 +11,13 @@ import googleAPI.APIManager;
 import javafx.util.Pair;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
 
 public class main {
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, SQLException {
 
 //        ArrayList<Pair<String,String>> att = new ArrayList<>();
 //        Pair pair = new Pair<String,String>(("maya"),("meshi"));
@@ -24,30 +26,29 @@ public class main {
 //        System.out.println(att.get(0).getKey()); //print maya
 
 
-
-        ArrayList<AttractionType> typesHotel = new ArrayList<>();
-        typesHotel.add(AttractionType.lodging);
-        Attraction hotel = new Attraction("Baglioni Hotel - London", "60 Hyde Park Gate, South Kensington, London SW7 5BB, UK",
-                "020 7368 5700", null, new Geometry("51.50167580000001", "-0.1847417"), "ChIJFSZeB1kFdkgRTixgFHqP13g",
-                typesHotel, null);
-
-
-        LocalDate arrivingDate = common.converter.convertStringToLocalDate("01/09/2021");
-        LocalDate leavingDate = common.converter.convertStringToLocalDate("04/09/2021");
-
-       RouteTrip routeTrip = new RouteTrip("london",hotel,arrivingDate,leavingDate,null);
-        routeTrip.planRouteTrip();
-        System.out.println(routeTrip.getPlanForDays());
-
-
-        ArrayList<Attraction> possibleAttractions = routeTrip.getPossibleAttractions("london");
-        for(Attraction att : possibleAttractions){
-            System.out.println(att.getName() );
-            System.out.println(  hotel.calcDistanceBetweenAttractions(att));
-        }
-
-
-
+//
+//        ArrayList<AttractionType> typesHotel = new ArrayList<>();
+//        typesHotel.add(AttractionType.lodging);
+//        Attraction hotel = new Attraction("Baglioni Hotel - London", "60 Hyde Park Gate, South Kensington, London SW7 5BB, UK",
+//                "020 7368 5700", null, new Geometry("51.50167580000001", "-0.1847417"), "ChIJFSZeB1kFdkgRTixgFHqP13g",
+//                typesHotel, null);
+//
+//
+//        LocalDate arrivingDate = common.converter.convertStringToLocalDate("01/09/2021");
+//        LocalDate leavingDate = common.converter.convertStringToLocalDate("04/09/2021");
+//
+//       RouteTrip routeTrip = new RouteTrip("london",hotel,arrivingDate,leavingDate,null);
+//        routeTrip.planRouteTrip();
+//        System.out.println(routeTrip.getPlanForDays());
+//
+//
+//        ArrayList<Attraction> possibleAttractions = routeTrip.getPossibleAttractions("london");
+//        for(Attraction att : possibleAttractions){
+//            System.out.println(att.getName() );
+//            System.out.println(  hotel.calcDistanceBetweenAttractions(att));
+//        }
+        DBManager db = new DBManager();
+        System.out.println(db.getAllAttractionsByDestination("london"));
 
     }
 

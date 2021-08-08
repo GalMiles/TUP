@@ -8,6 +8,7 @@ import servlets.utils.ResponseJson;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -31,12 +32,18 @@ public class LoginServlet extends HttpServlet {
         String lines = reader.lines().collect(Collectors.joining());
         User newUser = gson.fromJson(lines, User.class);
         ResponseJson responseJson = new ResponseJson();
-        Engine engine = ContextServletUtils.getEngine(req);
 
+
+
+        Engine engine = ContextServletUtils.getEngine(req);
 
         try {
             Traveler user = engine.login(newUser.emailAddress,newUser.password);
+            String value1 = user.getId();
+            Cookie uiColorCookie = new Cookie("id", value1);
+            resp.addCookie(uiColorCookie);
             responseJson.message = gson.toJson(user);
+
         }catch (SQLException e){
             responseJson.status = "error";
             responseJson.message = "SQL error- " + e.getMessage();
