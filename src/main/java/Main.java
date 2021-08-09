@@ -123,6 +123,8 @@ public class Main {
 
         DBManager db = new DBManager();
 
+        /*
+
         String[] AttractionToAdd = {
                 "Capel Manor Gardens",
                 "Carew Manor & Dovecote",
@@ -150,27 +152,20 @@ public class Main {
 
         };
 
-
-
         for(String currentAttractionName: AttractionToAdd)
         {
            Attraction attraction = db.getAttractionFromDataBaseByName(currentAttractionName, Destinations.london);
         }
 
-        //db.insetAttractionToDBByID("ChIJtV5bzSAFdkgRpwLZFPWrJgo", Destinations.london);
-        //try{
+         */
 
-        //db.insetAttractionToDBByID("ChIJ_zAq7TgFdkgRQg1OSw1j7hU", Destinations.london);
- //       } catch (Exception e)
- //       {
- //           System.out.println(e.getMessage());
-  //      }
 
-        //Gson gson = new Gson();
-        //JsonAttraction att = gson.fromJson(londonsEye, JsonAttraction.class);
-        //Attraction realAtt = new Attraction(att);
+        Attraction hotel = db.getHotelFromDBByName("Central Park Hotel london", Destinations.london_hotels);
 
-        //Attraction newAtt = db.getAttractionFromDataBaseByName("The British Museum");
+
+
+
+
         System.out.println("fin1");
 
 
