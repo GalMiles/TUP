@@ -28,7 +28,6 @@ public class AttractionsServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        System.out.println("i am here");
         if(req.getServletPath().endsWith("/all"))
             processGetRequestAllAttractions(req, resp);
 
@@ -45,12 +44,9 @@ public class AttractionsServlet extends HttpServlet {
         String lines = reader.lines().collect(Collectors.joining()); ///destination
 
         Collection<Attraction> attractions = null;
-        System.out.println("the line is:");
-        System.out.println(lines);
         try {
             attractions = engine.getAttractions(lines);
             responseJson.message = attractions;
-            System.out.println("helllllooooooooooo");
         } catch (SQLException e) {
             responseJson.status = "error";
             responseJson.message = "SQL error- " + e.getMessage();

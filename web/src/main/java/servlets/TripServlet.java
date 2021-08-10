@@ -2,11 +2,10 @@ package servlets;
 
 
 import com.google.gson.Gson;
+import common.DesiredHoursInDay;
 import engine.Engine;
-import engine.attraction.Attraction;
 import engine.planTrip.DayPlan;
 import engine.planTrip.RouteTrip;
-import javafx.util.Pair;
 import servlets.utils.ContextServletUtils;
 import servlets.utils.ResponseJson;
 
@@ -83,10 +82,8 @@ public class TripServlet extends HttpServlet {
         String lines = reader.lines().collect(Collectors.joining());
         TripDetails tripDetails = gson.fromJson(lines, TripDetails.class);
         ArrayList<DayPlan> trip = null;
-
         try {
-            trip = engine.createTripForUser(tripDetails.destination,tripDetails.hotelID, tripDetails.arrivingDate,
-                    tripDetails.leavingDate,tripDetails.mustSeenAttractionsID);
+            trip = engine.createTripForUser(tripDetails.destination,tripDetails.hotelID,tripDetails.mustSeenAttractionsID,tripDetails.hoursEveryDay);
             responseJson.message = trip;
         } catch (SQLException e) {
             responseJson.status = "error";
@@ -97,18 +94,11 @@ public class TripServlet extends HttpServlet {
         }
     }
 
-    static class TripDetails {
+        public static class TripDetails {
         String destination;
         String hotelID;
-        String arrivingDate;
-        String leavingDate;
         ArrayList<String> mustSeenAttractionsID;
-        ArrayList<Pair<String, String>> hoursEveryday;
+        ArrayList<DesiredHoursInDay> hoursEveryDay;
 
-        static class DesiredHoursInDay {
-            private String date;
-            private String startTime;
-            private String endTime;
-        }
     }
 }

@@ -1,13 +1,11 @@
 package engine.planTrip;
 
 
-import common.AttractionType;
-import common.DayOpeningHours;
-import common.Destinations;
-import common.Geometry;
+import common.*;
 import engine.attraction.Attraction;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -15,43 +13,90 @@ import java.util.Iterator;
 
 public class RouteTrip {
     ArrayList<DayPlan> planForDays;
-    //there is no need to the to save the attractions for trip twice(in planForDays and here)
-    //Attraction attractionsForTheTrip;
     int tripDuration;
-    //an Enum that saves destinations(include Paris, London)
-    Destinations destination;
+    Destinations destination;    //an Enum that saves destinations(include Paris, London)
     Attraction hotel;
     LocalDate arrivingDate;
     LocalDate leavingDate;
     ArrayList<Attraction> mustSeenAttractions;
     static int tripId = 0;
 
+    public RouteTrip(String destination, Attraction hotel, ArrayList<Attraction> mustSeenAttractions, ArrayList<DesiredHoursInDay> desiredHoursInDays) {
+        setArrivingDate(LocalDate.parse(((desiredHoursInDays.get(0)).getDate())));
+        String lastDay = desiredHoursInDays.get(desiredHoursInDays.size()-1).getDate();
+        setLeavingDate(LocalDate.parse(lastDay));
+        setTripDuration(leavingDate.getDayOfMonth() - arrivingDate.getDayOfMonth() + 1);
+        setMustSeenAttractions(mustSeenAttractions);
+        setDestination(Destinations.valueOf(destination));
+        setHotel(hotel);
+        setPlanForDays(desiredHoursInDays,this.hotel);
 
-    public RouteTrip(String destination,Attraction hotel,LocalDate arrivingDate, LocalDate leavingDate,ArrayList<Attraction> mustSeenAttractions) {
-        this.tripDuration = leavingDate.getDayOfMonth() - arrivingDate.getDayOfMonth();
-        this.planForDays =  new ArrayList<>(this.tripDuration);
-        this.mustSeenAttractions = new ArrayList<>(mustSeenAttractions);
-        this.destination = Destinations.valueOf(destination);
-        this.hotel = hotel;
-        this.arrivingDate = arrivingDate;
-        this.leavingDate = leavingDate;
-        (this.tripId)++;
+        tripId++;
 
     }
 
+    public int getTripDuration() { return tripDuration; }
+    public Destinations getDestination() {
+        return destination;
+    }
+    public Attraction getHotel() {
+        return hotel;
+    }
+    public LocalDate getArrivingDate() {
+        return arrivingDate;
+    }
+    public LocalDate getLeavingDate() {
+        return leavingDate;
+    }
+    public ArrayList<Attraction> getMustSeenAttractions() {
+        return mustSeenAttractions;
+    }
     public ArrayList<DayPlan> getPlanForDays() {
         return planForDays;
     }
 
+    public void setTripDuration(int tripDuration) {
+        this.tripDuration = tripDuration;
+    }
+
+    public void setDestination(Destinations destination) {
+        this.destination = destination;
+    }
+
+    public void setHotel(Attraction hotel) {
+        this.hotel = hotel;
+    }
+
+    public void setArrivingDate(LocalDate arrivingDate) {
+        this.arrivingDate = arrivingDate;
+    }
+
+    public void setLeavingDate(LocalDate leavingDate) {
+        this.leavingDate = leavingDate;
+    }
+
+    public void setMustSeenAttractions(ArrayList<Attraction> mustSeenAttractions) {
+        this.mustSeenAttractions = new ArrayList<Attraction>();
+        if(mustSeenAttractions != null) {
+            for (Attraction attraction : mustSeenAttractions)
+                this.mustSeenAttractions.add(attraction);
+        }
+    }
+
+    public void setPlanForDays(ArrayList<DesiredHoursInDay> planForDays, Attraction hotel) {
+        this.planForDays = new ArrayList<DayPlan>();
+        for(DesiredHoursInDay day: planForDays){
+            DayPlan dayPlan = new DayPlan(LocalDate.parse(day.getDate()),
+                    LocalTime.parse(day.getStartTime()),
+                            LocalTime.parse(day.getEndTime()),hotel);
+            this.planForDays.add(dayPlan);
+        }
+    }
+
     public void planRouteTrip(){
         ArrayList<Attraction> possibleAttractions = getPossibleAttractions(destination.toString());
-        LocalDate currentDate = arrivingDate;
-        DayPlan dayPlan;
-        for (int i = 0; i < tripDuration; i++){
-            dayPlan = new DayPlan(hotel, currentDate);
+        for(DayPlan dayPlan: this.planForDays){
             dayPlan.calculateDayPlan(possibleAttractions);
-            planForDays.add(dayPlan);
-            currentDate = currentDate.plusDays(1);
         }
     }
 

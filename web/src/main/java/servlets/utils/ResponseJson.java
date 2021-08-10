@@ -1,7 +1,9 @@
 package servlets.utils;
 
 import engine.Engine;
+import engine.planTrip.RouteTrip;
 import engine.traveler.Traveler;
+import servlets.TripServlet;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -50,6 +52,7 @@ public class ResponseJson{
 
         //return newTraveler;
     }
+
 
 
 }

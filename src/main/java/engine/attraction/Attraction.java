@@ -51,7 +51,11 @@ public class Attraction {
         String[] typesArray = resultSet.getString("types").split(",");
         for (String type: typesArray)
         {
-            this.types.add(AttractionType.valueOf(type));
+            try{
+            AttractionType value = AttractionType.valueOf(type);
+                this.types.add(value);
+            } catch (IllegalArgumentException | NullPointerException e) {}
+
         }
         String[] geometryArr = geometryStr.split(",");
         this.geometry = new Geometry(geometryArr[0], geometryArr[1]);
@@ -86,6 +90,8 @@ public class Attraction {
         }
 
     }
+
+
 
     public Attraction(Attraction other)
     {

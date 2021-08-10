@@ -13,35 +13,81 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class DayPlan {
-    int MAX_DURATION = 10;
-    ArrayList<OnePlan> daySchedule;
+    double durationDesireByUser;
+    ArrayList<OnePlan> daySchedule = new ArrayList<>();
     LocalDate date;
     Attraction hotel;
+    LocalTime startTime;
+    LocalTime finishTime;
     int durationDay = 0;
 
-    public DayPlan(ArrayList<OnePlan> daySchedule, LocalDate date) {
-        this.daySchedule = daySchedule;
-        this.date = date;
+
+    public DayPlan(LocalDate date, LocalTime startTime, LocalTime finishTime ,Attraction hotel){
+        setHotel(hotel);
+        setDate(date);
+        setStartTime(startTime);
+        setFinishTime(finishTime);
+        setDurationDesireByUser((startTime.until(finishTime,ChronoUnit.MINUTES))/60.0);
     }
 
-    public DayPlan(Attraction hotel,LocalDate date) {
-        this.daySchedule = new ArrayList<>();
-        this.hotel = hotel;
+
+    public double getDurationDesireByUser() {
+        return durationDesireByUser;
+    }
+    public ArrayList<OnePlan> getDaySchedule() {
+        return daySchedule;
+    }
+    public LocalDate getDate() {
+        return date;
+    }
+    public Attraction getHotel() {
+        return hotel;
+    }
+    public LocalTime getStartTime() {
+        return startTime;
+    }
+    public LocalTime getFinishTime() {
+        return finishTime;
+    }
+    public int getDurationDay() {
+        return durationDay;
+    }
+
+    public void setDurationDesireByUser(double durationDesireByUser) {
+        this.durationDesireByUser = durationDesireByUser;
+    }
+    public void setDaySchedule(ArrayList<OnePlan> daySchedule) {
+        this.daySchedule = daySchedule;
+    }
+    public void setDate(LocalDate date) {
         this.date = date;
+    }
+    public void setHotel(Attraction hotel) {
+        this.hotel = hotel;
+    }
+    public void setStartTime(LocalTime startTime) {
+        this.startTime = startTime;
+    }
+    public void setFinishTime(LocalTime finishTime) {
+        this.finishTime = finishTime;
+    }
+    public void setDurationDay(int durationDay) {
+        this.durationDay = durationDay;
     }
 
     public void calculateDayPlan(ArrayList<Attraction> possibleAttractions) {
         Attraction currentAttraction = hotel;
         Attraction nextAttraction;
-        LocalTime currentTime = LocalTime.parse("10:00" ,DateTimeFormatter.ofPattern("HH:mm"));
+        LocalTime currentTime = startTime;
         daySchedule.add(new OnePlan(hotel,currentTime));
 
-        while (durationDay < MAX_DURATION) {
+        while (durationDay < durationDesireByUser) {
             nextAttraction = chooseBestNextAttraction(currentAttraction, currentTime,possibleAttractions);
             daySchedule.add(new OnePlan(nextAttraction,currentTime));
             possibleAttractions.remove(nextAttraction); // -object of any class are reference so this action delete chosen attraction so we dont add visited attraction to rhe next day
             currentAttraction = nextAttraction;
             currentTime = currentTime.plusHours(nextAttraction.getDuration());
+
             durationDay += nextAttraction.getDuration();
             if (nextAttraction.getName().equals(hotel.getName()))
                 break;
@@ -109,29 +155,33 @@ public class DayPlan {
                 minValue = differenceBetweenClockAndStartTime;
         }
         scoreTime = -1 * minValue;
-
-
         return scoreDistance + scoreTime;
     }
 
-    @Override
-    public String toString() {
-        printDaySchedule(daySchedule);
-        return "";
+//    @Override
+//    public String toString() {
 //        return "DayPlan{" +
-//                "MAX_DURATION=" + MAX_DURATION +
+//                "durationDesireByUser=" + durationDesireByUser +
 //                ", daySchedule=" + daySchedule +
 //                ", date=" + date +
 //                ", hotel=" + hotel +
+//                ", startTime=" + startTime +
+//                ", finishTime=" + finishTime +
 //                ", durationDay=" + durationDay +
 //                '}';
+//    }
+
+    @Override
+    public String toString() {
+        printDaySchedule(daySchedule,date);
+        return "";
     }
 
-    private void printDaySchedule(ArrayList<OnePlan> daySchedule)
+    private void printDaySchedule(ArrayList<OnePlan> daySchedule,LocalDate date)
     {
         int i = 0;
         for (OnePlan plan : daySchedule) {
-            System.out.println("DAY " +String.valueOf(i)+ ":"+ plan.getAttraction().getName());
+            System.out.println(date +" DAY " +String.valueOf(i)+ ":"+ plan.getAttraction().getName());
             i++;
         }
 

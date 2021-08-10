@@ -2,6 +2,7 @@ package engine;
 
 import com.google.gson.Gson;
 import common.AttractionType;
+import common.DesiredHoursInDay;
 import common.Destinations;
 import common.Geometry;
 import database.DBManager;
@@ -89,7 +90,7 @@ public class Engine {
     }
 
     public ArrayList<DayPlan> createTripForUser(String destination, String stringHotelID,
-                                                String stringArrivingDate, String stringLeavingDate,ArrayList<String> mustSeenAttractionsID) throws SQLException{
+            ArrayList<String> mustSeenAttractionsID, ArrayList<DesiredHoursInDay> desiredHoursInDays) throws SQLException{
         DBManager db = new DBManager();
         //Attraction hotel  = db.getAttractionFromDBByID(stringHotelID);
 
@@ -99,15 +100,12 @@ public class Engine {
                 "020 7368 5700", null, new Geometry("51.50167580000001", "-0.1847417"), "ChIJFSZeB1kFdkgRTixgFHqP13g",
                 typesHotel, null);
 
-
-
-        LocalDate arrivingDate = LocalDate.parse(stringArrivingDate);
-        LocalDate leavingDate = LocalDate.parse(stringLeavingDate);
         ArrayList<Attraction> mustSeenAttractions = createArrayListOfMustSeenAttractions(mustSeenAttractionsID, db);
-        RouteTrip routeTrip = new RouteTrip(destination,hotel,arrivingDate,leavingDate, mustSeenAttractions);
+        RouteTrip routeTrip = new RouteTrip(destination,hotel, mustSeenAttractions, desiredHoursInDays);
         routeTrip.planRouteTrip();
         return routeTrip.getPlanForDays();
     }
+
     private ArrayList<Attraction> createArrayListOfMustSeenAttractions(ArrayList<String> mustSeenAttractionsID,DBManager db) throws SQLException {
         ArrayList<Attraction> mustSeenAttractions = new ArrayList<>();
         for (String attractionID: mustSeenAttractionsID)
