@@ -40,42 +40,19 @@ public class Engine {
         return db.getAllAttractionsByDestination(destination);
     }
 
-    //getting favorite attractions, no destination related
     public Collection<Attraction> getFavAttractions() throws SQLException {
         DBManager db = new DBManager();
         return db.getFavAttractions();
     }
 
-    public Collection<Attraction> deleteFromFavAttractions(String attractionName) throws SQLException, IOException, ParseException {
-        Collection<Attraction> newFavAttraction = null;
+    public void deleteFromFavAttractions(String attractionId) throws SQLException {
         DBManager db = new DBManager();
-
-        //creating Attraction object from string from db
-        Attraction attraction = db.getAttractionFromDataBaseByName(attractionName, Destinations.london);
-        //getting favAttraction from db
-        newFavAttraction = db.getFavAttractions();
-        newFavAttraction.remove(attraction);
-
-        /////need to update in data base!!!!!////
-
-        return newFavAttraction;
-
+        //db.deleteUserOneFavoriteAttraction(attractionId);
     }
 
-    public Collection<Attraction> addToFavAttractions(String attractionName) throws SQLException, IOException, ParseException {
-        Collection<Attraction> newFavAttraction = null;
+    public void addToFavAttractions(String attractionNamId) throws SQLException {
         DBManager db = new DBManager();
-
-        //creating Attraction object from string from db
-        Attraction attraction = db.getAttractionFromDataBaseByName(attractionName, Destinations.london);
-
-        //getting favAttraction from db
-        newFavAttraction = db.getFavAttractions();
-        newFavAttraction.add(attraction);
-
-        /////need to update in data base!!!!!////
-
-        return newFavAttraction;
+        //db.addFavoriteAttraction(attractionId);
     }
 
     public Collection<RouteTrip> getUserTrips() throws SQLException, RouteTrip.NotFoundException {

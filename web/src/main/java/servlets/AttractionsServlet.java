@@ -26,24 +26,28 @@ import java.util.stream.Collectors;
 public class AttractionsServlet extends HttpServlet {
     Gson gson = new Gson();
 
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        if(req.getServletPath().endsWith("/all"))
+        if (req.getServletPath().endsWith("/all"))
             processGetRequestAllAttractions(req, resp);
 
-        if(req.getServletPath().endsWith("/favorites"))
+        if (req.getServletPath().endsWith("/favorites"))
             processGetRequestFavoritesAttractions(req, resp);
-
-
     }
 
-    private void processGetRequestAllAttractions(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException{
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        doGet(req, resp);
+    }
+
+    private void processGetRequestAllAttractions(HttpServletRequest req, HttpServletResponse resp) throws  IOException {
         Engine engine = ContextServletUtils.getEngine(req);
         ResponseJson responseJson = new ResponseJson();
         BufferedReader reader = req.getReader();
         String lines = reader.lines().collect(Collectors.joining()); ///destination
 
-        Collection<Attraction> attractions = null;
+        Collection<Attraction> attractions;
         try {
             attractions = engine.getAttractions(lines);
             responseJson.message = attractions;
@@ -57,13 +61,13 @@ public class AttractionsServlet extends HttpServlet {
         }
     }
 
-    private void processGetRequestFavoritesAttractions(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException{
+    private void processGetRequestFavoritesAttractions(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         Engine engine = ContextServletUtils.getEngine(req);
         ResponseJson responseJson = new ResponseJson();
         BufferedReader reader = req.getReader();
         String lines = reader.lines().collect(Collectors.joining()); ///destination
 
-        Collection<Attraction> favAttractions = null;
+        Collection<Attraction> favAttractions;
 
         try {
             favAttractions = engine.getAttractions(lines);
@@ -81,7 +85,7 @@ public class AttractionsServlet extends HttpServlet {
 
     //delete attraction from favorite attraction
     @Override
-    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws  IOException {
         Engine engine = ContextServletUtils.getEngine(req);
         ResponseJson responseJson = new ResponseJson();
         BufferedReader reader = req.getReader();
@@ -104,27 +108,23 @@ public class AttractionsServlet extends HttpServlet {
 
     //add attraction to favorite attraction
     @Override
-    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         Engine engine = ContextServletUtils.getEngine(req);
         ResponseJson responseJson = new ResponseJson();
         BufferedReader reader = req.getReader();
-        String lines = reader.lines().collect(Collectors.joining());
+        String lines = reader.lines().collect(Collectors.joining()); //id
 
-        Collection<Attraction> favAttractions = null;
-        //in lines we hava the attraction name the user want to add
         try {
-            favAttractions = engine.addToFavAttractions(lines);
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        } catch (ParseException e) {
+            engine.addToFavAttractions(lines);
+        } catch (SQLException e) {
             e.printStackTrace();
+            responseJson.status = "error";
+            responseJson.message = "SQL error- " + e.getMessage();
+
+            try (PrintWriter out = resp.getWriter()) {
+                out.println(gson.toJson(responseJson));
+            }
         }
-
-        //creating response message
-        responseJson.message = favAttractions;
-
-        PrintWriter out = resp.getWriter();
-        out.println(gson.toJson(responseJson));
     }
-        }
+}
 
