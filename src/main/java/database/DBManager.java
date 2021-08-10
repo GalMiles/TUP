@@ -26,16 +26,14 @@ public class DBManager {
 
 
     public DBManager() throws SQLException {
-        this.sqlConnection = DriverManager.getConnection("jdbc:mysql://localhost:3306/tup", "root", "123456ma");
+        this.sqlConnection = DriverManager.getConnection("jdbc:mysql://localhost:3306/tup", "root", "742!GDFMP");
+        this.statement = sqlConnection.createStatement();
     }
 
 
     public void closeConnection() throws SQLException {
         this.sqlConnection.close();
     }
-
-
-
 
     public ArrayList<Attraction> getAllAttractionsByDestination(String destination) throws SQLException {
         ArrayList<Attraction> attractions = new ArrayList<>();
@@ -166,10 +164,87 @@ public class DBManager {
     }
 
 
-    public void insertAttractionToDataBase(JsonAttraction attraction, Destinations destination) throws SQLException, ParseException {
+    public Attraction getAttractionFromDataBaseByName(String attractionName, Destinations destination) throws SQLException, IOException, ParseException {
+        Attraction resAttraction;
+        String query = "SELECT * FROM "+ destination.toString() + " WHERE Name=\"" + attractionName + "\"";
+        ResultSet res = this.statement.executeQuery(query);
+        if(res.next())  //check of there is a result from the query
+        {
+            //if there is a result, make an attraction
+            resAttraction = new Attraction(res);
+        }
+        else {  //there is no result from the query(the attraction doesnt found in the database)
+            JsonAttraction jsonAttraction = apiManager.getAttractionFromAPI(attractionName);
+            jsonAttraction.getResult().setOpening_hours(null);
+            resAttraction = new Attraction(jsonAttraction);
+            this.insertAttractionToDB(resAttraction, destination);
+        }
+        return resAttraction;
+    }
+
+
+
+
+    public Attraction getAttractionFromDBByID(String id) throws SQLException {
+        Attraction resAttracion = null;
+        String query = "SELECT * FROM attractionstable WHERE attractionid = \" " + id + "\"";
+        ResultSet resultSet = this.statement.executeQuery(query);
+        if(resultSet.next())
+        {
+            resAttracion = new Attraction(resultSet);
+        }
+        return resAttracion;
+
+    }
+
+
+    public void checkIfEmailIsFound(String email) throws SQLException, Traveler.AlreadyExistsException {
+        String query = "SELECT * FROM travelers WHERE Email = \" " + email + "\"";
+        ResultSet resultSet = this.statement.executeQuery(query);
+        if(resultSet.next())
+        {
+            //throw new Traveler.NotFoundException("Invalid Username\\Password");
+            throw new Traveler.AlreadyExistsException("Traveler is exist in the DB");
+        }
+    }
+
+    public ArrayList<Attraction> getAttractionsByOperationTime(String operationTime){
+        ArrayList<Attraction> attractionsArr = new ArrayList<>();
+        String[] operationTimeSplitArr = operationTime.split("-");
+        String openingHour =operationTimeSplitArr[0];
+        String closingHour =operationTimeSplitArr[1];
+
+        return attractionsArr;
+    }
+
+
+    //getting favorite attractions from db
+    public Collection<Attraction> getFavAttractions() {
+        return null;
+    }
+
+    public Collection<RouteTrip> getMyTripsFromDB() {
+        return null;
+    }
+
+
+    public Attraction getHotelFromDBByName (String hotelName, Destinations destination) throws SQLException, IOException, ParseException {
+        return this.getAttractionFromDataBaseByName(hotelName, destination);
+    }
+
+
+
+
+    /*
+    public void insetAttractionToDBByID(String id, Destinations destination) throws IOException, SQLException, ParseException {
+        JsonAttraction attraction = apiManager.getAttractionByID(id);
+        Attraction finalAttraction = new Attraction(attraction);
+        this.insertAttractionToDB( finalAttraction, destination);
+    }
+
+        public void insertAttractionToDataBase(JsonAttraction attraction, Destinations destination) throws SQLException, ParseException {
 
         JsonAttraction.JsonResult result = attraction.getResult();
-        StringBuilder typesStr = new StringBuilder();
         ArrayList<StringBuilder> dayStrArr = new ArrayList<>();
         for (int i = 0; i < 7; ++i) {
             dayStrArr.add(i, new StringBuilder());
@@ -220,72 +295,6 @@ public class DBManager {
         }
     }
 
+     */
 
-
-    public Attraction getAttractionFromDataBaseByName(String attractionName, Destinations destination) throws SQLException, IOException, ParseException {
-        Attraction resAttraction;
-        String query = "SELECT * FROM attractionstable WHERE Name=\"" + attractionName + "\"";
-        ResultSet res = this.statement.executeQuery(query);
-        if(res.next())  //check of there is a result from the query
-        {
-            //if there is a result, make an attraction
-            resAttraction = new Attraction(res);
-        }
-        else {  //there is no result from the query(the attraction doesnt found in the database)
-            JsonAttraction jsonAttraction = apiManager.getAttractionFromAPI(attractionName);
-            resAttraction = new Attraction(jsonAttraction);
-            this.insertAttractionToDB(resAttraction, destination);
-        }
-        return resAttraction;
-    }
-
-    public void insetAttractionToDBByID(String id, Destinations destination) throws IOException, SQLException, ParseException {
-        JsonAttraction attraction = apiManager.getAttractionByID(id);
-        Attraction finalAttraction = new Attraction(attraction);
-        this.insertAttractionToDB( finalAttraction, destination);
-    }
-
-
-
-    public Attraction getAttractionFromDBByID(String id) throws SQLException {
-        Attraction resAttracion = null;
-        String query = "SELECT * FROM attractionstable WHERE attractionid = \" " + id + "\"";
-        ResultSet resultSet = this.statement.executeQuery(query);
-        if(resultSet.next())
-        {
-            resAttracion = new Attraction(resultSet);
-        }
-        return resAttracion;
-
-    }
-
-
-    public void checkIfEmailIsFound(String email) throws SQLException, Traveler.AlreadyExistsException {
-        String query = "SELECT * FROM travelers WHERE Email = \" " + email + "\"";
-        ResultSet resultSet = this.statement.executeQuery(query);
-        if(resultSet.next())
-        {
-            //throw new Traveler.NotFoundException("Invalid Username\\Password");
-            throw new Traveler.AlreadyExistsException("Traveler is exist in the DB");
-        }
-    }
-
-    public ArrayList<Attraction> getAttractionsByOperationTime(String operationTime){
-        ArrayList<Attraction> attractionsArr = new ArrayList<>();
-        String[] operationTimeSplitArr = operationTime.split("-");
-        String openingHour =operationTimeSplitArr[0];
-        String closingHour =operationTimeSplitArr[1];
-
-        return attractionsArr;
-    }
-
-
-    //getting favorite attractions from db
-    public Collection<Attraction> getFavAttractions() {
-        return null;
-    }
-
-    public Collection<RouteTrip> getMyTripsFromDB() {
-        return null;
-    }
 }
