@@ -69,7 +69,7 @@ public class Engine {
     public ArrayList<DayPlan> createTripForUser(String destination, String stringHotelID,
             ArrayList<String> mustSeenAttractionsID, ArrayList<DesiredHoursInDay> desiredHoursInDays) throws SQLException{
         DBManager db = new DBManager();
-        Attraction hotel  = db.getAttractionFromDBByID(stringHotelID);
+        Attraction hotel  = db.getAttractionFromDBByID(stringHotelID, Destinations.valueOf(destination));
 
 //        ArrayList<AttractionType> typesHotel = new ArrayList<>();
 //        typesHotel.add(AttractionType.lodging);
@@ -86,7 +86,7 @@ public class Engine {
     private ArrayList<Attraction> createArrayListOfMustSeenAttractions(ArrayList<String> mustSeenAttractionsID,DBManager db) throws SQLException {
         ArrayList<Attraction> mustSeenAttractions = new ArrayList<>();
         for (String attractionID: mustSeenAttractionsID)
-            mustSeenAttractions.add(db.getAttractionFromDBByID(attractionID));
+            mustSeenAttractions.add(db.getAttractionFromDBByID(attractionID, Destinations.london));
         return mustSeenAttractions;
     }
 

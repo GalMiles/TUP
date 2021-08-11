@@ -26,7 +26,7 @@ public class DBManager {
 
 
     public DBManager() throws SQLException {
-        this.sqlConnection = DriverManager.getConnection("jdbc:mysql://localhost:3306/tup", "root", "123456ma");
+        this.sqlConnection = DriverManager.getConnection("jdbc:mysql://localhost:3306/tup", "root", "1234");
         this.statement = sqlConnection.createStatement();
     }
 
@@ -185,9 +185,9 @@ public class DBManager {
 
 
 
-    public Attraction getAttractionFromDBByID(String id) throws SQLException {
+    public Attraction getAttractionFromDBByID(String id, Destinations destination) throws SQLException {
         Attraction resAttracion = null;
-        String query = "SELECT * FROM attractionstable WHERE attractionid = \" " + id + "\"";
+        String query = "SELECT * FROM tup." + destination.toString() +  " WHERE attractionAPI_ID = \" " + id + "\"";
         ResultSet resultSet = this.statement.executeQuery(query);
         if(resultSet.next())
         {
