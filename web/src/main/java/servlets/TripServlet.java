@@ -1,6 +1,7 @@
 package servlets;
 
 
+import com.google.gson.Gson;
 import common.DesiredHoursInDay;
 import engine.Engine;
 import engine.planTrip.DayPlan;
@@ -18,6 +19,7 @@ import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 @WebServlet(name = "TripServlet", urlPatterns = {"/trip"})
 public class TripServlet extends HttpServlet {
@@ -81,8 +83,8 @@ public class TripServlet extends HttpServlet {
         public static class TripDetails {
         String destination;
         String hotelID;
-        ArrayList<String> mustSeenAttractionsID;
-        ArrayList<DesiredHoursInDay> hoursEveryDay;
+        ArrayList<String> mustSeenAttractionsID = new ArrayList<>();
+        ArrayList<DesiredHoursInDay> hoursEveryDay = new ArrayList<>();
 
     }
 }

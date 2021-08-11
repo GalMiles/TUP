@@ -1,7 +1,9 @@
 package client;
 
+import com.google.gson.Gson;
 import common.AttractionType;
 import common.DesiredHoursInDay;
+import common.Destinations;
 import common.Geometry;
 //import common.OpeningHours;
 import database.DBManager;
@@ -21,6 +23,24 @@ import java.util.ArrayList;
 
 
 public class main {
+
+    public static class TripDetails {
+        String destination;
+        String hotelID;
+        ArrayList<String> mustSeenAttractionsID;
+        ArrayList<DesiredHoursInDay> hoursEveryDay;
+
+        @Override
+        public String toString() {
+            return "TripDetails{" +
+                    "destination='" + destination + '\'' +
+                    ", hotelID='" + hotelID + '\'' +
+                    ", mustSeenAttractionsID=" + mustSeenAttractionsID +
+                    ", hoursEveryDay=" + hoursEveryDay +
+                    '}';
+        }
+    }
+
     public static void main(String[] args) throws IOException {
 
 //
@@ -66,15 +86,41 @@ public class main {
 //            System.out.println(  hotel.calcDistanceBetweenAttractions(att));
 //        }
 
-        try {
-            DBManager db = new DBManager();
-            db.Login("ayadv@gmail.com", "1234");
+//        try {
+//            DBManager db = new DBManager();
+//            db.Login("ayadv@gmail.com", "1234");
+//
+//        }catch (SQLException e){
+//                System.out.println("error  SQL error- " + e.getMessage());
+//        } catch (Traveler.NotFoundException e) {
+//            System.out.println("Invalid email or password " + e.getMessage());
+//        }
 
-        }catch (SQLException e){
-                System.out.println("error  SQL error- " + e.getMessage());
-        } catch (Traveler.NotFoundException e) {
-            System.out.println("Invalid email or password " + e.getMessage());
-        }
+//        TripDetails trip = new TripDetails();
+//
+//        trip.destination = "london";
+//        trip.hotelID = "ChIJGeIsmrgEdkgRlsvY9Maa0A0";
+//        trip.mustSeenAttractionsID = new ArrayList<>();
+//        trip.mustSeenAttractionsID.add("ChIJ_R7u-6QcdkgR_TvWQJZsm3k");
+//        trip.mustSeenAttractionsID.add("ChIJ2_19mdYEdkgRadLE5rfxLPU");
+//        trip.mustSeenAttractionsID.add("ChIJ7bDgv2IadkgRkIbzf3FdF5M");
+//        trip.mustSeenAttractionsID.add("ChIJG1YB2m4RdkgRsetv9D40NGY");
+//        trip.mustSeenAttractionsID.add("ChIJVbSVrt0EdkgRQH_FO4ZkHc0");
+//        trip.hoursEveryDay = new ArrayList<>();
+//        trip.hoursEveryDay.add(new DesiredHoursInDay("2021-08-11"));
+//
+//        trip.hoursEveryDay.get(0).setStartTime("10:00");
+//        trip.hoursEveryDay.get(0).setEndTime("20:00");
+//        trip.hoursEveryDay.add(new DesiredHoursInDay("2021-08-12"));
+//        trip.hoursEveryDay.get(1).setStartTime("10:00");
+//        trip.hoursEveryDay.get(1).setEndTime("18:00");
+//        trip.hoursEveryDay.add(new DesiredHoursInDay("2021-08-13"));
+//        trip.hoursEveryDay.get(2).setStartTime("15:00");
+//        trip.hoursEveryDay.get(2).setEndTime("20:00");
+//
+//        Gson gson = new Gson();
+//        System.out.println(gson.toJson(trip));
+
 
 
     }

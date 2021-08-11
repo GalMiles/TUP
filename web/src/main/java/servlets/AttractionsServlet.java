@@ -1,11 +1,9 @@
 package servlets;
 
 
-import com.google.gson.Gson;
 import engine.Engine;
 import engine.attraction.Attraction;
 import servlets.utils.ContextServletUtils;
-import servlets.utils.ResponseJson;
 import servlets.utils.ServletUtils;
 
 import javax.servlet.ServletException;
@@ -13,16 +11,12 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
-import java.text.ParseException;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.stream.Collectors;
 
-//favorite attractions
+
 @WebServlet(name = "AttractionsServlet", urlPatterns = {"/attractions/favorites", "/attractions/all"})
 public class AttractionsServlet extends HttpServlet {
 
@@ -65,7 +59,7 @@ public class AttractionsServlet extends HttpServlet {
         Collection<Attraction> favoriteAttractions;
 
         try {
-            favoriteAttractions = engine.getAttractions(servletUtils.lines);
+            favoriteAttractions = engine.getAttractions(servletUtils.lines); //id
             servletUtils.writeJsonResponse(favoriteAttractions);
 
         } catch (SQLException e) {
@@ -94,7 +88,6 @@ public class AttractionsServlet extends HttpServlet {
             out.println(servletUtils.createOutResponse());
         }
     }
-
 
     //add attraction to favorite attraction
     @Override

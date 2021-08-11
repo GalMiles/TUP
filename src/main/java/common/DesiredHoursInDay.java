@@ -5,6 +5,10 @@ public class DesiredHoursInDay {
     private String startTime;
     private String endTime;
 
+    public DesiredHoursInDay(String s) {
+        setDate(s);
+    }
+
     public String getDate() {
         return date;
     }
@@ -27,5 +31,14 @@ public class DesiredHoursInDay {
 
     public void setEndTime(String endTime) {
         this.endTime = endTime;
+    }
+
+    @Override
+    public String toString() {
+        return "DesiredHoursInDay{" +
+                "date='" + date + '\'' +
+                ", startTime='" + startTime + '\'' +
+                ", endTime='" + endTime + '\'' +
+                '}';
     }
 }

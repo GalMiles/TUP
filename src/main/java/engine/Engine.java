@@ -13,6 +13,7 @@ import engine.planTrip.DayPlan;
 import engine.planTrip.RouteTrip;
 import engine.traveler.Traveler;
 
+import javax.print.attribute.standard.Destination;
 import java.io.IOException;
 import java.sql.SQLException;
 
@@ -20,6 +21,7 @@ import java.text.ParseException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 public class Engine {
 
@@ -40,7 +42,7 @@ public class Engine {
         return db.getAllAttractionsByDestination(destination);
     }
 
-    public Collection<Attraction> getFavAttractions() throws SQLException {
+    public Collection<Attraction> getFavoriteAttractions() throws SQLException {
         DBManager db = new DBManager();
         return db.getFavAttractions();
     }
@@ -67,20 +69,21 @@ public class Engine {
     }
 
     public ArrayList<DayPlan> createTripForUser(String destination, String stringHotelID,
-            ArrayList<String> mustSeenAttractionsID, ArrayList<DesiredHoursInDay> desiredHoursInDays) throws SQLException{
+             ArrayList<String> mustSeenAttractionsID, ArrayList<DesiredHoursInDay> desiredHoursInDays) throws SQLException{
         DBManager db = new DBManager();
-        Attraction hotel  = db.getAttractionFromDBByID(stringHotelID, Destinations.valueOf(destination));
+        //Attraction hotel  = db.getAttractionFromDBByID(stringHotelID, Destinations.valueOf(destination));
 
-//        ArrayList<AttractionType> typesHotel = new ArrayList<>();
-//        typesHotel.add(AttractionType.lodging);
-//        Attraction hotel = new Attraction("Baglioni Hotel - London", "60 Hyde Park Gate, South Kensington, London SW7 5BB, UK",
-//                "020 7368 5700", null, new Geometry("51.50167580000001", "-0.1847417"), "ChIJFSZeB1kFdkgRTixgFHqP13g",
-//                typesHotel, null);
+        ArrayList<AttractionType> typesHotel = new ArrayList<>();
+        typesHotel.add(AttractionType.lodging);
+        Attraction hotel = new Attraction("Baglioni Hotel - London", "60 Hyde Park Gate, South Kensington, London SW7 5BB, UK",
+                "020 7368 5700", null, new Geometry("51.50167580000001", "-0.1847417"), "ChIJFSZeB1kFdkgRTixgFHqP13g",
+                typesHotel, null);
 
         ArrayList<Attraction> mustSeenAttractions = createArrayListOfMustSeenAttractions(mustSeenAttractionsID, db);
         RouteTrip routeTrip = new RouteTrip(destination,hotel, mustSeenAttractions, desiredHoursInDays);
         routeTrip.planRouteTrip();
         return routeTrip.getPlanForDays();
+
     }
 
     private ArrayList<Attraction> createArrayListOfMustSeenAttractions(ArrayList<String> mustSeenAttractionsID,DBManager db) throws SQLException {
@@ -94,5 +97,13 @@ public class Engine {
         DBManager db = new DBManager();
         //db.deleteAttractionfromFavoriteList(attractionId);
 
+    }
+
+    public ArrayList<String> getDestinations() {
+        ArrayList<String> destinations = new ArrayList<>();
+        Destinations[] destinationsList = Destinations.values();
+        for (Destinations des: destinationsList)
+            destinations.add(des.name());
+        return destinations;
     }
 }
