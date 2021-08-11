@@ -1,74 +1,59 @@
 package servlets;
 
 
-import com.google.gson.Gson;
 import common.DesiredHoursInDay;
 import engine.Engine;
 import engine.planTrip.DayPlan;
 import engine.planTrip.RouteTrip;
 import servlets.utils.ContextServletUtils;
-import servlets.utils.ResponseJson;
+import servlets.utils.ServletUtils;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.stream.Collectors;
 
 @WebServlet(name = "TripServlet", urlPatterns = {"/trip"})
 public class TripServlet extends HttpServlet {
-    Gson gson = new Gson();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        //req.getCookies()
+
+        ServletUtils servletUtils = new ServletUtils(req);
         Engine engine = ContextServletUtils.getEngine(req);
-        ResponseJson responseJson = new ResponseJson();
-        BufferedReader reader = req.getReader();
-        String lines = reader.lines().collect(Collectors.joining());
 
-        Collection<RouteTrip> userTrips = null;
         try {
-            userTrips = engine.getUserTrips();
-            responseJson.message = userTrips;
-        } catch (SQLException e) {
-            responseJson.status = "error";
-            responseJson.message = "SQL error- " + e.getMessage();
-        }catch (RouteTrip.NotFoundException e){
-            responseJson.status = "error";
-            responseJson.message = "Attraction not found";
-
+            Collection<RouteTrip> userTrips = engine.getUserTrips();
+            servletUtils.writeJsonResponse(userTrips);
+        } catch (SQLException | RouteTrip.NotFoundException e) {
+            servletUtils.writeJsonResponse("error", e.getMessage());
         }
+
         try (PrintWriter out = resp.getWriter()) {
-            out.println(gson.toJson(responseJson));
+            out.println(servletUtils.createOutResponse());
         }
     }
+
     //delete trip from my trips
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
+        ServletUtils servletUtils = new ServletUtils(req);
         Engine engine = ContextServletUtils.getEngine(req);
-        ResponseJson responseJson = new ResponseJson();
-        BufferedReader reader = req.getReader();
-
-        //here there is the routeTrip we want to delete
-        String lines = reader.lines().collect(Collectors.joining());
 
         try {
-            engine.deleteTripFromUserTrips(lines);
+            engine.deleteTripFromUserTrips(servletUtils.lines);
         } catch (SQLException e) {
-            responseJson.status = "error";
-            responseJson.message = "SQL error- " + e.getMessage();
+            servletUtils.writeJsonResponse("error", e.getMessage());
         }
 
         try (PrintWriter out = resp.getWriter()) {
-            out.println(gson.toJson(responseJson));
+            out.println(servletUtils.createOutResponse());
         }
     }
 
@@ -76,21 +61,20 @@ public class TripServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 
+        ServletUtils servletUtils = new ServletUtils(req);
         Engine engine = ContextServletUtils.getEngine(req);
-        ResponseJson responseJson = new ResponseJson();
-        BufferedReader reader = req.getReader();
-        String lines = reader.lines().collect(Collectors.joining());
-        TripDetails tripDetails = gson.fromJson(lines, TripDetails.class);
-        ArrayList<DayPlan> trip = null;
+
+        TripDetails tripDetails = (TripDetails)servletUtils.gsonFromJson(TripDetails.class);
+
         try {
-            trip = engine.createTripForUser(tripDetails.destination,tripDetails.hotelID,tripDetails.mustSeenAttractionsID,tripDetails.hoursEveryDay);
-            responseJson.message = trip;
+            ArrayList<DayPlan> trip = engine.createTripForUser(tripDetails.destination,tripDetails.hotelID,tripDetails.mustSeenAttractionsID,tripDetails.hoursEveryDay);
+            servletUtils.writeJsonResponse(trip);
         } catch (SQLException e) {
-            responseJson.status = "error";
-            responseJson.message = "SQL error- " + e.getMessage();
+            servletUtils.writeJsonResponse("error", e.getMessage());
         }
+
         try (PrintWriter out = resp.getWriter()) {
-            out.println(gson.toJson(responseJson));
+            out.println(servletUtils.createOutResponse());
         }
     }
 

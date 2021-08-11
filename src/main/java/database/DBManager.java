@@ -26,7 +26,7 @@ public class DBManager {
 
 
     public DBManager() throws SQLException {
-        this.sqlConnection = DriverManager.getConnection("jdbc:mysql://localhost:3306/tup", "root", "742!GDFMP");
+        this.sqlConnection = DriverManager.getConnection("jdbc:mysql://localhost:3306/tup", "root", "123456ma");
         this.statement = sqlConnection.createStatement();
     }
 

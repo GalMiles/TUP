@@ -45,12 +45,12 @@ public class Engine {
         return db.getFavAttractions();
     }
 
-    public void deleteFromFavAttractions(String attractionId) throws SQLException {
+    public void deleteFromFavoriteAttractions(String attractionId) throws SQLException {
         DBManager db = new DBManager();
         //db.deleteUserOneFavoriteAttraction(attractionId);
     }
 
-    public void addToFavAttractions(String attractionNamId) throws SQLException {
+    public void addToFavoriteAttractions(String attractionNamId) throws SQLException {
         DBManager db = new DBManager();
         //db.addFavoriteAttraction(attractionId);
     }
@@ -69,13 +69,13 @@ public class Engine {
     public ArrayList<DayPlan> createTripForUser(String destination, String stringHotelID,
             ArrayList<String> mustSeenAttractionsID, ArrayList<DesiredHoursInDay> desiredHoursInDays) throws SQLException{
         DBManager db = new DBManager();
-        //Attraction hotel  = db.getAttractionFromDBByID(stringHotelID);
+        Attraction hotel  = db.getAttractionFromDBByID(stringHotelID);
 
-        ArrayList<AttractionType> typesHotel = new ArrayList<>();
-        typesHotel.add(AttractionType.lodging);
-        Attraction hotel = new Attraction("Baglioni Hotel - London", "60 Hyde Park Gate, South Kensington, London SW7 5BB, UK",
-                "020 7368 5700", null, new Geometry("51.50167580000001", "-0.1847417"), "ChIJFSZeB1kFdkgRTixgFHqP13g",
-                typesHotel, null);
+//        ArrayList<AttractionType> typesHotel = new ArrayList<>();
+//        typesHotel.add(AttractionType.lodging);
+//        Attraction hotel = new Attraction("Baglioni Hotel - London", "60 Hyde Park Gate, South Kensington, London SW7 5BB, UK",
+//                "020 7368 5700", null, new Geometry("51.50167580000001", "-0.1847417"), "ChIJFSZeB1kFdkgRTixgFHqP13g",
+//                typesHotel, null);
 
         ArrayList<Attraction> mustSeenAttractions = createArrayListOfMustSeenAttractions(mustSeenAttractionsID, db);
         RouteTrip routeTrip = new RouteTrip(destination,hotel, mustSeenAttractions, desiredHoursInDays);

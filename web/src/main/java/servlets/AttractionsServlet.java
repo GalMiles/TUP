@@ -6,6 +6,7 @@ import engine.Engine;
 import engine.attraction.Attraction;
 import servlets.utils.ContextServletUtils;
 import servlets.utils.ResponseJson;
+import servlets.utils.ServletUtils;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -24,8 +25,6 @@ import java.util.stream.Collectors;
 //favorite attractions
 @WebServlet(name = "AttractionsServlet", urlPatterns = {"/attractions/favorites", "/attractions/all"})
 public class AttractionsServlet extends HttpServlet {
-    Gson gson = new Gson();
-
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -42,88 +41,75 @@ public class AttractionsServlet extends HttpServlet {
     }
 
     private void processGetRequestAllAttractions(HttpServletRequest req, HttpServletResponse resp) throws  IOException {
+        ServletUtils servletUtils = new ServletUtils(req);
         Engine engine = ContextServletUtils.getEngine(req);
-        ResponseJson responseJson = new ResponseJson();
-        BufferedReader reader = req.getReader();
-        String lines = reader.lines().collect(Collectors.joining()); ///destination
 
         Collection<Attraction> attractions;
         try {
-            attractions = engine.getAttractions(lines);
-            responseJson.message = attractions;
+            attractions = engine.getAttractions(servletUtils.lines); //destination
+            servletUtils.writeJsonResponse(attractions);
         } catch (SQLException e) {
-            responseJson.status = "error";
-            responseJson.message = "SQL error- " + e.getMessage();
+            servletUtils.writeJsonResponse("error", e.getMessage());
         }
 
         try (PrintWriter out = resp.getWriter()) {
-            out.println(gson.toJson(responseJson));
+            out.println(servletUtils.createOutResponse());
         }
     }
 
     private void processGetRequestFavoritesAttractions(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        Engine engine = ContextServletUtils.getEngine(req);
-        ResponseJson responseJson = new ResponseJson();
-        BufferedReader reader = req.getReader();
-        String lines = reader.lines().collect(Collectors.joining()); ///destination
 
-        Collection<Attraction> favAttractions;
+        ServletUtils servletUtils = new ServletUtils(req);
+        Engine engine = ContextServletUtils.getEngine(req);
+
+        Collection<Attraction> favoriteAttractions;
 
         try {
-            favAttractions = engine.getAttractions(lines);
-            responseJson.message = favAttractions;
+            favoriteAttractions = engine.getAttractions(servletUtils.lines);
+            servletUtils.writeJsonResponse(favoriteAttractions);
 
         } catch (SQLException e) {
-            responseJson.status = "error";
-            responseJson.message = "SQL error- " + e.getMessage();
+            servletUtils.writeJsonResponse("error", e.getMessage());
         }
 
         try (PrintWriter out = resp.getWriter()) {
-            out.println(gson.toJson(responseJson));
+            out.println(servletUtils.createOutResponse());
         }
     }
 
     //delete attraction from favorite attraction
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws  IOException {
+
+        ServletUtils servletUtils = new ServletUtils(req);
         Engine engine = ContextServletUtils.getEngine(req);
-        ResponseJson responseJson = new ResponseJson();
-        BufferedReader reader = req.getReader();
-        String lines = reader.lines().collect(Collectors.joining()); /// id
 
         try {
-            engine.deleteFavoriteAttractionsById(lines);
-        } catch (SQLException e) {
-            responseJson.status = "error";
-            responseJson.message = "SQL error- " + e.getMessage();
-        } catch (Attraction.NotFoundException e) {
-            responseJson.status = "error";
-            responseJson.message = "Attraction not found";
+            engine.deleteFavoriteAttractionsById(servletUtils.lines);
+        } catch (SQLException | Attraction.NotFoundException e) {
+            servletUtils.writeJsonResponse("error", e.getMessage());
+        }
 
-            try (PrintWriter out = resp.getWriter()) {
-                out.println(gson.toJson(responseJson));
-            }
+        try (PrintWriter out = resp.getWriter()) {
+            out.println(servletUtils.createOutResponse());
         }
     }
+
 
     //add attraction to favorite attraction
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        ServletUtils servletUtils = new ServletUtils(req);
         Engine engine = ContextServletUtils.getEngine(req);
-        ResponseJson responseJson = new ResponseJson();
-        BufferedReader reader = req.getReader();
-        String lines = reader.lines().collect(Collectors.joining()); //id
 
         try {
-            engine.addToFavAttractions(lines);
+            engine.addToFavoriteAttractions(servletUtils.lines);
         } catch (SQLException e) {
-            e.printStackTrace();
-            responseJson.status = "error";
-            responseJson.message = "SQL error- " + e.getMessage();
+            servletUtils.writeJsonResponse("error", e.getMessage());
+        }
 
-            try (PrintWriter out = resp.getWriter()) {
-                out.println(gson.toJson(responseJson));
-            }
+        try (PrintWriter out = resp.getWriter()) {
+            out.println(servletUtils.createOutResponse());
         }
     }
 }

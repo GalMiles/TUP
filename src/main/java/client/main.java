@@ -8,6 +8,7 @@ import database.DBManager;
 import engine.planTrip.RouteTrip;
 
 import engine.attraction.Attraction;
+import engine.traveler.Traveler;
 import googleAPI.APIManager;
 import javafx.util.Pair;
 
@@ -22,41 +23,41 @@ import java.util.ArrayList;
 public class main {
     public static void main(String[] args) throws IOException {
 
-
-
-        ArrayList<AttractionType> typesHotel = new ArrayList<>();
-        typesHotel.add(AttractionType.lodging);
-        Attraction hotel = new Attraction("Baglioni Hotel - London", "60 Hyde Park Gate, South Kensington, London SW7 5BB, UK",
-                "020 7368 5700", null, new Geometry("51.50167580000001", "-0.1847417"), "ChIJFSZeB1kFdkgRTixgFHqP13g",
-                typesHotel, null);
-
-
-        LocalDate arrivingDate = common.converter.convertStringToLocalDate("01/09/2021");
-        LocalDate leavingDate = common.converter.convertStringToLocalDate("04/09/2021");
-
-        ArrayList<DesiredHoursInDay> desiredHoursInDays = new ArrayList<>();
-        DesiredHoursInDay d1 = new DesiredHoursInDay();
-        d1.setDate("2021-09-01");
-        d1.setStartTime("10:00");
-        d1.setEndTime("20:00");
-        desiredHoursInDays.add(d1);
-
-        DesiredHoursInDay d2 = new DesiredHoursInDay();
-        d2.setDate("2021-09-02");
-        d2.setStartTime("10:00");
-        d2.setEndTime("20:00");
-        desiredHoursInDays.add(d2);
-
-        DesiredHoursInDay d3 = new DesiredHoursInDay();
-        d3.setDate("2021-09-03");
-        d3.setStartTime("10:00");
-        d3.setEndTime("20:00");
-        desiredHoursInDays.add(d3);
-
-        RouteTrip routeTrip = new RouteTrip("london",hotel,null, desiredHoursInDays);
+//
+//
+//        ArrayList<AttractionType> typesHotel = new ArrayList<>();
+//        typesHotel.add(AttractionType.lodging);
+//        Attraction hotel = new Attraction("Baglioni Hotel - London", "60 Hyde Park Gate, South Kensington, London SW7 5BB, UK",
+//                "020 7368 5700", null, new Geometry("51.50167580000001", "-0.1847417"), "ChIJFSZeB1kFdkgRTixgFHqP13g",
+//                typesHotel, null);
+//
+//
+//        LocalDate arrivingDate = common.converter.convertStringToLocalDate("01/09/2021");
+//        LocalDate leavingDate = common.converter.convertStringToLocalDate("04/09/2021");
+//
+//        ArrayList<DesiredHoursInDay> desiredHoursInDays = new ArrayList<>();
+//        DesiredHoursInDay d1 = new DesiredHoursInDay();
+//        d1.setDate("2021-09-01");
+//        d1.setStartTime("10:00");
+//        d1.setEndTime("20:00");
+//        desiredHoursInDays.add(d1);
+//
+//        DesiredHoursInDay d2 = new DesiredHoursInDay();
+//        d2.setDate("2021-09-02");
+//        d2.setStartTime("10:00");
+//        d2.setEndTime("20:00");
+//        desiredHoursInDays.add(d2);
+//
+//        DesiredHoursInDay d3 = new DesiredHoursInDay();
+//        d3.setDate("2021-09-03");
+//        d3.setStartTime("10:00");
+//        d3.setEndTime("20:00");
+//        desiredHoursInDays.add(d3);
+//
+//        RouteTrip routeTrip = new RouteTrip("london",hotel,null, desiredHoursInDays);
 
         //routeTrip.planRouteTrip();
-        System.out.println(routeTrip.getPlanForDays());
+        //System.out.println(routeTrip.getPlanForDays());
         //System.out.println(routeTrip);
 //
 //        ArrayList<Attraction> possibleAttractions = routeTrip.getPossibleAttractions("london");
@@ -65,7 +66,15 @@ public class main {
 //            System.out.println(  hotel.calcDistanceBetweenAttractions(att));
 //        }
 
+        try {
+            DBManager db = new DBManager();
+            db.Login("ayadv@gmail.com", "1234");
 
+        }catch (SQLException e){
+                System.out.println("error  SQL error- " + e.getMessage());
+        } catch (Traveler.NotFoundException e) {
+            System.out.println("Invalid email or password " + e.getMessage());
+        }
 
 
     }
