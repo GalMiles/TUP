@@ -11,6 +11,7 @@ import engine.planTrip.RouteTrip;
 import engine.traveler.Traveler;
 import googleAPI.APIManager;
 import googleAPI.JsonAttraction;
+import jdk.internal.instrumentation.Logger;
 
 import java.io.IOException;
 import java.sql.*;
@@ -25,11 +26,13 @@ public class DBManager {
     private Connection sqlConnection;
 
 
-    public DBManager() throws SQLException {
-        this.sqlConnection = DriverManager.getConnection("jdbc:mysql://localhost:3306/tup", "root", "123456ma");
-        this.statement = sqlConnection.createStatement();
-    }
+    public DBManager() throws SQLException, ClassNotFoundException {
+        /*this.sqlConnection = DriverManager.getConnection("jdbc:mysql://localhost:3306/tup", "root", "123456ma");
+        this.statement = sqlConnection.createStatement();*/
 
+        sqlConnection = DriverManager.getConnection("jdbc:mysql://database-1.cxfxbg1niylb.us-west-2.rds.amazonaws.com:3306/tup", "admin", "Galmiles1105");
+        statement = sqlConnection.createStatement();
+    }
 
     public void closeConnection() throws SQLException {
         this.sqlConnection.close();

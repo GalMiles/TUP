@@ -34,7 +34,7 @@ public class AttractionsServlet extends HttpServlet {
         doGet(req, resp);
     }
 
-    private void processGetRequestAllAttractions(HttpServletRequest req, HttpServletResponse resp) throws  IOException {
+    private void processGetRequestAllAttractions(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         ServletUtils servletUtils = new ServletUtils(req);
         Engine engine = ContextServletUtils.getEngine(req);
 
@@ -58,14 +58,14 @@ public class AttractionsServlet extends HttpServlet {
 
         Collection<Attraction> favoriteAttractions;
 
-        try {
+       /* try {
             favoriteAttractions = engine.getAttractions(servletUtils.lines); //id
             servletUtils.writeJsonResponse(favoriteAttractions);
 
         } catch (SQLException e) {
             servletUtils.writeJsonResponse("error", e.getMessage());
         }
-
+*/
         try (PrintWriter out = resp.getWriter()) {
             out.println(servletUtils.createOutResponse());
         }

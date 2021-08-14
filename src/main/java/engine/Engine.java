@@ -40,6 +40,7 @@ public class Engine {
     public Collection<Attraction> getAttractions(String destination) throws SQLException {
         DBManager db = new DBManager();
         return db.getAllAttractionsByDestination(destination);
+        //return null;
     }
 
     public Collection<Attraction> getFavoriteAttractions() throws SQLException {
