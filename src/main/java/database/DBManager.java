@@ -166,7 +166,6 @@ public class DBManager {
         }
     }
 
-
     public Attraction getAttractionFromDataBaseByName(String attractionName, Destinations destination) throws SQLException, IOException, ParseException {
         Attraction resAttraction;
         String query = "SELECT * FROM "+ destination.toString() + " WHERE Name=\"" + attractionName + "\"";

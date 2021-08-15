@@ -30,6 +30,25 @@ public class wikiAPIManager {
         reader.close();
 
         return(fourFirstSentences[0].trim() + ".\n" + fourFirstSentences[1].trim() + ".\n" + fourFirstSentences[2].trim() + ".\n" + fourFirstSentences[3].trim() + ".\n");
+    }
+
+    public static String getAttractionImageFromWiki(String attractionName) throws IOException {
+
+        String newAttractionName = attractionName.replace(" ", "_");
+        String url = "https://en.wikipedia.org/w/api.php?action=query&titles=" + newAttractionName +"&prop=pageimages&format=json&pithumbsize=250";
+
+        URL urlObject = new URL(url);
+        HttpURLConnection connection = (HttpURLConnection) urlObject.openConnection();
+        BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+        String lines = reader.lines().collect(Collectors.joining());
+
+        String imageSource = lines.split("\"source\":\"")[1];
+        imageSource = imageSource.replaceAll("\"", " ");
+        imageSource = imageSource.split("width")[0].replace(",", "").trim();
+
+        reader.close();
+
+        return(imageSource);
 
     }
 }
