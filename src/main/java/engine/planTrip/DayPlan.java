@@ -20,6 +20,7 @@ public class DayPlan {
     LocalTime startTime;
     LocalTime finishTime;
     int durationDay = 0;
+    ArrayList<Attraction> mustSeenAttractionsForDay = new ArrayList<>();
 
 
     public DayPlan(LocalDate date, LocalTime startTime, LocalTime finishTime ,Attraction hotel){
@@ -53,6 +54,10 @@ public class DayPlan {
         return durationDay;
     }
 
+    public ArrayList<Attraction> getMustSeenAttractionsForDay() {
+        return mustSeenAttractionsForDay;
+    }
+
     public void setDurationDesireByUser(double durationDesireByUser) {
         this.durationDesireByUser = durationDesireByUser;
     }
@@ -75,16 +80,43 @@ public class DayPlan {
         this.durationDay = durationDay;
     }
 
-    public void calculateDayPlan(ArrayList<Attraction> possibleAttractions) {
-        Attraction currentAttraction = hotel;
+    public void setMustSeenAttractions(ArrayList<Attraction> mustSeenAttractions, int minimumDistance) {
+        for (Attraction attraction : mustSeenAttractions) {
+            if (this.mustSeenAttractionsForDay.isEmpty()) {
+                this.mustSeenAttractionsForDay.add(new Attraction(attraction));
+                durationDay += attraction.getDuration();
+            }
+            else{
+                Attraction listRepresent = this.mustSeenAttractionsForDay.get(0);
+                if (attraction.calcDistanceBetweenAttractions(listRepresent) <= minimumDistance &&
+                        attraction.getDuration() < durationDay) {
+                    this.mustSeenAttractionsForDay.add(new Attraction(attraction));
+                    durationDay += attraction.getDuration();
+                }
+            }
+        }
+        mustSeenAttractions.removeIf(a -> this.mustSeenAttractionsForDay.contains(a));
+    }
+
+    public void calculateDayPlanWithMustSeenAttractions(){
+        daySchedule.add(new OnePlan(hotel,startTime));
+        if(this.mustSeenAttractionsForDay.isEmpty()){
+            return;
+        }
+        calculateDayPlan(this.mustSeenAttractionsForDay);
+    }
+
+
+    public void calculateDayPlan(ArrayList<Attraction> attractionsAvailable) {
+
         Attraction nextAttraction;
-        LocalTime currentTime = startTime;
-        daySchedule.add(new OnePlan(hotel,currentTime));
+        Attraction currentAttraction = daySchedule.get(daySchedule.size()-1).getAttraction();
+        LocalTime currentTime = startTime.plusHours(durationDay);
 
         while (durationDay < durationDesireByUser) {
-            nextAttraction = chooseBestNextAttraction(currentAttraction, currentTime,possibleAttractions);
+            nextAttraction = chooseBestNextAttraction(currentAttraction, currentTime,attractionsAvailable);
             daySchedule.add(new OnePlan(nextAttraction,currentTime));
-            possibleAttractions.remove(nextAttraction); // -object of any class are reference so this action delete chosen attraction so we dont add visited attraction to rhe next day
+            attractionsAvailable.remove(nextAttraction); // -object of any class are reference so this action delete chosen attraction so we dont add visited attraction to rhe next day
             currentAttraction = nextAttraction;
             currentTime = currentTime.plusHours(nextAttraction.getDuration());
 
@@ -130,7 +162,9 @@ public class DayPlan {
 
             closeAttraction = hourOnClock.isBefore(openingHoursNext.get(i));
             overPossibleDuration = closingHoursNext.get(i).isBefore(hourOnClockAfterEnjoying);
+
             if (closeAttraction || overPossibleDuration) {
+
                 openingHoursNext.remove(openingHoursNext.get(i));
                 closingHoursNext.remove(closingHoursNext.get(i));
             }
@@ -157,7 +191,6 @@ public class DayPlan {
         scoreTime = -1 * minValue;
         return scoreDistance + scoreTime;
     }
-
 //    @Override
 //    public String toString() {
 //        return "DayPlan{" +
@@ -169,6 +202,7 @@ public class DayPlan {
 //                ", finishTime=" + finishTime +
 //                ", durationDay=" + durationDay +
 //                '}';
+
 //    }
 
     @Override
@@ -186,4 +220,6 @@ public class DayPlan {
         }
 
     }
+
+
 }

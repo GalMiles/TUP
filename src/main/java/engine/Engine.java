@@ -82,9 +82,20 @@ public class Engine {
 
         ArrayList<Attraction> mustSeenAttractions = createArrayListOfMustSeenAttractions(mustSeenAttractionsID, db);
         RouteTrip routeTrip = new RouteTrip(destination,hotel, mustSeenAttractions, desiredHoursInDays);
-        routeTrip.planRouteTrip();
+        ArrayList<Attraction> attractionsAvailable = createListOfRestAttractionAvailableInDestination(db,destination,mustSeenAttractions);
+        routeTrip.planRouteTrip(attractionsAvailable);
         return routeTrip.getPlanForDays();
 
+    }
+
+    private ArrayList<Attraction> createListOfRestAttractionAvailableInDestination(DBManager db,String destination, ArrayList<Attraction> mustSeenAttractions) throws SQLException {
+        ArrayList<Attraction> allPossibleAttractions = db.getAllAttractionsByDestination(destination);
+        ArrayList<Attraction> attractionsAvailable = new ArrayList<Attraction>();
+        for (Attraction attraction : allPossibleAttractions){
+            if(!mustSeenAttractions.contains(attraction))
+                attractionsAvailable.add(attraction);
+        }
+        return attractionsAvailable;
     }
 
     private ArrayList<Attraction> createArrayListOfMustSeenAttractions(ArrayList<String> mustSeenAttractionsID,DBManager db) throws SQLException {

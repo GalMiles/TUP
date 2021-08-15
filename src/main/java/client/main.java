@@ -20,6 +20,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 
 public class main {
@@ -42,6 +43,20 @@ public class main {
     }
 
     public static void main(String[] args) throws IOException {
+
+        ArrayList<Integer> test = new ArrayList<Integer>();
+        test.add(1);
+        test.add(2);
+        test.add(3);
+
+        test.removeIf(n -> !(n > 1));
+
+        for(Integer t : test) {
+            System.out.println(t);
+
+        }
+
+        //ArrayList<Integer> newTest = test.stream().filter(num -> num>1).collect(Collectors.toCollection(ArrayList<Integer>));
 
 //
 //
