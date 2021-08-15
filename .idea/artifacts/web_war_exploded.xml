@@ -6,7 +6,6 @@
         <exploded>true</exploded>
         <module>web</module>
         <packaging>war</packaging>
-        <unpackNestedArchives>false</unpackNestedArchives>
       </options>
     </properties>
     <root id="root">
@@ -19,6 +18,7 @@
           <element id="archive" name="TUP-1.0-SNAPSHOT.jar">
             <element id="module-output" name="TUP" />
           </element>
+          <element id="library" level="project" name="Maven: org.jsoup:jsoup:1.13.1" />
           <element id="library" level="project" name="Maven: org.apache.maven:maven-core:3.0" />
           <element id="library" level="project" name="Maven: org.apache.maven:maven-model:3.0" />
           <element id="library" level="project" name="Maven: org.apache.maven:maven-settings:3.0" />
