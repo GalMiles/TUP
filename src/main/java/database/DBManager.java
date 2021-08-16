@@ -30,6 +30,8 @@ public class DBManager {
         /*this.sqlConnection = DriverManager.getConnection("jdbc:mysql://localhost:3306/tup", "root", "123456ma");
         this.statement = sqlConnection.createStatement();*/
 
+        DriverManager.registerDriver(new com.mysql.cj.jdbc.Driver());
+
         sqlConnection = DriverManager.getConnection("jdbc:mysql://database-1.cxfxbg1niylb.us-west-2.rds.amazonaws.com:3306/tup", "admin", "Galmiles1105");
         statement = sqlConnection.createStatement();
     }
