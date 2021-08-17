@@ -19,14 +19,14 @@ import java.sql.SQLException;
 public class RegisterServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
         ServletUtils servletUtils = new ServletUtils(req);
         Engine engine = ContextServletUtils.getEngine(req);
         Traveler jsonMember = (Traveler) servletUtils.gsonFromJson(Traveler.class);
 
         try {
             Traveler newMember = ResponseJson.travelerFromJson(jsonMember, req);
-            engine.Register(newMember);
+            String idString = engine.Register(newMember);
+            resp.setHeader("travelerID", idString);
             servletUtils.writeJsonResponse(newMember);
 
         } catch (SQLException | Traveler.IllegalValueException | Traveler.AlreadyExistsException e) {

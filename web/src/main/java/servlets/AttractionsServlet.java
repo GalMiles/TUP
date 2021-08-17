@@ -25,6 +25,7 @@ public class AttractionsServlet extends HttpServlet {
         if (req.getServletPath().endsWith("/all"))
             processGetRequestAllAttractions(req, resp);
 
+
         if (req.getServletPath().endsWith("/favorites"))
             processGetRequestFavoritesAttractions(req, resp);
     }
@@ -37,7 +38,7 @@ public class AttractionsServlet extends HttpServlet {
     private void processGetRequestAllAttractions(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         ServletUtils servletUtils = new ServletUtils(req);
         Engine engine = ContextServletUtils.getEngine(req);
-
+        //resp.setHeader("travelerId","1");
         Collection<Attraction> attractions;
         try {
             attractions = engine.getAttractions(servletUtils.lines); //destination
@@ -79,7 +80,7 @@ public class AttractionsServlet extends HttpServlet {
         Engine engine = ContextServletUtils.getEngine(req);
 
         try {
-            engine.deleteFavoriteAttractionsById(servletUtils.lines);
+            engine.deleteFromFavoriteAttractions(servletUtils.lines);
         } catch (SQLException | Attraction.NotFoundException e) {
             servletUtils.writeJsonResponse("error", e.getMessage());
         }

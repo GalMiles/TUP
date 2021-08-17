@@ -5,6 +5,8 @@ public class DesiredHoursInDay {
     private String startTime;
     private String endTime;
 
+    public DesiredHoursInDay(){}
+
     public DesiredHoursInDay(String s) {
         setDate(s);
     }

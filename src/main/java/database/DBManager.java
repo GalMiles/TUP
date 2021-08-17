@@ -27,8 +27,8 @@ public class DBManager {
 
 
     public DBManager() throws SQLException {
-        /*this.sqlConnection = DriverManager.getConnection("jdbc:mysql://localhost:3306/tup", "root", "123456ma");
-        this.statement = sqlConnection.createStatement();*/
+        //this.sqlConnection = DriverManager.getConnection("jdbc:mysql://localhost:3306/tup", "root", "123456ma");
+        //this.statement = sqlConnection.createStatement();
 
         DriverManager.registerDriver(new com.mysql.cj.jdbc.Driver());
 
@@ -53,12 +53,20 @@ public class DBManager {
     }
 
 
-    public void Register(Traveler traveler) throws SQLException, Traveler.AlreadyExistsException {
+    public String Register(Traveler traveler) throws SQLException, Traveler.AlreadyExistsException {
+        String idString = null;
         checkIfEmailIsFound(traveler.getEmailAddress());
         String query = "INSERT INTO travelers(Email, Password, FirstName, LastName) VALUES ( "
                 + "\"" +traveler.getEmailAddress() + "\", \"" + traveler.getPassword() + "\", \"" + traveler.getFirstName() +
                     "\", \"" + traveler.getLastName()+ "\")";
         this.statement.executeUpdate(query);
+        query = "SELECT id FROM travelers WHERE Email =  \"" +  traveler.getEmailAddress() +"\"";
+        ResultSet resultSet = this.statement.executeQuery(query);
+        if(resultSet.next())
+        {
+            idString = resultSet.getString("id");
+        }
+        return idString;
     }
 
 
@@ -76,8 +84,7 @@ public class DBManager {
             String password = results.getString("Password");
             String firstName = results.getString("FirstName");
             String lastName = results.getString("LastName");
-            String id = Integer.toString(results.getInt("id"));
-            traveler = new Traveler(firstName, lastName, userName, password, id);
+            traveler = new Traveler(firstName, lastName, userName, password);
         }
         else
         {
@@ -191,7 +198,7 @@ public class DBManager {
 
     public Attraction getAttractionFromDBByID(String id, Destinations destination) throws SQLException {
         Attraction resAttracion = null;
-        String query = "SELECT * FROM tup." + destination.toString() +  " WHERE attractionAPI_ID = \" " + id + "\"";
+        String query = "SELECT * FROM tup." + destination.toString() +  " WHERE attractionAPI_ID =\"" + id + "\"";
         ResultSet resultSet = this.statement.executeQuery(query);
         if(resultSet.next())
         {
@@ -203,7 +210,7 @@ public class DBManager {
 
 
     public void checkIfEmailIsFound(String email) throws SQLException, Traveler.AlreadyExistsException {
-        String query = "SELECT * FROM travelers WHERE Email = \" " + email + "\"";
+        String query = "SELECT * FROM travelers WHERE Email = \"" + email + "\"";
         ResultSet resultSet = this.statement.executeQuery(query);
         if(resultSet.next())
         {
@@ -223,7 +230,7 @@ public class DBManager {
 
 
     //getting favorite attractions from db
-    public Collection<Attraction> getFavAttractions() {
+    public Collection<Attraction> getFavAttractions(String travelerID) {
         return null;
     }
 

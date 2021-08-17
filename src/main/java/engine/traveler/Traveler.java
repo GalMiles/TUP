@@ -9,15 +9,13 @@ public class Traveler {
     private String lastName;
     private String emailAddress;
     private String password;
-    private String id;
     //private RouteTrip routeTrip;
 
-    public Traveler(String firstName, String lastName, String emailAddress, String password, String id) {
+    public Traveler(String firstName, String lastName, String emailAddress, String password) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.emailAddress = emailAddress;
         this.password = password;
-        this.id = id;
     }
 
     public Traveler(Traveler other) throws IllegalValueException {
@@ -39,7 +37,6 @@ public class Traveler {
     public String getPassword() {
         return password;
     }
-    public String getId() { return id; }
     //public RouteTrip getRouteTrip() { return routeTrip; }
 
     public void setFirstName(String firstName) throws IllegalValueException {

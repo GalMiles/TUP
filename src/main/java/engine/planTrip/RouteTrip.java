@@ -102,7 +102,7 @@ public class RouteTrip {
         }
     }
 
-    private void divideMustSeenAttractionsForEachDay() {
+    public void divideMustSeenAttractionsForEachDay() {
         int minimumDistance = 1;
         while (mustSeenAttractions.size() != 0) {
             for (DayPlan dayPlan : this.planForDays) {
