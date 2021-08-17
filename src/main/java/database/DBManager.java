@@ -12,6 +12,8 @@ import engine.traveler.Traveler;
 import googleAPI.APIManager;
 import googleAPI.JsonAttraction;
 import jdk.internal.instrumentation.Logger;
+
+
 import wikipediaAPI.wikiAPIManager;
 
 import java.io.IOException;
@@ -257,8 +259,20 @@ public class DBManager {
             catch(IllegalArgumentException | IOException e){
                 image = null;
             }
-            String query = "INSERT INTO london(Image) VALUES (" + "\"" + image +"\")";
-            this.statement.executeUpdate(query);
+            //String query = "INSERT INTO london(Image) VALUES (" + "\"" + image +"\")";
+            //this.statement.executeUpdate(query);
+//            DSLContext ctx = DSL.using(sqlConnection,SQLDialect.MYSQL);
+//            Result<Record> result = ctx.update(DSL.table("london")).set(DSL.field("Image") ,image).where(DSL.field("attractionAPI_ID").eq(att.getPlaceID()));
+//            result.execute();
+           //DSL.using(sqlConnection).update(DSL.table("london")).set(DSL.field("Image") ,image).where(DSL.field("attractionAPI_ID").eq(att.getPlaceID())).fetch();
+            PreparedStatement p = sqlConnection.prepareStatement("UPDATE london SET Image = ? WHERE attractionAPI_ID = ?");
+            p.setString(1,image);
+            p.setString(2,att.getPlaceID());
+            p.execute();
+
+            //.where(attractionAPI_ID.equals(att.get))
+                    //.where("attractionAPI_ID",att.getPlaceID());
+
         }
 
     }
