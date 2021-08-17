@@ -35,13 +35,18 @@ public class wikiAPIManager {
     public static String getAttractionImageFromWiki(String attractionName) throws IOException {
 
         String newAttractionName = attractionName.replace(" ", "_");
-        String url = "https://en.wikipedia.org/w/api.php?action=query&titles=" + newAttractionName +"&prop=pageimages&format=json&pithumbsize=250";
+        String url = "https://en.wikipedia.org/w/api.php?action=query&titles=" + newAttractionName +"&prop=pageimages&format=json&pithumbsize=150";
 
         URL urlObject = new URL(url);
         HttpURLConnection connection = (HttpURLConnection) urlObject.openConnection();
         BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
         String lines = reader.lines().collect(Collectors.joining());
 
+        if(!lines.contains("source"))
+        {
+            reader.close();
+            throw new IllegalArgumentException();
+        }
         String imageSource = lines.split("\"source\":\"")[1];
         imageSource = imageSource.replaceAll("\"", " ");
         imageSource = imageSource.split("width")[0].replace(",", "").trim();

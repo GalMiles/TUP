@@ -14,6 +14,7 @@ import engine.attraction.Attraction;
 import engine.traveler.Traveler;
 import googleAPI.APIManager;
 import javafx.util.Pair;
+import wikipediaAPI.wikiAPIManager;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -56,6 +57,9 @@ public class main {
 //            System.out.println(t);
 //
 //        }
+
+        wikiAPIManager w = new wikiAPIManager();
+        System.out.println(w.getAttractionImageFromWiki("Big ben"));
 
         //ArrayList<Integer> newTest = test.stream().filter(num -> num>1).collect(Collectors.toCollection(ArrayList<Integer>));
 
