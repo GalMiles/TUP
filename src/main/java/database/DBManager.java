@@ -12,6 +12,7 @@ import engine.traveler.Traveler;
 import googleAPI.APIManager;
 import googleAPI.JsonAttraction;
 import jdk.internal.instrumentation.Logger;
+import wikipediaAPI.wikiAPIManager;
 
 import java.io.IOException;
 import java.sql.*;
@@ -27,13 +28,13 @@ public class DBManager {
 
 
     public DBManager() throws SQLException {
-        //this.sqlConnection = DriverManager.getConnection("jdbc:mysql://localhost:3306/tup", "root", "123456ma");
-        //this.statement = sqlConnection.createStatement();
+        this.sqlConnection = DriverManager.getConnection("jdbc:mysql://localhost:3306/tup", "root", "123456ma");
+        this.statement = sqlConnection.createStatement();
 
-        DriverManager.registerDriver(new com.mysql.cj.jdbc.Driver());
+       DriverManager.registerDriver(new com.mysql.cj.jdbc.Driver());
 
-        sqlConnection = DriverManager.getConnection("jdbc:mysql://database-1.cxfxbg1niylb.us-west-2.rds.amazonaws.com:3306/tup", "admin", "Galmiles1105");
-        statement = sqlConnection.createStatement();
+//        sqlConnection = DriverManager.getConnection("jdbc:mysql://database-1.cxfxbg1niylb.us-west-2.rds.amazonaws.com:3306/tup", "admin", "Galmiles1105");
+//        statement = sqlConnection.createStatement();
     }
 
     public void closeConnection() throws SQLException {
@@ -244,8 +245,23 @@ public class DBManager {
     }
 
 
+    public void insertImagesToDB() throws SQLException {
 
+        String image=null;
+        wikiAPIManager wiki = new wikiAPIManager();
+        ArrayList<Attraction> attractions = this.getAllAttractionsByDestination("london");
+        for(Attraction att: attractions) {
+            try {
+                image = wiki.getAttractionImageFromWiki(att.getName());
+            }
+            catch(IllegalArgumentException | IOException e){
+                image = null;
+            }
+            String query = "INSERT INTO london(Image) VALUES (" + "\"" + image +"\")";
+            this.statement.executeUpdate(query);
+        }
 
+    }
     /*
     public void insetAttractionToDBByID(String id, Destinations destination) throws IOException, SQLException, ParseException {
         JsonAttraction attraction = apiManager.getAttractionByID(id);

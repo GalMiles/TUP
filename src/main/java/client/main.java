@@ -17,6 +17,7 @@ import javafx.util.Pair;
 import wikipediaAPI.wikiAPIManager;
 
 import java.io.IOException;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -46,6 +47,7 @@ public class main {
 
     public static void main(String[] args) throws IOException, SQLException {
 
+
 //        ArrayList<Integer> test = new ArrayList<Integer>();
 //        test.add(1);
 //        test.add(2);
@@ -57,9 +59,10 @@ public class main {
 //            System.out.println(t);
 //
 //        }
-
-        wikiAPIManager w = new wikiAPIManager();
-        System.out.println(w.getAttractionImageFromWiki("Big ben"));
+        DBManager db = new DBManager();
+        db.insertImagesToDB();
+//        wikiAPIManager w = new wikiAPIManager();
+//        System.out.println(w.getAttractionImageFromWiki("Big ben"));
 
         //ArrayList<Integer> newTest = test.stream().filter(num -> num>1).collect(Collectors.toCollection(ArrayList<Integer>));
 
