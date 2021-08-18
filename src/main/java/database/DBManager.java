@@ -268,7 +268,7 @@ public class DBManager {
             PreparedStatement p = sqlConnection.prepareStatement("UPDATE london SET Image = ? WHERE attractionAPI_ID = ?");
             p.setString(1,image);
             p.setString(2,att.getPlaceID());
-            p.execute();
+            //p.execute();
 
             //.where(attractionAPI_ID.equals(att.get))
                     //.where("attractionAPI_ID",att.getPlaceID());

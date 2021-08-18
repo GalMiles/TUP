@@ -80,9 +80,15 @@ public class Engine {
                 "020 7368 5700", null, new Geometry("51.50167580000001", "-0.1847417"), "ChIJFSZeB1kFdkgRTixgFHqP13g",
                 typesHotel, null);
 
-        ArrayList<Attraction> mustSeenAttractions = createArrayListOfMustSeenAttractions(mustSeenAttractionsID, db, destination);
+        //ArrayList<Attraction> mustSeenAttractions = createArrayListOfMustSeenAttractions(mustSeenAttractionsID, db, destination);
+        //RouteTrip routeTrip = new RouteTrip(destination,hotel, mustSeenAttractions, desiredHoursInDays);
+        //ArrayList<Attraction> attractionsAvailable = createListOfRestAttractionAvailableInDestination(db,destination,mustSeenAttractions);
+
+        ArrayList<Attraction> mustSeenAttractions = null;
         RouteTrip routeTrip = new RouteTrip(destination,hotel, mustSeenAttractions, desiredHoursInDays);
-        ArrayList<Attraction> attractionsAvailable = createListOfRestAttractionAvailableInDestination(db,destination,mustSeenAttractions);
+
+        ArrayList<Attraction> attractionsAvailable = null;
+
         routeTrip.planRouteTrip(attractionsAvailable);
         return routeTrip.getPlanForDays();
 

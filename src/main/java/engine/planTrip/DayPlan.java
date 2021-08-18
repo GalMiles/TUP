@@ -100,10 +100,10 @@ public class DayPlan {
 
     public void calculateDayPlanWithMustSeenAttractions(){
         daySchedule.add(new OnePlan(hotel,startTime));
-        if(this.mustSeenAttractionsForDay.isEmpty()){
-            return;
-        }
-        calculateDayPlan(this.mustSeenAttractionsForDay);
+//        if(this.mustSeenAttractionsForDay.isEmpty()){
+//            return;
+//        }
+//        calculateDayPlan(this.mustSeenAttractionsForDay);
     }
 
 
