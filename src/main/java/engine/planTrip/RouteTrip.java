@@ -95,7 +95,11 @@ public class RouteTrip {
     }
 
     public void planRouteTrip(ArrayList<Attraction> attractionsAvailable){
-        divideMustSeenAttractionsForEachDay();
+
+        attractionsAvailable = getPossibleAttractions("london");
+
+
+        //divideMustSeenAttractionsForEachDay();
         for(DayPlan dayPlan: this.planForDays){
             dayPlan.calculateDayPlanWithMustSeenAttractions();
             dayPlan.calculateDayPlan(attractionsAvailable);
