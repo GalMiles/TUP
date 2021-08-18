@@ -108,7 +108,8 @@ public class RouteTrip {
 
     public void divideMustSeenAttractionsForEachDay() {
         int minimumDistance = 1;
-        while (mustSeenAttractions.size() != 0) {
+
+        while (mustSeenAttractions.size() != 0 && minimumDistance != 200) { /// limit number of iteration
             for (DayPlan dayPlan : this.planForDays) {
                 dayPlan.setMustSeenAttractions(mustSeenAttractions, minimumDistance);
             }

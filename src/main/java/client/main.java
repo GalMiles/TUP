@@ -105,13 +105,20 @@ public class main {
         d3.setEndTime("20:00");
         desiredHoursInDays.add(d3);
 
-        RouteTrip routeTrip = new RouteTrip("london",hotel,null, desiredHoursInDays);
-        routeTrip.planRouteTrip(new ArrayList<>());
+//        RouteTrip routeTrip = new RouteTrip("london",hotel,mustSeenAttractions, desiredHoursInDays);
 //        routeTrip.divideMustSeenAttractionsForEachDay();
-        System.out.println(routeTrip.getPlanForDays());
+//        System.out.println(routeTrip.getPlanForDays());
+//
+        for(Attraction att: mustSeenAttractions) {
+            for (Attraction at : mustSeenAttractions) {
+                if(!att.equals(at))
+                    System.out.println(att.getName() + " ---> " + at.getName() + "  " + att.calcDistanceBetweenAttractions(at));
+            }
+        }
 
 
 
+        //routeTrip.planRouteTrip(new ArrayList<>());
 
 
 

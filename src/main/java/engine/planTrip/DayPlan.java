@@ -29,6 +29,7 @@ public class DayPlan {
         setStartTime(startTime);
         setFinishTime(finishTime);
         setDurationDesireByUser((startTime.until(finishTime,ChronoUnit.MINUTES))/60.0);
+
     }
 
 
@@ -81,21 +82,34 @@ public class DayPlan {
     }
 
     public void setMustSeenAttractions(ArrayList<Attraction> mustSeenAttractions, int minimumDistance) {
+        double minDistance = Double.MAX_VALUE;
+        Attraction minAttraction = null;
+        double distance;
         for (Attraction attraction : mustSeenAttractions) {
+
             if (this.mustSeenAttractionsForDay.isEmpty()) {
-                this.mustSeenAttractionsForDay.add(new Attraction(attraction));
-                durationDay += attraction.getDuration();
+                for(Attraction att : mustSeenAttractions) {
+                    distance = hotel.calcDistanceBetweenAttractions(att);
+                    if(distance < minDistance){
+                        minDistance = distance;
+                        minAttraction = att;
+                    }
+                }
+                this.mustSeenAttractionsForDay.add(new Attraction(minAttraction));
             }
             else{
-                Attraction listRepresent = this.mustSeenAttractionsForDay.get(0);
-                if (attraction.calcDistanceBetweenAttractions(listRepresent) <= minimumDistance &&
-                        attraction.getDuration() < durationDay) {
-                    this.mustSeenAttractionsForDay.add(new Attraction(attraction));
-                    durationDay += attraction.getDuration();
+                Attraction listRepresent = this.mustSeenAttractionsForDay.get(this.mustSeenAttractionsForDay.size()-1);
+                for(int i = 0 ; i< 5 ; i++) {
+                    if (attraction.calcDistanceBetweenAttractions(listRepresent) <= minimumDistance + i &&
+                            attraction.getDuration() < durationDay) {
+                        this.mustSeenAttractionsForDay.add(new Attraction(attraction));
+                        durationDay += attraction.getDuration();
+                        break;
+                    }
                 }
             }
         }
-        mustSeenAttractions.removeIf(a -> this.mustSeenAttractionsForDay.contains(a));
+         mustSeenAttractions.removeIf(a -> this.mustSeenAttractionsForDay.contains(a));
     }
 
     public void calculateDayPlanWithMustSeenAttractions(){

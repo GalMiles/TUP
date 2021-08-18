@@ -13,6 +13,7 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class Attraction {
 
@@ -263,6 +264,19 @@ public class Attraction {
         public NotFoundException(String message) {
             super(message);
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Attraction that = (Attraction) o;
+        return  Objects.equals(placeID, that.placeID);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(placeID);
     }
 
     public String attractionToJson() {
