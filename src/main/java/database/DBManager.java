@@ -30,10 +30,10 @@ public class DBManager {
 
 
     public DBManager() throws SQLException {
-        this.sqlConnection = DriverManager.getConnection("jdbc:mysql://localhost:3306/tup", "root", "123456ma");
+        this.sqlConnection = DriverManager.getConnection("jdbc:mysql://localhost:3306/tup", "root", "Galmiles31051960");
         this.statement = sqlConnection.createStatement();
 
-       DriverManager.registerDriver(new com.mysql.cj.jdbc.Driver());
+        DriverManager.registerDriver(new com.mysql.cj.jdbc.Driver());
 
 //        sqlConnection = DriverManager.getConnection("jdbc:mysql://database-1.cxfxbg1niylb.us-west-2.rds.amazonaws.com:3306/tup", "admin", "Galmiles1105");
 //        statement = sqlConnection.createStatement();
@@ -48,8 +48,7 @@ public class DBManager {
         String sql = "SELECT * FROM tup." + destination.toString();
         PreparedStatement ps = this.sqlConnection.prepareStatement(sql);
         ResultSet results = ps.executeQuery();
-        while(results.next())
-        {
+        while (results.next()) {
             attractions.add(new Attraction(results));
         }
         return attractions;
@@ -60,20 +59,18 @@ public class DBManager {
         String idString = null;
         checkIfEmailIsFound(traveler.getEmailAddress());
         String query = "INSERT INTO travelers(Email, Password, FirstName, LastName) VALUES ( "
-                + "\"" +traveler.getEmailAddress() + "\", \"" + traveler.getPassword() + "\", \"" + traveler.getFirstName() +
-                    "\", \"" + traveler.getLastName()+ "\")";
+                + "\"" + traveler.getEmailAddress() + "\", \"" + traveler.getPassword() + "\", \"" + traveler.getFirstName() +
+                "\", \"" + traveler.getLastName() + "\")";
         this.statement.executeUpdate(query);
-        query = "SELECT id FROM travelers WHERE Email =  \"" +  traveler.getEmailAddress() +"\"";
+        query = "SELECT id FROM travelers WHERE Email =  \"" + traveler.getEmailAddress() + "\"";
         ResultSet resultSet = this.statement.executeQuery(query);
-        if(resultSet.next())
-        {
+        if (resultSet.next()) {
             idString = resultSet.getString("id");
         }
         return idString;
     }
 
 
-    //login
     public Traveler Login(String Email, String Password) throws SQLException, Traveler.NotFoundException {
         Traveler traveler = null;
         String query = "SELECT * FROM travelers WHERE Email=? and Password=?";
@@ -81,27 +78,22 @@ public class DBManager {
         ps.setString(1, Email);
         ps.setString(2, Password);
         ResultSet results = ps.executeQuery();
-        if(results.next())
-        {
+        if (results.next()) {
             String userName = results.getString("Email");
             String password = results.getString("Password");
             String firstName = results.getString("FirstName");
             String lastName = results.getString("LastName");
             traveler = new Traveler(firstName, lastName, userName, password);
-        }
-        else
-        {
+        } else {
             throw new Traveler.NotFoundException("Traveler not found");
         }
         return traveler;
     }
 
 
-
     public void insertAttractionToDB(Attraction attraction, Destinations destination) throws SQLException {
         ArrayList<StringBuilder> dayStrArr = new ArrayList<>();
-        for(int i = 0; i < 7 ;++i)
-        {
+        for (int i = 0; i < 7; ++i) {
             dayStrArr.add(i, new StringBuilder());
         }
         PreparedStatement ps = this.sqlConnection.prepareStatement(
@@ -116,28 +108,20 @@ public class DBManager {
         ps.setString(6, attraction.getGeometry().toString());//Geometry
         ps.setString(7, this.getTypesStr(attraction.getTypes()));
         int index = 8;
-        for(DayOpeningHours day: attraction.getOpeningHoursArr())
-        {
-            if(day.isAllDayLongOpened())
-            {
+        for (DayOpeningHours day : attraction.getOpeningHoursArr()) {
+            if (day.isAllDayLongOpened()) {
                 ps.setString(index, "All Day Long");
-            }
-            else
-            {
-                if(!day.isOpen())
-                {
+            } else {
+                if (!day.isOpen()) {
                     ps.setString(index, "Closed");
-                }
-                else
-                {
+                } else {
                     int arraySize = day.getOpeningHours().size();
                     String dayOpeningHours = "";
-                    for(int j=0;j < arraySize-1; ++j )
-                    {
+                    for (int j = 0; j < arraySize - 1; ++j) {
                         String currentOpeningHour = day.getOpeningHours().get(j) + "-" + day.getClosingHours().get(j);
                         dayOpeningHours += currentOpeningHour + ", ";
                     }
-                    String currentOpeningHour = day.getOpeningHours().get(arraySize-1) + "-" + day.getClosingHours().get(arraySize-1);
+                    String currentOpeningHour = day.getOpeningHours().get(arraySize - 1) + "-" + day.getClosingHours().get(arraySize - 1);
                     dayOpeningHours += currentOpeningHour;
                     ps.setString(index, dayOpeningHours);
                 }
@@ -147,47 +131,38 @@ public class DBManager {
         ps.executeUpdate();
     }
 
-    private String getTypesStr(ArrayList<AttractionType> types)
-    {
+    private String getTypesStr(ArrayList<AttractionType> types) {
         StringBuilder typesStr = new StringBuilder();
         int typesArrSize = types.size();
-        for(int i = 0; i < typesArrSize-1; ++i)
-        {
-            if(types.get(i) != null)
-            {
+        for (int i = 0; i < typesArrSize - 1; ++i) {
+            if (types.get(i) != null) {
                 typesStr.append(types.get(i).toString() + ",");
             }
         }
-        if(types.get(typesArrSize-1) != null)
-        {
-            typesStr.append(types.get(typesArrSize-1).toString());
+        if (types.get(typesArrSize - 1) != null) {
+            typesStr.append(types.get(typesArrSize - 1).toString());
         }
         return typesStr.toString();
     }
 
 
-    private String checkParameter(String param)
-    {
-        if(param == null)
-        {
+    private String checkParameter(String param) {
+        if (param == null) {
             return "N\\A";
-        }
-        else
-        {
+        } else {
             return param;
         }
     }
 
     public Attraction getAttractionFromDataBaseByName(String attractionName, Destinations destination) throws SQLException, IOException, ParseException {
         Attraction resAttraction;
-        String query = "SELECT * FROM "+ destination.toString() + " WHERE Name=\"" + attractionName + "\"";
+        String query = "SELECT * FROM " + destination.toString() + " WHERE Name=\"" + attractionName + "\"";
         ResultSet res = this.statement.executeQuery(query);
-        if(res.next())  //check of there is a result from the query
+        if (res.next())  //check of there is a result from the query
         {
             //if there is a result, make an attraction
             resAttraction = new Attraction(res);
-        }
-        else {  //there is no result from the query(the attraction doesnt found in the database)
+        } else {  //there is no result from the query(the attraction doesnt found in the database)
             JsonAttraction jsonAttraction = apiManager.getAttractionFromAPI(attractionName);
             jsonAttraction.getResult().setOpening_hours(null);
             resAttraction = new Attraction(jsonAttraction);
@@ -197,14 +172,11 @@ public class DBManager {
     }
 
 
-
-
     public Attraction getAttractionFromDBByID(String id, Destinations destination) throws SQLException {
         Attraction resAttracion = null;
-        String query = "SELECT * FROM tup." + destination.toString() +  " WHERE attractionAPI_ID =\"" + id + "\"";
+        String query = "SELECT * FROM tup." + destination.toString() + " WHERE attractionAPI_ID =\"" + id + "\"";
         ResultSet resultSet = this.statement.executeQuery(query);
-        if(resultSet.next())
-        {
+        if (resultSet.next()) {
             resAttracion = new Attraction(resultSet);
         }
         return resAttracion;
@@ -215,25 +187,24 @@ public class DBManager {
     public void checkIfEmailIsFound(String email) throws SQLException, Traveler.AlreadyExistsException {
         String query = "SELECT * FROM travelers WHERE Email = \"" + email + "\"";
         ResultSet resultSet = this.statement.executeQuery(query);
-        if(resultSet.next())
-        {
+        if (resultSet.next()) {
             //throw new Traveler.NotFoundException("Invalid Username\\Password");
             throw new Traveler.AlreadyExistsException("Traveler is exist in the DB");
         }
     }
 
-    public ArrayList<Attraction> getAttractionsByOperationTime(String operationTime){
+    public ArrayList<Attraction> getAttractionsByOperationTime(String operationTime) {
         ArrayList<Attraction> attractionsArr = new ArrayList<>();
         String[] operationTimeSplitArr = operationTime.split("-");
-        String openingHour =operationTimeSplitArr[0];
-        String closingHour =operationTimeSplitArr[1];
+        String openingHour = operationTimeSplitArr[0];
+        String closingHour = operationTimeSplitArr[1];
 
         return attractionsArr;
     }
 
 
     //getting favorite attractions from db
-    public Collection<Attraction> getFavAttractions(String travelerID) {
+    public Collection<Attraction> getFavoriteAttractions(String travelerID) {
         return null;
     }
 
@@ -242,40 +213,42 @@ public class DBManager {
     }
 
 
-    public Attraction getHotelFromDBByName (String hotelName, Destinations destination) throws SQLException, IOException, ParseException {
+    public Attraction getHotelFromDBByName(String hotelName, Destinations destination) throws SQLException, IOException, ParseException {
         return this.getAttractionFromDataBaseByName(hotelName, destination);
     }
 
 
-    public void insertImagesToDB() throws SQLException {
+    public void insertImagesToDB() throws SQLException, IOException {
 
-        String image=null;
+        String image = null;
         wikiAPIManager wiki = new wikiAPIManager();
         ArrayList<Attraction> attractions = this.getAllAttractionsByDestination("london");
-        for(Attraction att: attractions) {
-            try {
-                image = wiki.getAttractionImageFromWiki(att.getName());
-            }
-            catch(IllegalArgumentException | IOException e){
-                image = null;
-            }
-            //String query = "INSERT INTO london(Image) VALUES (" + "\"" + image +"\")";
-            //this.statement.executeUpdate(query);
-//            DSLContext ctx = DSL.using(sqlConnection,SQLDialect.MYSQL);
-//            Result<Record> result = ctx.update(DSL.table("london")).set(DSL.field("Image") ,image).where(DSL.field("attractionAPI_ID").eq(att.getPlaceID()));
-//            result.execute();
-           //DSL.using(sqlConnection).update(DSL.table("london")).set(DSL.field("Image") ,image).where(DSL.field("attractionAPI_ID").eq(att.getPlaceID())).fetch();
+        for (Attraction att : attractions) {
+            image = wiki.getAttractionImageFromWiki(att.getName());
+
             PreparedStatement p = sqlConnection.prepareStatement("UPDATE london SET Image = ? WHERE attractionAPI_ID = ?");
-            p.setString(1,image);
-            p.setString(2,att.getPlaceID());
+            p.setString(1, image);
+            p.setString(2, att.getPlaceID());
             p.execute();
-
-            //.where(attractionAPI_ID.equals(att.get))
-                    //.where("attractionAPI_ID",att.getPlaceID());
-
         }
 
     }
+    public void insertDescriptionToDB() throws SQLException, IOException {
+
+        String description = null;
+        wikiAPIManager wiki = new wikiAPIManager();
+        ArrayList<Attraction> attractions = this.getAllAttractionsByDestination("london");
+        for (Attraction att : attractions) {
+            description = wiki.getAttractionDescriptionFromWiki(att.getName());
+
+            PreparedStatement p = sqlConnection.prepareStatement("UPDATE london SET Description = ? WHERE attractionAPI_ID = ?");
+            p.setString(1, description);
+            p.setString(2, att.getPlaceID());
+            p.execute();
+        }
+
+    }
+
     /*
     public void insetAttractionToDBByID(String id, Destinations destination) throws IOException, SQLException, ParseException {
         JsonAttraction attraction = apiManager.getAttractionByID(id);

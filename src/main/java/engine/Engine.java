@@ -45,7 +45,7 @@ public class Engine {
 
     public Collection<Attraction> getFavoriteAttractions() throws SQLException {
         DBManager db = new DBManager();
-        return db.getFavAttractions(currentTravelerID);
+        return db.getFavoriteAttractions(currentTravelerID);
     }
 
     public void deleteFromFavoriteAttractions(String attractionId) throws SQLException,Attraction.NotFoundException {

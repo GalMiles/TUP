@@ -60,7 +60,8 @@ public class main {
 //
 //        }
         DBManager db = new DBManager();
-        db.insertImagesToDB();
+        //db.insertImagesToDB();
+        db.insertDescriptionToDB();
 //        wikiAPIManager w = new wikiAPIManager();
 //        System.out.println(w.getAttractionImageFromWiki("Big ben"));
 
@@ -160,7 +161,6 @@ public class main {
 
 
     }
-
 
 
 /*
