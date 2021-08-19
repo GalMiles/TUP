@@ -89,6 +89,7 @@ public class Attraction {
                 this.OpeningHoursArr.set(i%7,currentDayOpeningHours);
             }
         }
+        setDuration(this.types);
 
     }
 

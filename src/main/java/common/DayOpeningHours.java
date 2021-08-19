@@ -18,8 +18,14 @@ public class DayOpeningHours {
         this.isAllDayLongOpened = isAllDayLongOpened;
         this.isOpen = isOpen;
         this.day = DayOfWeek.of(day);
-        this.addOpening(openingHours);
-        this.addClosing(closingHours);
+        if(isAllDayLongOpened){
+            this.addOpening("00:00");
+            this.addClosing("00:00");
+        }
+        else {
+            this.addOpening(openingHours);
+            this.addClosing(closingHours);
+        }
     }
 
     public DayOpeningHours(boolean isAllDayLongOpened, boolean isOpen, int day)
@@ -27,8 +33,11 @@ public class DayOpeningHours {
         this.isAllDayLongOpened = isAllDayLongOpened;
         this.isOpen = isOpen;
         this.day = DayOfWeek.of(day);
-        this.openingHours = null;
-        this.closingHours = null;
+        if(isAllDayLongOpened) {
+            this.addOpening("00:00");
+            this.addClosing("00:00");
+        }
+
     }
 
     public DayOpeningHours(boolean isOpen, int day) {

@@ -81,43 +81,60 @@ public class DayPlan {
         this.durationDay = durationDay;
     }
 
-    public void setMustSeenAttractions(ArrayList<Attraction> mustSeenAttractions, int minimumDistance) {
-        double minDistance = Double.MAX_VALUE;
-        Attraction minAttraction = null;
-        double distance;
-        for (Attraction attraction : mustSeenAttractions) {
-
+    public void setMustSeenAttractions(ArrayList<Attraction> mustSeenAttractions) {
+       for (Attraction attraction : mustSeenAttractions) {
             if (this.mustSeenAttractionsForDay.isEmpty()) {
-                for(Attraction att : mustSeenAttractions) {
-                    distance = hotel.calcDistanceBetweenAttractions(att);
-                    if(distance < minDistance){
-                        minDistance = distance;
-                        minAttraction = att;
-                    }
-                }
-                this.mustSeenAttractionsForDay.add(new Attraction(minAttraction));
+                this.mustSeenAttractionsForDay.add(new Attraction(attraction));
+                this.durationDay += attraction.getDuration();
             }
             else{
                 Attraction listRepresent = this.mustSeenAttractionsForDay.get(this.mustSeenAttractionsForDay.size()-1);
-                for(int i = 0 ; i< 5 ; i++) {
-                    if (attraction.calcDistanceBetweenAttractions(listRepresent) <= minimumDistance + i &&
-                            attraction.getDuration() < durationDay) {
-                        this.mustSeenAttractionsForDay.add(new Attraction(attraction));
-                        durationDay += attraction.getDuration();
-                        break;
-                    }
-                }
+                Attraction closestAttraction = findClosestAttractionToSource(listRepresent, mustSeenAttractions);
+                if(closestAttraction == null)
+                    break;
+                this.mustSeenAttractionsForDay.add(new Attraction(closestAttraction));
+                durationDay += attraction.getDuration();
             }
         }
          mustSeenAttractions.removeIf(a -> this.mustSeenAttractionsForDay.contains(a));
     }
 
+    private Attraction findClosestAttractionToSource(Attraction sourceAttraction, ArrayList<Attraction> mustSeenAttractions)
+    {
+        CellDetails closestAttraction = null;
+        int V = mustSeenAttractions.size();
+        ArrayList<CellDetails> dist = new ArrayList(V);
+        double minDistance = Integer.MAX_VALUE;
+
+        for (Attraction att: mustSeenAttractions) {
+             CellDetails cellDetails = new CellDetails();
+             cellDetails.attraction = att;
+             cellDetails.distance = att.calcDistanceBetweenAttractions(sourceAttraction);
+             if(this.mustSeenAttractionsForDay.contains(cellDetails.attraction) ||
+                     att.getDuration() > durationDesireByUser - durationDay)
+                 cellDetails.isOptional = false;
+             dist.add(cellDetails);
+        }
+
+        for(CellDetails cd: dist){
+            if(cd.distance < minDistance && cd.isOptional) {
+                minDistance = cd.distance;
+                closestAttraction = cd;
+            }
+        }
+        return (closestAttraction == null) ? null : closestAttraction.attraction;
+    }
+
+
+
+
+
     public void calculateDayPlanWithMustSeenAttractions(){
         daySchedule.add(new OnePlan(hotel,startTime));
-//        if(this.mustSeenAttractionsForDay.isEmpty()){
-//            return;
-//        }
-//        calculateDayPlan(this.mustSeenAttractionsForDay);
+        if(this.mustSeenAttractionsForDay.isEmpty()){
+            return;
+        }
+        calculateDayPlan(this.mustSeenAttractionsForDay);
     }
 
 

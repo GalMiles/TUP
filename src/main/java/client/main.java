@@ -8,6 +8,7 @@ import common.Geometry;
 //import common.OpeningHours;
 import database.DBManager;
 import engine.Engine;
+import engine.planTrip.DayPlan;
 import engine.planTrip.RouteTrip;
 
 import engine.attraction.Attraction;
@@ -47,11 +48,6 @@ public class main {
 
     public static void main(String[] args) throws IOException, SQLException {
 
-
-
-        DBManager db = new DBManager();
-        db.insertImagesToDB();
-
         TripDetails trip = new TripDetails();
 
         trip.destination = "london";
@@ -63,7 +59,7 @@ public class main {
         trip.mustSeenAttractionsID.add("ChIJG1YB2m4RdkgRsetv9D40NGY");
         trip.mustSeenAttractionsID.add("ChIJVbSVrt0EdkgRQH_FO4ZkHc0");
         Engine engine = new Engine();
-        //DBManager db = new DBManager();
+        DBManager db = new DBManager();
         ArrayList<Attraction> mustSeenAttractions = engine.createArrayListOfMustSeenAttractions(trip.mustSeenAttractionsID,db,"london" );
         trip.hoursEveryDay = new ArrayList<>();
         trip.hoursEveryDay.add(new DesiredHoursInDay("2021-08-11"));
@@ -105,16 +101,33 @@ public class main {
         d3.setEndTime("20:00");
         desiredHoursInDays.add(d3);
 
-//        RouteTrip routeTrip = new RouteTrip("london",hotel,mustSeenAttractions, desiredHoursInDays);
+        RouteTrip routeTrip = new RouteTrip("london",hotel,mustSeenAttractions, desiredHoursInDays);
 //        routeTrip.divideMustSeenAttractionsForEachDay();
-//        System.out.println(routeTrip.getPlanForDays());
+//        int i =1;
+//        for(DayPlan d: routeTrip.getPlanForDays()){
+//            System.out.println("day " + i );
+//            i++;
+//            for(Attraction a: d.getMustSeenAttractionsForDay()){
+//                System.out.println(a.getName() + " , ");
+//            }
+//        }
+        routeTrip.planRouteTrip(db.getAllAttractionsByDestination("london"));
+        System.out.println(routeTrip.getPlanForDays());
+
 //
-        for(Attraction att: mustSeenAttractions) {
-            for (Attraction at : mustSeenAttractions) {
-                if(!att.equals(at))
-                    System.out.println(att.getName() + " ---> " + at.getName() + "  " + att.calcDistanceBetweenAttractions(at));
-            }
-        }
+//        for(Attraction at: mustSeenAttractions){
+//            System.out.println("hotel: "+ hotel.getName() + " ---> " + at.getName() + "  " + hotel.calcDistanceBetweenAttractions(at)
+//            + "    " +at.getName() + "  Duration:" + at.getDuration() );
+//
+//
+//        }
+//
+//        for(Attraction att: mustSeenAttractions) {
+//            for (Attraction at : mustSeenAttractions) {
+//                if(!att.equals(at))
+//                    System.out.println(att.getName() + " ---> " + at.getName() + "  " + att.calcDistanceBetweenAttractions(at));
+//            }
+//        }
 
 
 

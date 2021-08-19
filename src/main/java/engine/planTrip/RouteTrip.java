@@ -95,11 +95,7 @@ public class RouteTrip {
     }
 
     public void planRouteTrip(ArrayList<Attraction> attractionsAvailable){
-
-        attractionsAvailable = getPossibleAttractions("london");
-
-
-        //divideMustSeenAttractionsForEachDay();
+        divideMustSeenAttractionsForEachDay();
         for(DayPlan dayPlan: this.planForDays){
             dayPlan.calculateDayPlanWithMustSeenAttractions();
             dayPlan.calculateDayPlan(attractionsAvailable);
@@ -107,42 +103,16 @@ public class RouteTrip {
     }
 
     public void divideMustSeenAttractionsForEachDay() {
-        int minimumDistance = 1;
+        int numberOfIterations = 1;
 
-        while (mustSeenAttractions.size() != 0 && minimumDistance != 200) { /// limit number of iteration
+        while (mustSeenAttractions.size() != 0 && numberOfIterations != 200) { /// limit number of iteration
             for (DayPlan dayPlan : this.planForDays) {
-                dayPlan.setMustSeenAttractions(mustSeenAttractions, minimumDistance);
+                dayPlan.setMustSeenAttractions(mustSeenAttractions);
             }
-            minimumDistance += 1;
+            numberOfIterations += 1;
         }
         this.planForDays.forEach(dayPlan -> dayPlan.setDurationDay(0));
     }
-
-
-
-//        int sizeMust = mustSeenAttractions.size();
-//
-//        if (sizeMust == 0)
-//            return;
-//
-//        double numberOfAttractionsEachDay = Math.ceil(sizeMust / tripDuration);
-//        int minimumDestination = 1;
-//        this.planForDays.get(0).getMustSeenAttractionsForDay().add(mustSeenAttractions.get(0)); //init
-//        while(sizeMust != 0){
-//            for(DayPlan dayPlan: this.planForDays) {
-//                for(Attraction attraction: mustSeenAttractions){
-//                    //if(dayPlan.getMustSeenAttractionsForDay())
-//                }
-//            }
-//
-//            sizeMust--;
-//        }
-
-
- //   }
-
-
-
 
     @Override
     public String toString() {
