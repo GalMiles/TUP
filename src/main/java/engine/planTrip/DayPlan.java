@@ -125,10 +125,6 @@ public class DayPlan {
         return (closestAttraction == null) ? null : closestAttraction.attraction;
     }
 
-
-
-
-
     public void calculateDayPlanWithMustSeenAttractions(){
         daySchedule.add(new OnePlan(hotel,startTime));
         if(this.mustSeenAttractionsForDay.isEmpty()){
