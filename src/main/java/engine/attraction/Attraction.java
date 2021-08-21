@@ -25,6 +25,8 @@ public class Attraction {
     private String placeID;
     private ArrayList<AttractionType> types = new ArrayList<>();
     private ArrayList<DayOpeningHours> OpeningHoursArr = new ArrayList<>();
+    private String imageUrl;
+    private String description;
     private int duration = 0;
 
     public Attraction(String name, String address, String phoneNumber, String website, Geometry geometry, String placeID,
@@ -90,8 +92,12 @@ public class Attraction {
             }
         }
         setDuration(this.types);
+        this.description = resultSet.getString("Description");
+        this.imageUrl = resultSet.getString("Image");
 
     }
+
+
 
 
 
@@ -103,7 +109,8 @@ public class Attraction {
         this.setWebsite(other.website);
         this.setPlaceID(other.placeID);
         this.setDuration(other.getTypes());
-
+        this.setImageUrl(other.imageUrl);
+        this.setDescription(other.description);
         this.setGeometry(other.geometry);
         this.setTypes(other.types);
         this.setOpeningHoursArr(other.OpeningHoursArr);
@@ -193,11 +200,9 @@ public class Attraction {
     }
     public String getWebsite() {return website;}
     public int getDuration() {return duration;}
-
     public void setDuration(int duration) {
         this.duration = duration;
     }
-
     public void setName(String name) {this.name = name;}
     public void setAddress(String address) {this.address = address;}
     public void setPhoneNumber(String phoneNumber) {this.phoneNumber = phoneNumber;}
@@ -206,6 +211,14 @@ public class Attraction {
     public void setPlaceID(String placeID) {this.placeID = placeID;}
     public void setTypes(ArrayList<AttractionType> types) {this.types = types;}
     public void setOpeningHoursArr(ArrayList<DayOpeningHours> openingHoursArr) {OpeningHoursArr = openingHoursArr;}
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
     public void setDuration(ArrayList<AttractionType> types)
     {
@@ -244,6 +257,14 @@ public class Attraction {
 
     public DayOpeningHours getOpeningHoursByDay(DayOfWeek day){
         return OpeningHoursArr.get(day.getValue());
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public String getDescription() {
+        return description;
     }
 
     @Override
