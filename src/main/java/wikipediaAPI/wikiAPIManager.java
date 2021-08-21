@@ -67,22 +67,22 @@ public class wikiAPIManager {
         String imageUrl=null;
         String newAttractionName = attractionName.replace(" ", "_");
 
-        String url = "https://en.wikipedia.org/w/api.php?action=query&titles=" + newAttractionName +"&prop=pageimages&format=json&pithumbsize=150";
+        String url = "https://en.wikipedia.org/w/api.php?action=query&titles=" + newAttractionName +"&prop=pageimages&format=json&pithumbsize=300";
         imageUrl = getAttractionImageFromWikiWithUrl(url);
 
         if(imageUrl==null) {
-            url = "https://en.wikipedia.org/w/api.php?action=query&titles=" + newAttractionName + ",_London&prop=pageimages&format=json&pithumbsize=150";
+            url = "https://en.wikipedia.org/w/api.php?action=query&titles=" + newAttractionName + ",_London&prop=pageimages&format=json&pithumbsize=300";
             imageUrl = getAttractionImageFromWikiWithUrl(url);
         }
         if(imageUrl==null) {
             newAttractionName = newAttractionName.replace("The","");
-            url = "https://en.wikipedia.org/w/api.php?action=query&titles=" + newAttractionName +"&prop=pageimages&format=json&pithumbsize=150";
+            url = "https://en.wikipedia.org/w/api.php?action=query&titles=" + newAttractionName +"&prop=pageimages&format=json&pithumbsize=300";
             imageUrl = getAttractionImageFromWikiWithUrl(url);
         }
         return imageUrl;
     }
 
-    private static String getAttractionImageFromWikiWithUrl(String url) throws IOException {
+    public static String getAttractionImageFromWikiWithUrl(String url) throws IOException {
 
         URL urlObject = new URL(url);
         HttpURLConnection connection = (HttpURLConnection) urlObject.openConnection();

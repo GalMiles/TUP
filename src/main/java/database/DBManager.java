@@ -1,17 +1,13 @@
 package database;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import common.AttractionType;
 import common.DayOpeningHours;
 import common.Destinations;
-import common.OpeningHours;
 import engine.attraction.Attraction;
 import engine.planTrip.RouteTrip;
 import engine.traveler.Traveler;
 import googleAPI.APIManager;
 import googleAPI.JsonAttraction;
-import jdk.internal.instrumentation.Logger;
 
 
 import wikipediaAPI.wikiAPIManager;
@@ -30,7 +26,7 @@ public class DBManager {
 
 
     public DBManager() throws SQLException {
-        this.sqlConnection = DriverManager.getConnection("jdbc:mysql://localhost:3306/tup", "root", "123456ma");
+        this.sqlConnection = DriverManager.getConnection("jdbc:mysql://localhost:3306/tup", "root", "Galmiles31051960");
         this.statement = sqlConnection.createStatement();
 
         DriverManager.registerDriver(new com.mysql.cj.jdbc.Driver());
@@ -217,8 +213,33 @@ public class DBManager {
         return this.getAttractionFromDataBaseByName(hotelName, destination);
     }
 
+    public ArrayList<Attraction> getAllHotelsFromDB(String destination) throws SQLException {
+        ArrayList<Attraction> attractions = new ArrayList<>();
+        String sql = "SELECT * FROM tup." + destination.toString()+"_hotels";
+        PreparedStatement ps = this.sqlConnection.prepareStatement(sql);
+        ResultSet results = ps.executeQuery();
+        while (results.next()) {
+            attractions.add(new Attraction(results));
+        }
+        return attractions;
+    }
+    public void insertHotelsImagesToDB() throws SQLException, IOException {
 
-    public void insertImagesToDB() throws SQLException, IOException {
+        String image = null;
+        wikiAPIManager wiki = new wikiAPIManager();
+        ArrayList<Attraction> attractions = this.getAllHotelsFromDB("london");
+        for (Attraction att : attractions) {
+            image = wiki.getAttractionImageFromWiki(att.getName());
+
+            PreparedStatement p = sqlConnection.prepareStatement("UPDATE london_hotels SET Image = ? WHERE attractionAPI_ID = ?");
+            p.setString(1, image);
+            p.setString(2, att.getPlaceID());
+            p.execute();
+        }
+
+    }
+
+    public void insertAttractionsImagesToDB() throws SQLException, IOException {
 
         String image = null;
         wikiAPIManager wiki = new wikiAPIManager();
@@ -233,7 +254,7 @@ public class DBManager {
         }
 
     }
-    public void insertDescriptionToDB() throws SQLException, IOException {
+    public void insertAttractionsDescriptionToDB() throws SQLException, IOException {
 
         String description = null;
         wikiAPIManager wiki = new wikiAPIManager();
@@ -247,6 +268,32 @@ public class DBManager {
             p.execute();
         }
 
+    }
+
+    public void insertToDB() throws SQLException, IOException, ParseException {
+
+        wikiAPIManager w = new wikiAPIManager();
+
+        String attID=null;
+        String atractionName = "Britannia_Hotels";
+        attID = "ChIJyZap4LsCdkgR15bK4_L6-m0";
+
+//        String url = "https://en.wikipedia.org/w/api.php?action=query&titles=" + atractionName+ "&prop=extracts&format=json";
+//       String description =  w.getAttractionDescriptionFromWikiWithUrl(url);
+//
+//        PreparedStatement p = sqlConnection.prepareStatement("UPDATE london SET Description = ? WHERE attractionAPI_ID = ?");
+//        p.setString(1, description);
+//        p.setString(2, attID);
+//        p.execute();
+
+        String url = "https://en.wikipedia.org/w/api.php?action=query&titles=" + atractionName +"&prop=pageimages&format=json&pithumbsize=150";
+        String image = w.getAttractionImageFromWikiWithUrl(url);
+
+
+        PreparedStatement p = sqlConnection.prepareStatement("UPDATE london_hotels SET Image = ? WHERE attractionAPI_ID = ?");
+        p.setString(1, image);
+        p.setString(2, attID);
+        p.execute();
     }
 
     /*
