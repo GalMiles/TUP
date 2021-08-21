@@ -43,19 +43,19 @@ public class Engine {
         //return null;
     }
 
-    public Collection<Attraction> getFavoriteAttractions() throws SQLException {
+    public ArrayList<Attraction> getFavoriteAttractions() throws SQLException {
         DBManager db = new DBManager();
-        return db.getFavoriteAttractions(currentTravelerID);
+        return db.getFavoriteAttractions(currentTravelerID); //or currentId? not sure
     }
 
     public void deleteFromFavoriteAttractions(String attractionId) throws SQLException,Attraction.NotFoundException {
         DBManager db = new DBManager();
-        //db.deleteUserOneFavoriteAttraction(attractionId,currentTravelerID);
+        db.deleteUserOneFavoriteAttraction(attractionId,currentTravelerID);
     }
 
-    public void addToFavoriteAttractions(String attractionNamId) throws SQLException {
+    public void addToFavoriteAttractions(String attractionId) throws SQLException {
         DBManager db = new DBManager();
-        //db.addFavoriteAttraction(attractionId,currentTravelerID);
+        db.addFavoriteAttraction(attractionId,currentTravelerID);
     }
 
     public Collection<RouteTrip> getUserTrips() throws SQLException, RouteTrip.NotFoundException {

@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Collection;
 
 
@@ -57,16 +58,16 @@ public class AttractionsServlet extends HttpServlet {
         ServletUtils servletUtils = new ServletUtils(req);
         Engine engine = ContextServletUtils.getEngine(req);
 
-        Collection<Attraction> favoriteAttractions;
+        ArrayList <Attraction> favoriteAttractions;
 
-       /* try {
-            favoriteAttractions = engine.getAttractions(servletUtils.lines); //id
+       try {
+            favoriteAttractions = engine.getFavoriteAttractions();
             servletUtils.writeJsonResponse(favoriteAttractions);
 
         } catch (SQLException e) {
             servletUtils.writeJsonResponse("error", e.getMessage());
         }
-*/
+
         try (PrintWriter out = resp.getWriter()) {
             out.println(servletUtils.createOutResponse());
         }

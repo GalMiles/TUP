@@ -3,6 +3,7 @@ package client;
 import common.DesiredHoursInDay;
 //import common.OpeningHours;
 import database.DBManager;
+import engine.attraction.Attraction;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -32,8 +33,12 @@ public class main {
     public static void main(String[] args) throws IOException, SQLException, ParseException {
 
         DBManager db = new DBManager();
-        db.insertToDB();
+        //db.insertToDB();
        // db.insertHotelsImagesToDB();
+
+       // db.deleteUserOneFavoriteAttraction("ChIJhRoYKUkFdkgRDL20SU9sr9E", "3");
+        db.addFavoriteAttraction("ChIJ3TgfM0kDdkgRZ2TV4d1Jv6g", "2");
+      //  ArrayList<Attraction> arr= db.getFavoriteAttractions("3");
 //        TripDetails trip = new TripDetails();
 //
 //        trip.destination = "london";

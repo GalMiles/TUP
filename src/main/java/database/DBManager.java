@@ -198,10 +198,34 @@ public class DBManager {
         return attractionsArr;
     }
 
+    public ArrayList<Attraction> getFavoriteAttractions(String travelerID) throws SQLException {
+        Destinations destination = null;
+        ArrayList<Attraction> attractions = new ArrayList<>();
 
-    //getting favorite attractions from db
-    public Collection<Attraction> getFavoriteAttractions(String travelerID) {
-        return null;
+        PreparedStatement p = sqlConnection.prepareStatement("SELECT * FROM favorites_attractions WHERE traveler_id = ? ");
+        p.setString(1, travelerID);
+        //p.execute();
+        ResultSet results = p.executeQuery();
+        while (results.next()) {
+            String attractionId = results.getString("attractionAPI_ID");
+            Attraction attraction = getAttractionFromDBByID(attractionId, destination.london);
+            attractions.add(attraction);
+        }
+    return attractions;
+    }
+
+    public void deleteUserOneFavoriteAttraction(String attractionId, String travelerID) throws SQLException {
+
+        PreparedStatement p = sqlConnection.prepareStatement("DELETE FROM favorites_attractions WHERE traveler_id = ? AND attractionAPI_ID = ?");
+        p.setString(1, travelerID);
+        p.setString(2, attractionId);
+        p.execute();
+    }
+    public void addFavoriteAttraction(String attractionId, String travelerID) throws SQLException {
+        PreparedStatement p = sqlConnection.prepareStatement("INSERT INTO favorites_attractions (traveler_id, attractionAPI_ID) VALUES (?, ?)");
+        p.setString(1, travelerID);
+        p.setString(2, attractionId);
+        p.execute();
     }
 
     public Collection<RouteTrip> getMyTripsFromDB() {
