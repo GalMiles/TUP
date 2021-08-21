@@ -72,22 +72,22 @@ public class Engine {
     public ArrayList<DayPlan> createTripForUser(String destination, String stringHotelID,
              ArrayList<String> mustSeenAttractionsID, ArrayList<DesiredHoursInDay> desiredHoursInDays) throws SQLException{
         DBManager db = new DBManager();
-        //Attraction hotel  = db.getAttractionFromDBByID(stringHotelID, Destinations.valueOf(destination));
+        Attraction hotel  = db.getAttractionFromDBByID(stringHotelID, Destinations.valueOf(destination));
 
-        ArrayList<AttractionType> typesHotel = new ArrayList<>();
-        typesHotel.add(AttractionType.lodging);
-        Attraction hotel = new Attraction("Baglioni Hotel - London", "60 Hyde Park Gate, South Kensington, London SW7 5BB, UK",
-                "020 7368 5700", null, new Geometry("51.50167580000001", "-0.1847417"), "ChIJFSZeB1kFdkgRTixgFHqP13g",
-                typesHotel, null);
+//        ArrayList<AttractionType> typesHotel = new ArrayList<>();
+//        typesHotel.add(AttractionType.lodging);
+//        Attraction hotel = new Attraction("Baglioni Hotel - London", "60 Hyde Park Gate, South Kensington, London SW7 5BB, UK",
+//                "020 7368 5700", null, new Geometry("51.50167580000001", "-0.1847417"), "ChIJFSZeB1kFdkgRTixgFHqP13g",
+//                typesHotel, null);
 
-        //ArrayList<Attraction> mustSeenAttractions = createArrayListOfMustSeenAttractions(mustSeenAttractionsID, db, destination);
-        //RouteTrip routeTrip = new RouteTrip(destination,hotel, mustSeenAttractions, desiredHoursInDays);
-        //ArrayList<Attraction> attractionsAvailable = createListOfRestAttractionAvailableInDestination(db,destination,mustSeenAttractions);
-
-        ArrayList<Attraction> mustSeenAttractions = null;
+        ArrayList<Attraction> mustSeenAttractions = createArrayListOfMustSeenAttractions(mustSeenAttractionsID, db, destination);
         RouteTrip routeTrip = new RouteTrip(destination,hotel, mustSeenAttractions, desiredHoursInDays);
+        ArrayList<Attraction> attractionsAvailable = createListOfRestAttractionAvailableInDestination(db,destination,mustSeenAttractions);
 
-        ArrayList<Attraction> attractionsAvailable = null;
+//        ArrayList<Attraction> mustSeenAttractions = null;
+//        RouteTrip routeTrip = new RouteTrip(destination,hotel, mustSeenAttractions, desiredHoursInDays);
+//
+//        ArrayList<Attraction> attractionsAvailable = null;
 
         routeTrip.planRouteTrip(attractionsAvailable);
         return routeTrip.getPlanForDays();
