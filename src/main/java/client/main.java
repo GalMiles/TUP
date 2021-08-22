@@ -71,19 +71,16 @@ public class main {
         //System.out.println(gson.toJson(trip));
 
 
-//        ArrayList<DayPlan> res = engine.createTripForUser(trip.destination, trip.hotelID, trip.mustSeenAttractionsID, trip.hoursEveryDay);
-//        ArrayList<DayPlan>
-//        for(DayPlan d: res){
-//            ArrayList<OnePlan> re = d.getDaySchedule();
-//            for(OnePlan p: re){
-//                p.getAttraction().getPlaceID();
-//                p.getStartTime();
-//                p.getFinishTime();
-//                p.getIsFavoriteAttraction();
-//            }
-//
-//        }
-//        System.out.println(gson.toJson(res));
+        ArrayList<DayPlan> res = engine.createTripForUser(trip.destination, trip.hotelID, trip.mustSeenAttractionsID, trip.hoursEveryDay);
+
+        for(DayPlan d: res){
+            ArrayList<OnePlan> re = d.getDaySchedule();
+            for(OnePlan p: re){
+              p.setAttraction(null);
+            }
+
+        }
+        System.out.println(gson.toJson(res));
 
       ///  System.out.println(engine.getAttractions("london"));
 

@@ -10,12 +10,14 @@ public class OnePlan {
     LocalTime startTime;
     LocalTime finishTime;
     Boolean isFavoriteAttraction = false;
+    String attractionId;
 
     public OnePlan(Attraction attraction, LocalTime startTime , Boolean isFavoriteAttraction) {
         setAttraction(attraction);
         setStartTime(startTime);
         setFinishTime(startTime.plusHours(attraction.getDuration()));
         setFavoriteAttraction(isFavoriteAttraction);
+        attractionId = attraction.getPlaceID();
     }
 
     public Attraction getAttraction() {return attraction;}
