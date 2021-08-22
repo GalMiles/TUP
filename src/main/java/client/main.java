@@ -1,8 +1,10 @@
 package client;
 
+import com.google.gson.Gson;
 import common.DesiredHoursInDay;
 //import common.OpeningHours;
 import database.DBManager;
+import engine.Engine;
 import engine.attraction.Attraction;
 
 import java.io.IOException;
@@ -33,46 +35,47 @@ public class main {
     public static void main(String[] args) throws IOException, SQLException, ParseException {
 
         DBManager db = new DBManager();
-        //db.insertToDB();
-       // db.insertHotelsImagesToDB();
+        Engine engine = new Engine();
 
-       // db.deleteUserOneFavoriteAttraction("ChIJhRoYKUkFdkgRDL20SU9sr9E", "3");
-        db.addFavoriteAttraction("ChIJ3TgfM0kDdkgRZ2TV4d1Jv6g", "2");
-      //  ArrayList<Attraction> arr= db.getFavoriteAttractions("3");
-//        TripDetails trip = new TripDetails();
-//
-//        trip.destination = "london";
-//        trip.hotelID = "ChIJGeIsmrgEdkgRlsvY9Maa0A0";
-//        trip.mustSeenAttractionsID = new ArrayList<>();
-//        trip.mustSeenAttractionsID.add("ChIJ_R7u-6QcdkgR_TvWQJZsm3k");
-//        trip.mustSeenAttractionsID.add("ChIJ2_19mdYEdkgRadLE5rfxLPU");
-//        trip.mustSeenAttractionsID.add("ChIJ7bDgv2IadkgRkIbzf3FdF5M");
-//        trip.mustSeenAttractionsID.add("ChIJG1YB2m4RdkgRsetv9D40NGY");
-//        trip.mustSeenAttractionsID.add("ChIJVbSVrt0EdkgRQH_FO4ZkHc0");
-//        Engine engine = new Engine();
-//        DBManager db = new DBManager();
-//        ArrayList<Attraction> mustSeenAttractions = engine.createArrayListOfMustSeenAttractions(trip.mustSeenAttractionsID,db,"london" );
-//        trip.hoursEveryDay = new ArrayList<>();
-//        trip.hoursEveryDay.add(new DesiredHoursInDay("2021-08-11"));
-//
-//        trip.hoursEveryDay.get(0).setStartTime("10:00");
-//        trip.hoursEveryDay.get(0).setEndTime("20:00");
-//        trip.hoursEveryDay.add(new DesiredHoursInDay("2021-08-12"));
-//        trip.hoursEveryDay.get(1).setStartTime("10:00");
-//        trip.hoursEveryDay.get(1).setEndTime("18:00");
-//        trip.hoursEveryDay.add(new DesiredHoursInDay("2021-08-13"));
-//        trip.hoursEveryDay.get(2).setStartTime("15:00");
-//        trip.hoursEveryDay.get(2).setEndTime("20:00");
-//
+        TripDetails trip = new TripDetails();
+
+        trip.destination = "london";
+        trip.hotelID = "ChIJ1TVZs1UFdkgRIeWxo-jEYaE";
+        trip.mustSeenAttractionsID = new ArrayList<>();
+        trip.mustSeenAttractionsID.add("ChIJ_R7u-6QcdkgR_TvWQJZsm3k");
+        trip.mustSeenAttractionsID.add("ChIJ2_19mdYEdkgRadLE5rfxLPU");
+        trip.mustSeenAttractionsID.add("ChIJ7bDgv2IadkgRkIbzf3FdF5M");
+        trip.mustSeenAttractionsID.add("ChIJG1YB2m4RdkgRsetv9D40NGY");
+        trip.mustSeenAttractionsID.add("ChIJVbSVrt0EdkgRQH_FO4ZkHc0");
+        ArrayList<Attraction> mustSeenAttractions = engine.createArrayListOfMustSeenAttractions(trip.mustSeenAttractionsID,db,"london" );
+        trip.hoursEveryDay = new ArrayList<>();
+        trip.hoursEveryDay.add(new DesiredHoursInDay("2021-08-11"));
+
+        trip.hoursEveryDay.get(0).setStartTime("10:00");
+        trip.hoursEveryDay.get(0).setEndTime("20:00");
+        trip.hoursEveryDay.add(new DesiredHoursInDay("2021-08-12"));
+        trip.hoursEveryDay.get(1).setStartTime("10:00");
+        trip.hoursEveryDay.get(1).setEndTime("18:00");
+        trip.hoursEveryDay.add(new DesiredHoursInDay("2021-08-13"));
+        trip.hoursEveryDay.get(2).setStartTime("15:00");
+        trip.hoursEveryDay.get(2).setEndTime("20:00");
+
+        Gson gson = new Gson();
+        //System.out.println(gson.toJson(trip));
+        System.out.println(
+        engine.createTripForUser(trip.destination, trip.hotelID, trip.mustSeenAttractionsID, trip.hoursEveryDay)
+        );
+
+
 //        ArrayList<AttractionType> typesHotel = new ArrayList<>();
 //        typesHotel.add(AttractionType.lodging);
 //        Attraction hotel = new Attraction("Baglioni Hotel - London", "60 Hyde Park Gate, South Kensington, London SW7 5BB, UK",
 //                "020 7368 5700", null, new Geometry("51.50167580000001", "-0.1847417"), "ChIJFSZeB1kFdkgRTixgFHqP13g",
 //                typesHotel, null);
-//
-//
-//
-//
+
+
+
+
 //        ArrayList<DesiredHoursInDay> desiredHoursInDays = new ArrayList<>();
 //        DesiredHoursInDay d1 = new DesiredHoursInDay();
 //        d1.setDate("2021-09-01");

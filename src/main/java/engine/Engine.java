@@ -72,7 +72,7 @@ public class Engine {
     public ArrayList<DayPlan> createTripForUser(String destination, String stringHotelID,
              ArrayList<String> mustSeenAttractionsID, ArrayList<DesiredHoursInDay> desiredHoursInDays) throws SQLException{
         DBManager db = new DBManager();
-        Attraction hotel  = db.getAttractionFromDBByID(stringHotelID, Destinations.valueOf(destination));
+        Attraction hotel  = db.getHotelFromDBByID(stringHotelID, Destinations.valueOf(destination));
 
 //        ArrayList<AttractionType> typesHotel = new ArrayList<>();
 //        typesHotel.add(AttractionType.lodging);

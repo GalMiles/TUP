@@ -43,7 +43,6 @@
           <element id="library" level="project" name="Maven: org.sonatype.plexus:plexus-cipher:1.4" />
           <element id="library" level="project" name="Maven: mysql:mysql-connector-java:8.0.23" />
           <element id="library" level="project" name="Maven: com.google.protobuf:protobuf-java:3.11.4" />
-          <element id="library" level="project" name="jooq-3.15.1" />
         </element>
       </element>
       <element id="directory" name="META-INF">

@@ -92,8 +92,10 @@ public class Attraction {
             }
         }
         setDuration(this.types);
-        this.description = resultSet.getString("Description");
-        this.imageUrl = resultSet.getString("Image");
+        if(!types.contains(AttractionType.lodging)) {
+            this.description = resultSet.getString("Description");
+            this.imageUrl = resultSet.getString("Image");
+        }
 
     }
 

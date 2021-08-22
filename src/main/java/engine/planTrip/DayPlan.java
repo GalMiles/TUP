@@ -126,15 +126,15 @@ public class DayPlan {
     }
 
     public void calculateDayPlanWithMustSeenAttractions(){
-        daySchedule.add(new OnePlan(hotel,startTime));
+        daySchedule.add(new OnePlan(hotel,startTime, false));
         if(this.mustSeenAttractionsForDay.isEmpty()){
             return;
         }
-        calculateDayPlan(this.mustSeenAttractionsForDay);
+        calculateDayPlan(this.mustSeenAttractionsForDay, true);
     }
 
 
-    public void calculateDayPlan(ArrayList<Attraction> attractionsAvailable) {
+    public void calculateDayPlan(ArrayList<Attraction> attractionsAvailable, Boolean isFavoriteAttraction) {
 
         Attraction nextAttraction;
         Attraction currentAttraction = daySchedule.get(daySchedule.size()-1).getAttraction();
@@ -142,13 +142,15 @@ public class DayPlan {
 
         while (durationDay < durationDesireByUser) {
             nextAttraction = chooseBestNextAttraction(currentAttraction, currentTime,attractionsAvailable);
-            daySchedule.add(new OnePlan(nextAttraction,currentTime));
-            attractionsAvailable.remove(nextAttraction); // -object of any class are reference so this action delete chosen attraction so we dont add visited attraction to rhe next day
-            currentAttraction = nextAttraction;
-            currentTime = currentTime.plusHours(nextAttraction.getDuration());
+            if(nextAttraction != null) {
+                daySchedule.add(new OnePlan(nextAttraction, currentTime, isFavoriteAttraction));
+                attractionsAvailable.remove(nextAttraction); // -object of any class are reference so this action delete chosen attraction so we dont add visited attraction to rhe next day
+                currentAttraction = nextAttraction;
+                currentTime = currentTime.plusHours(nextAttraction.getDuration());
 
-            durationDay += nextAttraction.getDuration();
-            if (nextAttraction.getName().equals(hotel.getName()))
+                durationDay += nextAttraction.getDuration();
+            }
+            else
                 break;
         }
 
@@ -165,9 +167,7 @@ public class DayPlan {
                 minScore = currentScore;
             }
         }
-        if (nextAttraction == null)
-            nextAttraction = hotel; //the day is over
-        return nextAttraction;
+        return nextAttraction; //in case its null, it mean that the day is over
     }
 
 
@@ -242,7 +242,7 @@ public class DayPlan {
     {
         int i = 0;
         for (OnePlan plan : daySchedule) {
-            System.out.println(date +" DAY " +String.valueOf(i)+ ":"+ plan.getAttraction().getName());
+            System.out.println(date +" DAY " +String.valueOf(i)+ ":"+ plan.getAttraction().getName() + "                favorite: " + plan.getFavoriteAttraction());
             i++;
         }
 

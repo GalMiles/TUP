@@ -98,7 +98,7 @@ public class RouteTrip {
         divideMustSeenAttractionsForEachDay();
         for(DayPlan dayPlan: this.planForDays){
             dayPlan.calculateDayPlanWithMustSeenAttractions();
-            dayPlan.calculateDayPlan(attractionsAvailable);
+            dayPlan.calculateDayPlan(attractionsAvailable, false);
         }
     }
 

@@ -26,7 +26,7 @@ public class DBManager {
 
 
     public DBManager() throws SQLException {
-        this.sqlConnection = DriverManager.getConnection("jdbc:mysql://localhost:3306/tup", "root", "Galmiles31051960");
+        this.sqlConnection = DriverManager.getConnection("jdbc:mysql://localhost:3306/tup", "root", "123456ma");
         this.statement = sqlConnection.createStatement();
 
         DriverManager.registerDriver(new com.mysql.cj.jdbc.Driver());
@@ -180,6 +180,8 @@ public class DBManager {
     }
 
 
+
+
     public void checkIfEmailIsFound(String email) throws SQLException, Traveler.AlreadyExistsException {
         String query = "SELECT * FROM travelers WHERE Email = \"" + email + "\"";
         ResultSet resultSet = this.statement.executeQuery(query);
@@ -235,6 +237,17 @@ public class DBManager {
 
     public Attraction getHotelFromDBByName(String hotelName, Destinations destination) throws SQLException, IOException, ParseException {
         return this.getAttractionFromDataBaseByName(hotelName, destination);
+    }
+
+    public Attraction getHotelFromDBByID(String id, Destinations destination) throws SQLException {
+        Attraction resAttracion = null;
+        String query = "SELECT * FROM tup." + destination.toString() +"_hotels" + " WHERE attractionAPI_ID =\"" + id + "\"";
+        ResultSet resultSet = this.statement.executeQuery(query);
+        if (resultSet.next()) {
+            resAttracion = new Attraction(resultSet);
+        }
+        return resAttracion;
+
     }
 
     public ArrayList<Attraction> getAllHotelsFromDB(String destination) throws SQLException {
