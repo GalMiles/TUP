@@ -53,9 +53,13 @@ public class Engine {
         db.deleteUserOneFavoriteAttraction(attractionId,currentTravelerID);
     }
 
-    public void addToFavoriteAttractions(String attractionId) throws SQLException {
+    public void addToFavoriteAttractions(ArrayList<String> favoriteAttractionsList) throws SQLException {
         DBManager db = new DBManager();
-        db.addFavoriteAttraction(attractionId,currentTravelerID);
+        for(String favoriteAttraction : favoriteAttractionsList)
+        {
+            db.addFavoriteAttraction(favoriteAttraction,currentTravelerID);
+        }
+
     }
 
     public Collection<RouteTrip> getUserTrips() throws SQLException, RouteTrip.NotFoundException {

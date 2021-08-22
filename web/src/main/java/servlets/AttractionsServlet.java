@@ -3,6 +3,7 @@ package servlets;
 
 import engine.Engine;
 import engine.attraction.Attraction;
+import engine.traveler.Traveler;
 import servlets.utils.ContextServletUtils;
 import servlets.utils.ServletUtils;
 
@@ -96,9 +97,10 @@ public class AttractionsServlet extends HttpServlet {
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         ServletUtils servletUtils = new ServletUtils(req);
         Engine engine = ContextServletUtils.getEngine(req);
+        FavoriteAttractions jsonFavoriteAttractions = (FavoriteAttractions) servletUtils.gsonFromJson(FavoriteAttractions.class);
 
         try {
-            engine.addToFavoriteAttractions(servletUtils.lines);
+            engine.addToFavoriteAttractions(jsonFavoriteAttractions.favoriteAttractionsList);
         } catch (SQLException e) {
             servletUtils.writeJsonResponse("error", e.getMessage());
         }
@@ -106,6 +108,10 @@ public class AttractionsServlet extends HttpServlet {
         try (PrintWriter out = resp.getWriter()) {
             out.println(servletUtils.createOutResponse());
         }
+    }
+
+    static class FavoriteAttractions{
+        ArrayList<String> favoriteAttractionsList;
     }
 }
 
