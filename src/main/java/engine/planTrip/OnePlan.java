@@ -19,7 +19,7 @@ public class OnePlan {
     }
 
     public Attraction getAttraction() {return attraction;}
-    public Boolean getFavoriteAttraction() {
+    public Boolean getIsFavoriteAttraction() {
         return isFavoriteAttraction;
     }
     public void setAttraction(Attraction attraction) {this.attraction = attraction;}

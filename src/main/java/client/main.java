@@ -6,6 +6,8 @@ import common.DesiredHoursInDay;
 import database.DBManager;
 import engine.Engine;
 import engine.attraction.Attraction;
+import engine.planTrip.DayPlan;
+import engine.planTrip.OnePlan;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -67,9 +69,21 @@ public class main {
         trip.hoursEveryDay.get(2).setEndTime("20:00");
 
         //System.out.println(gson.toJson(trip));
-        System.out.println(
-        engine.createTripForUser(trip.destination, trip.hotelID, trip.mustSeenAttractionsID, trip.hoursEveryDay)
-        );
+
+
+//        ArrayList<DayPlan> res = engine.createTripForUser(trip.destination, trip.hotelID, trip.mustSeenAttractionsID, trip.hoursEveryDay);
+//        ArrayList<DayPlan>
+//        for(DayPlan d: res){
+//            ArrayList<OnePlan> re = d.getDaySchedule();
+//            for(OnePlan p: re){
+//                p.getAttraction().getPlaceID();
+//                p.getStartTime();
+//                p.getFinishTime();
+//                p.getIsFavoriteAttraction();
+//            }
+//
+//        }
+//        System.out.println(gson.toJson(res));
 
       ///  System.out.println(engine.getAttractions("london"));
 
