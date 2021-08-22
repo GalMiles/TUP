@@ -48,18 +48,18 @@ public class Engine {
         return db.getFavoriteAttractions(currentTravelerID); //or currentId? not sure
     }
 
-    public void deleteFromFavoriteAttractions(String attractionId) throws SQLException,Attraction.NotFoundException {
+    public void deleteFromFavoriteAttractions(ArrayList<String> favoriteAttractionsList) throws SQLException,Attraction.NotFoundException {
         DBManager db = new DBManager();
-        db.deleteUserOneFavoriteAttraction(attractionId,currentTravelerID);
+        for(String favoriteAttraction : favoriteAttractionsList) {
+            db.deleteUserOneFavoriteAttraction(favoriteAttraction, currentTravelerID);
+        }
     }
 
     public void addToFavoriteAttractions(ArrayList<String> favoriteAttractionsList) throws SQLException, Traveler.NotFoundException {
         DBManager db = new DBManager();
-        for(String favoriteAttraction : favoriteAttractionsList)
-        {
+        for(String favoriteAttraction : favoriteAttractionsList){
             db.addFavoriteAttraction(favoriteAttraction,currentTravelerID);
         }
-
     }
 
     public Collection<RouteTrip> getUserTrips() throws SQLException, RouteTrip.NotFoundException {
@@ -130,4 +130,9 @@ public class Engine {
         db.updateTravelerDetailsOnDB(newTraveler,currentTravelerID, isSameEmail);
 
     }
+
+
+
+
+
 }

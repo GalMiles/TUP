@@ -105,13 +105,12 @@ public class RouteTrip {
     public void divideMustSeenAttractionsForEachDay() {
         int numberOfIterations = 1;
 
-        while (mustSeenAttractions.size() != 0 && numberOfIterations != 200) { /// limit number of iteration
+        while (mustSeenAttractions.size() != 0 && numberOfIterations != 200) { /// limit number of iterations
             for (DayPlan dayPlan : this.planForDays) {
-                dayPlan.setMustSeenAttractions(mustSeenAttractions);
+                dayPlan.setMustSeenAttractionsForDay(mustSeenAttractions);
             }
             numberOfIterations += 1;
         }
-        this.planForDays.forEach(dayPlan -> dayPlan.setDurationDay(0));
     }
 
     @Override

@@ -40,7 +40,6 @@ public class AttractionsServlet extends HttpServlet {
     private void processGetRequestAllAttractions(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         ServletUtils servletUtils = new ServletUtils(req);
         Engine engine = ContextServletUtils.getEngine(req);
-        //resp.setHeader("travelerId","1");
         Collection<Attraction> attractions;
         try {
             attractions = engine.getAttractions(servletUtils.lines); //destination
@@ -80,9 +79,11 @@ public class AttractionsServlet extends HttpServlet {
 
         ServletUtils servletUtils = new ServletUtils(req);
         Engine engine = ContextServletUtils.getEngine(req);
+        FavoriteAttractions jsonFavoriteAttractions = (FavoriteAttractions) servletUtils.gsonFromJson(FavoriteAttractions.class);
+
 
         try {
-            engine.deleteFromFavoriteAttractions(servletUtils.lines);
+            engine.deleteFromFavoriteAttractions(jsonFavoriteAttractions.favoriteAttractionsList);
         } catch (SQLException | Attraction.NotFoundException e) {
             servletUtils.writeJsonResponse("error", e.getMessage());
         }
@@ -92,7 +93,7 @@ public class AttractionsServlet extends HttpServlet {
         }
     }
 
-    //add attraction to favorite attraction
+    //add attractions to favorite attraction
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         ServletUtils servletUtils = new ServletUtils(req);

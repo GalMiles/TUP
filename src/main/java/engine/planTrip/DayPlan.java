@@ -2,15 +2,12 @@ package engine.planTrip;
 
 import common.DayOpeningHours;
 import engine.attraction.Attraction;
-import javafx.util.converter.LocalDateStringConverter;
 
-import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
-import java.util.Scanner;
+import java.util.Collections;
 
 public class DayPlan {
     double durationDesireByUser;
@@ -29,7 +26,6 @@ public class DayPlan {
         setStartTime(startTime);
         setFinishTime(finishTime);
         setDurationDesireByUser((startTime.until(finishTime,ChronoUnit.MINUTES))/60.0);
-
     }
 
 
@@ -81,11 +77,10 @@ public class DayPlan {
         this.durationDay = durationDay;
     }
 
-    public void setMustSeenAttractions(ArrayList<Attraction> mustSeenAttractions) {
+    public void setMustSeenAttractionsForDay(ArrayList<Attraction> mustSeenAttractions) {
        for (Attraction attraction : mustSeenAttractions) {
             if (this.mustSeenAttractionsForDay.isEmpty()) {
                 this.mustSeenAttractionsForDay.add(new Attraction(attraction));
-                this.durationDay += attraction.getDuration();
             }
             else{
                 Attraction listRepresent = this.mustSeenAttractionsForDay.get(this.mustSeenAttractionsForDay.size()-1);
@@ -93,7 +88,6 @@ public class DayPlan {
                 if(closestAttraction == null)
                     break;
                 this.mustSeenAttractionsForDay.add(new Attraction(closestAttraction));
-                durationDay += attraction.getDuration();
             }
         }
          mustSeenAttractions.removeIf(a -> this.mustSeenAttractionsForDay.contains(a));
@@ -181,7 +175,10 @@ public class DayPlan {
 
         DayOpeningHours dayOpeningHoursNext = nextAttraction.getOpeningHoursByDay(date.getDayOfWeek());
         ArrayList<LocalTime> openingHoursNext = new ArrayList<>(dayOpeningHoursNext.getOpeningHoursLocalTime());
+        ArrayList<Boolean> openingHoursNextPossible = new ArrayList<>(Collections.nCopies(openingHoursNext.size(), true));
         ArrayList<LocalTime> closingHoursNext = new ArrayList<>(dayOpeningHoursNext.getClosingHoursLocalTime());
+        ArrayList<Boolean> closingHoursNextPossible = new ArrayList<>(Collections.nCopies(closingHoursNext.size(), true));
+
         int sizeOpeningHoursNext = openingHoursNext.size();
         LocalTime hourOnClockAfterEnjoying = hourOnClock.plusHours(nextAttraction.getDuration());
 
@@ -191,13 +188,23 @@ public class DayPlan {
             overPossibleDuration = closingHoursNext.get(i).isBefore(hourOnClockAfterEnjoying);
 
             if (closeAttraction || overPossibleDuration) {
+                openingHoursNextPossible.set(i, false);
+                closingHoursNextPossible.set(i, false);
 
-                openingHoursNext.remove(openingHoursNext.get(i));
-                closingHoursNext.remove(closingHoursNext.get(i));
+
+//                openingHoursNext.remove(openingHoursNext.get(i));
+//                closingHoursNext.remove(closingHoursNext.get(i));
             }
-            if (openingHoursNext.size() == 0)
-                return Integer.MAX_VALUE;
+//            if (openingHoursNext.size() == 0)
+//                return Integer.MAX_VALUE;
         }
+
+        openingHoursNext = removeNotPossibleHours(openingHoursNext,openingHoursNextPossible);
+        closingHoursNext = removeNotPossibleHours(closingHoursNext,closingHoursNextPossible);
+
+        if (openingHoursNext.size() == 0)
+            return Integer.MAX_VALUE;
+
 
 
 
@@ -212,12 +219,40 @@ public class DayPlan {
 
         for (int i = 0; i < sizeOpeningHoursNext; i++) {
             differenceBetweenClockAndStartTime = openingHoursNext.get(i).until(hourOnClock, ChronoUnit.HOURS);
-            if (minValue > differenceBetweenClockAndStartTime)
+            if (minValue > differenceBetweenClockAndStartTime )
                 minValue = differenceBetweenClockAndStartTime;
         }
         scoreTime = -1 * minValue;
         return scoreDistance + scoreTime;
     }
+
+    private ArrayList<LocalTime> removeNotPossibleHours(ArrayList<LocalTime> hoursNext, ArrayList<Boolean> hoursNextPossible) {
+        ArrayList<LocalTime> result = new ArrayList<>();
+        int size = hoursNext.size();
+        for (int i = 0; i < size; i++) {
+            if (hoursNextPossible.get(i))
+                result.add(hoursNext.get(i));
+        }
+        return result;
+    }
+
+
+    /*
+    public ArrayList<Integer> po(ArrayList<Integer> hoursNext, ArrayList<Boolean> hoursNextPossible) {
+        ArrayList<Integer> h = new ArrayList<>();
+        int size = hoursNext.size();
+        for (int i = 0; i < size; i++) {
+            if (hoursNextPossible.get(i))
+                h.add(hoursNext.get(i));
+        }
+        return h;
+    }
+    * */
+
+
+
+
+
 //    @Override
 //    public String toString() {
 //        return "DayPlan{" +
@@ -242,11 +277,9 @@ public class DayPlan {
     {
         int i = 0;
         for (OnePlan plan : daySchedule) {
-            System.out.println(date +" DAY " +String.valueOf(i)+ ":"+ plan.getAttraction().getName() + "                favorite: " + plan.getFavoriteAttraction());
+            System.out.println(plan.getStartTime() + "-" + plan.getFinishTime() + "  " + date +" DAY " +String.valueOf(i)+ ":"+ plan.getAttraction().getName() + "                favorite: " + plan.getFavoriteAttraction());
             i++;
         }
 
     }
-
-
 }

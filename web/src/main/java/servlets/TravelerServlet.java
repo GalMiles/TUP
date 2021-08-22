@@ -18,9 +18,10 @@ import java.sql.SQLException;
 //the use of JsonMember is needed because we want to make sure that the field we got are right.
 //In order to create JsonMember we activate the setters who are responsible for validations.
 
-@WebServlet(name = "TravelerServlet", urlPatterns = {"/traveler/register", "/traveler/edit-profile"})
+@WebServlet(name = "TravelerServlet", urlPatterns = {"/traveler"})
 public class TravelerServlet extends HttpServlet {
     @Override
+    // register
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         ServletUtils servletUtils = new ServletUtils(req);
         Engine engine = ContextServletUtils.getEngine(req);
@@ -42,6 +43,7 @@ public class TravelerServlet extends HttpServlet {
     }
 
     @Override
+    //edit profile
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         ServletUtils servletUtils = new ServletUtils(req);
         Engine engine = ContextServletUtils.getEngine(req);

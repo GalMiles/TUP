@@ -12,10 +12,10 @@ public class OnePlan {
     Boolean isFavoriteAttraction = false;
 
     public OnePlan(Attraction attraction, LocalTime startTime , Boolean isFavoriteAttraction) {
-        this.attraction = attraction;
-        this.startTime = startTime;
-        this.finishTime = startTime.plusHours(attraction.getDuration());
-        this.isFavoriteAttraction = isFavoriteAttraction;
+        setAttraction(attraction);
+        setStartTime(startTime);
+        setFinishTime(startTime.plusHours(attraction.getDuration()));
+        setFavoriteAttraction(isFavoriteAttraction);
     }
 
     public Attraction getAttraction() {return attraction;}
@@ -27,6 +27,10 @@ public class OnePlan {
     public void setStartTime(LocalTime startTime) {this.startTime = startTime;}
     public LocalTime getFinishTime() {return finishTime;}
     public void setFinishTime(LocalTime finishTime) {this.finishTime = finishTime;}
+    public void setFavoriteAttraction(Boolean favoriteAttraction) {
+        isFavoriteAttraction = favoriteAttraction;
+    }
+
 
     @Override
     public String toString() {
