@@ -22,11 +22,11 @@ public class DBManager {
 
     private APIManager apiManager = new APIManager();
     private Statement statement;
-    private Connection sqlConnection;
+    public Connection sqlConnection;
 
 
     public DBManager() throws SQLException {
-        this.sqlConnection = DriverManager.getConnection("jdbc:mysql://localhost:3306/tup", "root", "123456ma");
+        this.sqlConnection = DriverManager.getConnection("jdbc:mysql://localhost:3306/tup", "root", "Galmiles31051960");
         this.statement = sqlConnection.createStatement();
 
         DriverManager.registerDriver(new com.mysql.cj.jdbc.Driver());
@@ -180,8 +180,13 @@ public class DBManager {
     }
 
 
-
-
+    public void checkIfTravelerIdIsExist(String travelerId) throws SQLException, Traveler.NotFoundException {
+        String query = "SELECT * FROM travelers WHERE traveler_id = \"" + travelerId + "\"";
+        ResultSet resultSet = this.statement.executeQuery(query);
+        if (!resultSet.next()) {
+            throw new Traveler.NotFoundException("Traveler id doesn't exist!");
+        }
+    }
     public void checkIfEmailIsFound(String email) throws SQLException, Traveler.AlreadyExistsException {
         String query = "SELECT * FROM travelers WHERE Email = \"" + email + "\"";
         ResultSet resultSet = this.statement.executeQuery(query);
@@ -223,7 +228,8 @@ public class DBManager {
         p.setString(2, attractionId);
         p.execute();
     }
-    public void addFavoriteAttraction(String attractionId, String travelerID) throws SQLException {
+    public void addFavoriteAttraction(String attractionId, String travelerID) throws SQLException, Traveler.NotFoundException {
+        checkIfTravelerIdIsExist(travelerID);
         PreparedStatement p = sqlConnection.prepareStatement("INSERT INTO favorites_attractions (traveler_id, attractionAPI_ID) VALUES (?, ?)");
         p.setString(1, travelerID);
         p.setString(2, attractionId);

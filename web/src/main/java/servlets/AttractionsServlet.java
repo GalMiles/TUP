@@ -101,7 +101,7 @@ public class AttractionsServlet extends HttpServlet {
 
         try {
             engine.addToFavoriteAttractions(jsonFavoriteAttractions.favoriteAttractionsList);
-        } catch (SQLException e) {
+        } catch (SQLException | Traveler.NotFoundException e) {
             servletUtils.writeJsonResponse("error", e.getMessage());
         }
 

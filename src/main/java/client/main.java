@@ -6,8 +6,11 @@ import common.DesiredHoursInDay;
 import database.DBManager;
 import engine.Engine;
 import engine.attraction.Attraction;
+import engine.traveler.Traveler;
 
 import java.io.IOException;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -32,12 +35,20 @@ public class main {
         }
     }
 
-    public static void main(String[] args) throws IOException, SQLException, ParseException {
-
+    public static void main(String[] args) throws IOException, SQLException, ParseException, Traveler.NotFoundException {
+        Gson gson = new Gson();
         DBManager db = new DBManager();
         Engine engine = new Engine();
 
+        //db.addFavoriteAttraction("ChIJ_R7u-6QcdkgR_TvWQJZsm3k", "3");
+        ArrayList<String> favList = new ArrayList<>();
+        favList.add("ChIJ1SnFptAEdkgRCQABqtg50Cw");
+        favList.add("ChIJ4bF21K8FdkgRDXc6FiSVAzE");
+        System.out.println(gson.toJson(favList));
         TripDetails trip = new TripDetails();
+
+
+
 
         trip.destination = "london";
         trip.hotelID = "ChIJ1TVZs1UFdkgRIeWxo-jEYaE";
@@ -60,7 +71,6 @@ public class main {
         trip.hoursEveryDay.get(2).setStartTime("15:00");
         trip.hoursEveryDay.get(2).setEndTime("20:00");
 
-        Gson gson = new Gson();
         //System.out.println(gson.toJson(trip));
 //        System.out.println(
 //        engine.createTripForUser(trip.destination, trip.hotelID, trip.mustSeenAttractionsID, trip.hoursEveryDay)

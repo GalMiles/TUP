@@ -53,7 +53,7 @@ public class Engine {
         db.deleteUserOneFavoriteAttraction(attractionId,currentTravelerID);
     }
 
-    public void addToFavoriteAttractions(ArrayList<String> favoriteAttractionsList) throws SQLException {
+    public void addToFavoriteAttractions(ArrayList<String> favoriteAttractionsList) throws SQLException, Traveler.NotFoundException {
         DBManager db = new DBManager();
         for(String favoriteAttraction : favoriteAttractionsList)
         {
