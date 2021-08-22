@@ -119,4 +119,11 @@ public class Engine {
             destinations.add(des.name());
         return destinations;
     }
+
+    public void updateTravelerDetails(Traveler newTraveler) throws SQLException, Traveler.AlreadyExistsException, Traveler.IllegalValueException {
+        DBManager db = new DBManager();
+        Boolean isSameEmail = newTraveler.getEmailAddress().equals(db.getTravelerFromDBByID(currentTravelerID).getEmailAddress());
+        db.updateTravelerDetailsOnDB(newTraveler,currentTravelerID, isSameEmail);
+
+    }
 }

@@ -2,6 +2,8 @@ package engine.traveler;
 
 import engine.planTrip.RouteTrip;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.regex.Pattern;
 
 public class Traveler {
@@ -9,7 +11,6 @@ public class Traveler {
     private String lastName;
     private String emailAddress;
     private String password;
-    //private RouteTrip routeTrip;
 
     public Traveler(String firstName, String lastName, String emailAddress, String password) {
         this.firstName = firstName;
@@ -25,6 +26,13 @@ public class Traveler {
         setPassword(other.password);
     }
 
+    public Traveler(ResultSet resultSet) throws SQLException, IllegalValueException {
+        setLastName(resultSet.getString("LastName"));
+        setFirstName(resultSet.getString("FirstName"));
+        setPassword(resultSet.getString("Password"));
+        setEmailAddress(resultSet.getString("Email"));
+    }
+
     public String getFirstName() {
         return firstName;
     }
@@ -37,7 +45,6 @@ public class Traveler {
     public String getPassword() {
         return password;
     }
-    //public RouteTrip getRouteTrip() { return routeTrip; }
 
     public void setFirstName(String firstName) throws IllegalValueException {
         if (firstName.trim().isEmpty())
@@ -66,12 +73,6 @@ public class Traveler {
         this.password = password;
     }
 
-
-
-    //public void setRouteTrip(RouteTrip routeTrip){
-    //    this.routeTrip = routeTrip;
-    //}
-
     public static class IllegalValueException extends Exception{
         public IllegalValueException(String message) {
             super(message);
@@ -92,7 +93,6 @@ public class Traveler {
         public InvalidUsernameOrPasswordException(String message) {super(message);}
     }
 
-
     @Override
     public String toString() {
         return "Traveler{" +
@@ -100,9 +100,6 @@ public class Traveler {
                 ", lastName='" + lastName + '\'' +
                 ", emailAddress='" + emailAddress + '\'' +
                 ", password='" + password + '\'' +
-                //", routeTrip=" + routeTrip +
                 '}';
     }
-
-
 }

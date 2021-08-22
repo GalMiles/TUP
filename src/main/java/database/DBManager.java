@@ -333,6 +333,34 @@ public class DBManager {
         p.execute();
     }
 
+    public void updateTravelerDetailsOnDB(Traveler newTraveler, String currentTravelerID, Boolean isSameEmail) throws Traveler.AlreadyExistsException, SQLException {
+        if(!isSameEmail)
+            checkIfEmailIsFound(newTraveler.getEmailAddress());
+
+        PreparedStatement p = sqlConnection.prepareStatement("UPDATE travelers SET Email = ? , Password = ? , FirstName = ? , " +
+                "LastName =? WHERE id =?");
+
+        p.setString(1, newTraveler.getEmailAddress());
+        p.setString(2, newTraveler.getPassword());
+        p.setString(3, newTraveler.getFirstName());
+        p.setString(4, newTraveler.getLastName());
+        p.setString(5, currentTravelerID);
+
+
+        p.execute();
+
+    }
+
+    public Traveler getTravelerFromDBByID(String id) throws SQLException, Traveler.IllegalValueException {
+        Traveler resTraveler = null;
+        String query = "SELECT * FROM tup.travelers WHERE id =\"" + id + "\"";
+        ResultSet resultSet = this.statement.executeQuery(query);
+        if (resultSet.next()) {
+            resTraveler = new Traveler(resultSet);
+        }
+        return resTraveler;
+    }
+
     /*
     public void insetAttractionToDBByID(String id, Destinations destination) throws IOException, SQLException, ParseException {
         JsonAttraction attraction = apiManager.getAttractionByID(id);

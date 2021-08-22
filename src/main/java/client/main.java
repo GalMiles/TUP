@@ -62,9 +62,11 @@ public class main {
 
         Gson gson = new Gson();
         //System.out.println(gson.toJson(trip));
-        System.out.println(
-        engine.createTripForUser(trip.destination, trip.hotelID, trip.mustSeenAttractionsID, trip.hoursEveryDay)
-        );
+//        System.out.println(
+//        engine.createTripForUser(trip.destination, trip.hotelID, trip.mustSeenAttractionsID, trip.hoursEveryDay)
+//        );
+
+        System.out.println(engine.getAttractions("london"));
 
 
 //        ArrayList<AttractionType> typesHotel = new ArrayList<>();
