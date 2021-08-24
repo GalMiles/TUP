@@ -39,6 +39,10 @@ public class RouteTrip {
 
     }
 
+    public RouteTrip(ArrayList<DayPlan> tripPlan) {
+        planForDays = new ArrayList<>(tripPlan);
+    }
+
     public RouteTrip createRouteTripFromJson(ResultSet results) throws SQLException {
         Gson gson = new Gson();
         String str = results.getString("trip");

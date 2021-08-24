@@ -67,9 +67,10 @@ public class Engine {
         return db.getTripsFromDbByTravelerId(currentTravelerID);
     }
 
-    public void deleteTripFromUserTrips(String tripId) throws SQLException {
+    public void deleteTripFromUserTrips(ArrayList<String> tripsListToDelete) throws SQLException {
         DBManager db = new DBManager();
-        //db.deleteTripFromUserTripsInDB(tripId,currentTravelerID);
+        for(String tripId : tripsListToDelete)
+            db.deleteTripFromUserTripsInDB(tripId,currentTravelerID);
     }
 
     public ArrayList<DayPlan> createTripForUser(String destination, String stringHotelID,
@@ -131,9 +132,8 @@ public class Engine {
     }
 
 
-    public int saveTripForUser(String tripName, ArrayList<DayPlan> tripPlan) throws SQLException {
+    public int saveTripForUser(String tripName, ArrayList<DayPlan> tripPlan) throws SQLException, RouteTrip.AlreadyExistException, RouteTrip.NotFoundException {
         DBManager db = new DBManager();
-        return 1;
-       // return db.insertTripToDB(tripName,tripPlan, currentTravelerID);
+       return db.insertTripToDB(tripName,tripPlan, currentTravelerID);
     }
 }

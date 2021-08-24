@@ -29,7 +29,7 @@ public class DBManager {
 
 
     public DBManager() throws SQLException {
-        this.sqlConnection = DriverManager.getConnection("jdbc:mysql://localhost:3306/tup", "root", "Galmiles31051960");
+        this.sqlConnection = DriverManager.getConnection("jdbc:mysql://localhost:3306/tup", "root", "123456ma");
         this.statement = sqlConnection.createStatement();
 
         DriverManager.registerDriver(new com.mysql.cj.jdbc.Driver());
@@ -379,7 +379,6 @@ public class DBManager {
         return trips;
     }
 
-
     private void fillRouteTrip(RouteTrip routeTrip) throws SQLException {
         ArrayList<DayPlan> res = routeTrip.getPlanForDays();
         for (DayPlan d : res) {
@@ -393,11 +392,9 @@ public class DBManager {
         }
     }
 
-    public void insertTripToDB(String tripName, ArrayList<DayPlan> tripPlan, String currentTravelerID) throws SQLException, RouteTrip.AlreadyExistException {
+    public int insertTripToDB(String tripName, ArrayList<DayPlan> tripPlan, String currentTravelerID) throws SQLException, RouteTrip.AlreadyExistException, RouteTrip.NotFoundException {
         Gson gson = new Gson();
-        RouteTrip routeTrip = new RouteTrip();
-        routeTrip.setHotel(null);
-        routeTrip.setMustSeenAttractions(null);
+        RouteTrip routeTrip = new RouteTrip(tripPlan);
         ArrayList<DayPlan> res = routeTrip.getPlanForDays();
         for (DayPlan d : res) {
             ArrayList<OnePlan> re = d.getDaySchedule();
@@ -407,31 +404,70 @@ public class DBManager {
                 p.setAttraction(null);
             }
         }
-        //check if exist
-        PreparedStatement p = sqlConnection.prepareStatement("SELECT * FROM trips WHERE traveler_id = ? AND trip = ?");
-        p.setString(1, currentTravelerID);
-        p.setString(2, gson.toJson(routeTrip));
-        ResultSet results = p.executeQuery();
-        if(results.next()){
-            throw new RouteTrip.AlreadyExistException("route trip already exists");
-        }
 
-        //insert RoutTrip to DB
-        p = sqlConnection.prepareStatement("INSERT INTO trips (traveler_id, trip) VALUES (? ,? )");
+        CheckIfTripExists(routeTrip,currentTravelerID, gson);
+
+       // insert RoutTrip to DB
+        PreparedStatement p = sqlConnection.prepareStatement("INSERT INTO trips (traveler_id, trip, trip_name) VALUES (? ,?,? )");
         p.setString(1, currentTravelerID);
         p.setString(2, gson.toJson(routeTrip));
+        p.setString(3,tripName);
         p.execute();
 
-        //get RouteTripID from DB
-        p = sqlConnection.prepareStatement("SELECT trip_id FROM trips WHERE (trip = CAST(? AS JSON) AND traveler_id = ?)");
-        p.setString(1, gson.toJson(routeTrip));
-        p.setString(2, currentTravelerID);
-        results = p.executeQuery();
-        if(results.next()){
-            routeTrip.setTripId(results.getInt("trip_id"));
-        }
+
+
+//        String query = "INSERT INTO trips(traveler_id, trip, trip_name) VALUES ( "
+//                + "\"" + currentTravelerID + "\", \"" + gson.toJson(routeTrip) + "\", \"" + tripName +"\")";
+//        this.statement.executeUpdate(query);
+
+
+
+
+        return updateTripID(routeTrip, currentTravelerID, gson);
+
+
 
     }
+
+    private int updateTripID(RouteTrip routeTrip, String currentTravelerID, Gson gson) throws SQLException, RouteTrip.NotFoundException {
+        PreparedStatement p = sqlConnection.prepareStatement("SELECT trip_id FROM trips WHERE (trip = CAST(? AS JSON) AND traveler_id = ?)");
+        p.setString(1, gson.toJson(routeTrip));
+        p.setString(2, currentTravelerID);
+        ResultSet results = p.executeQuery();
+        int tripID = 0;
+        if(results.next()) {
+            tripID = results.getInt("trip_id");
+            routeTrip.setTripId(tripID);
+        }
+        else
+         throw new RouteTrip.NotFoundException("cant find trip to update its tripID");
+
+        p = sqlConnection.prepareStatement("UPDATE trips SET trip = ? WHERE trip_id = ?");
+        p.setString(1,gson.toJson(routeTrip));
+        p.setInt(2, tripID);
+        p.execute();
+        return tripID;
+    }
+
+    private void CheckIfTripExists(RouteTrip routeTrip, String currentTravelerID, Gson gson) throws SQLException, RouteTrip.AlreadyExistException{
+            PreparedStatement p = sqlConnection.prepareStatement("SELECT * FROM trips WHERE traveler_id = ? AND trip = ?");
+            p.setString(1, currentTravelerID);
+            p.setString(2, gson.toJson(routeTrip));
+            ResultSet results = p.executeQuery();
+            if (results.next()) {
+                throw new RouteTrip.AlreadyExistException("route trip with the same plans already exists by name" + results.getString("trip_name"));
+            }
+        }
+
+    public void deleteTripFromUserTripsInDB(String tripId, String currentTravelerID) throws SQLException {
+        PreparedStatement p = sqlConnection.prepareStatement("DELETE FROM trips WHERE traveler_id = ? AND trip_id = ?");
+        p.setString(1, currentTravelerID);
+        p.setString(2, tripId);
+        p.execute();
+    }
+
+
+
 
     /*
     public void insetAttractionToDBByID(String id, Destinations destination) throws IOException, SQLException, ParseException {

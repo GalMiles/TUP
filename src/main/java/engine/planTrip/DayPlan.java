@@ -283,7 +283,7 @@ public class DayPlan {
     {
         int i = 0;
         for (OnePlan plan : daySchedule) {
-            System.out.println(plan.getStartTime() + "-" + plan.getFinishTime() + "  " + date +" DAY " +String.valueOf(i)+ ":"+ plan.getAttraction().getName() + "                favorite: " + plan.getIsFavoriteAttraction());
+            System.out.println(plan.getStartTime() + "-" + plan.getFinishTime() + "  " + date +" DAY " +String.valueOf(i)+ ":"+ (plan.getAttraction() != null ? plan.getAttraction().getName() : null) + "                favorite: " + plan.getIsFavoriteAttraction());
             i++;
         }
 

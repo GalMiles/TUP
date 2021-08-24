@@ -77,12 +77,20 @@ public class main {
         System.out.println(res);
         System.out.println("-------------------------------------");
 
+//        try {
+//            System.out.println();
+//            db.insertTripToDB("best trip",res,"5");
+//        } catch (RouteTrip.NotFoundException e) {
+//            System.out.println(e.getMessage());
 //
+//        }
+////
+        db.deleteTripFromUserTripsInDB("4","5");
+
         //db.getTripsFromDbByTravelerId("1");
 
 //        ArrayList<ArrayList<DayPlan>> trips =  db.getTripsFromDbByTravelerId("3");
-  //      System.out.println(trips.get(0));
-        //db.insertTripToDB(routeTrip,"3");
+        //      System.out.println(trips.get(0));
 
       ///  System.out.println(engine.getAttractions("london"));
 

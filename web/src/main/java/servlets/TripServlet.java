@@ -47,9 +47,10 @@ public class TripServlet extends HttpServlet {
 
         ServletUtils servletUtils = new ServletUtils(req);
         Engine engine = ContextServletUtils.getEngine(req);
+        TripsToDelete tripsToDelete = (TripsToDelete)servletUtils.gsonFromJson(TripsToDelete.class);
 
         try {
-            engine.deleteTripFromUserTrips(servletUtils.lines);
+            engine.deleteTripFromUserTrips(tripsToDelete.tripsToDeleteList);
         } catch (SQLException e) {
             servletUtils.writeJsonResponse("error", e.getMessage());
         }
@@ -91,7 +92,7 @@ public class TripServlet extends HttpServlet {
         try {
             int tripID = engine.saveTripForUser(tripPlan.name, tripPlan.plans);
             servletUtils.writeJsonResponse(tripID);
-        } catch (SQLException e) {
+        } catch (SQLException | RouteTrip.NotFoundException | RouteTrip.AlreadyExistException e) {
             servletUtils.writeJsonResponse("error", e.getMessage());
         }
 
@@ -101,14 +102,19 @@ public class TripServlet extends HttpServlet {
     }
 
 
-        public static class TripDetails {
-        String destination;
-        String hotelID;
-        ArrayList<String> mustSeenAttractionsID = new ArrayList<>();
-        ArrayList<DesiredHoursInDay> hoursEveryDay = new ArrayList<>();
-    }
+        static class TripDetails {
+            String destination;
+            String hotelID;
+            ArrayList<String> mustSeenAttractionsID = new ArrayList<>();
+            ArrayList<DesiredHoursInDay> hoursEveryDay = new ArrayList<>();
+        }
+
         static class TripPlan{
-            private String name;
-            private ArrayList<DayPlan> plans = new ArrayList<>();
+            String name;
+            ArrayList<DayPlan> plans = new ArrayList<>();
+        }
+
+        static class TripsToDelete{
+            ArrayList<String> tripsToDeleteList;
         }
 }
