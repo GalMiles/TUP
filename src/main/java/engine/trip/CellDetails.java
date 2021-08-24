@@ -1,4 +1,4 @@
-package engine.planTrip;
+package engine.trip;
 
 import engine.attraction.Attraction;
 

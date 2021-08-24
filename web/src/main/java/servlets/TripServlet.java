@@ -1,11 +1,11 @@
 package servlets;
 
 
-import com.google.gson.Gson;
 import common.DesiredHoursInDay;
+import common.TripPlan;
 import engine.Engine;
-import engine.planTrip.DayPlan;
-import engine.planTrip.RouteTrip;
+import engine.trip.DayPlan;
+import engine.trip.RouteTrip;
 import servlets.utils.ContextServletUtils;
 import servlets.utils.ServletUtils;
 
@@ -18,8 +18,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 
 @WebServlet(name = "TripServlet", urlPatterns = {"/trip"})
 public class TripServlet extends HttpServlet {
@@ -90,7 +88,7 @@ public class TripServlet extends HttpServlet {
         TripPlan tripPlan = (TripPlan)servletUtils.gsonFromJson(TripPlan.class);
 
         try {
-            int tripID = engine.saveTripForUser(tripPlan.name, tripPlan.plans);
+            int tripID = engine.saveUserTripOnDB(tripPlan);
             servletUtils.writeJsonResponse(tripID);
         } catch (SQLException | RouteTrip.NotFoundException | RouteTrip.AlreadyExistException e) {
             servletUtils.writeJsonResponse("error", e.getMessage());
@@ -109,10 +107,6 @@ public class TripServlet extends HttpServlet {
             ArrayList<DesiredHoursInDay> hoursEveryDay = new ArrayList<>();
         }
 
-        static class TripPlan{
-            String name;
-            ArrayList<DayPlan> plans = new ArrayList<>();
-        }
 
         static class TripsToDelete{
             ArrayList<String> tripsToDeleteList;

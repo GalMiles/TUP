@@ -1,25 +1,19 @@
 package client;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import common.DesiredHoursInDay;
 //import common.OpeningHours;
 import common.Destinations;
 import database.DBManager;
 import engine.Engine;
 import engine.attraction.Attraction;
-import engine.planTrip.DayPlan;
-import engine.planTrip.OnePlan;
-import engine.planTrip.RouteTrip;
-import netscape.javascript.JSObject;
+import engine.trip.DayPlan;
+import engine.trip.RouteTrip;
 
 import java.io.IOException;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.regex.Pattern;
 
 
 public class main {

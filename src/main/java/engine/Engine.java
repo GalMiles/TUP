@@ -1,13 +1,12 @@
 package engine;
 
-import common.AttractionType;
 import common.DesiredHoursInDay;
 import common.Destinations;
-import common.Geometry;
+import common.TripPlan;
 import database.DBManager;
 import engine.attraction.Attraction;
-import engine.planTrip.DayPlan;
-import engine.planTrip.RouteTrip;
+import engine.trip.DayPlan;
+import engine.trip.RouteTrip;
 import engine.traveler.Traveler;
 
 import java.sql.SQLException;
@@ -132,8 +131,8 @@ public class Engine {
     }
 
 
-    public int saveTripForUser(String tripName, ArrayList<DayPlan> tripPlan) throws SQLException, RouteTrip.AlreadyExistException, RouteTrip.NotFoundException {
+    public int saveUserTripOnDB(TripPlan tripPlan) throws SQLException, RouteTrip.AlreadyExistException, RouteTrip.NotFoundException {
         DBManager db = new DBManager();
-       return db.insertTripToDB(tripName,tripPlan, currentTravelerID);
+       return db.insertTripToDB(tripPlan.getTripName(), tripPlan.getPlans(), currentTravelerID);
     }
 }

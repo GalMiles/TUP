@@ -1,4 +1,4 @@
-package engine.planTrip;
+package engine.trip;
 
 
 import com.google.gson.Gson;
@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.stream.Collectors;
 
 public class RouteTrip {
     ArrayList<DayPlan> planForDays;
