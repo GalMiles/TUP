@@ -1,9 +1,12 @@
 package engine.planTrip;
 
 
+import com.google.gson.Gson;
 import common.*;
 import engine.attraction.Attraction;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -20,7 +23,9 @@ public class RouteTrip {
     LocalDate arrivingDate;
     LocalDate leavingDate;
     ArrayList<Attraction> mustSeenAttractions;
-    static int tripId = 0;
+    int tripId;
+
+    public RouteTrip(){}
 
     public RouteTrip(String destination, Attraction hotel, ArrayList<Attraction> mustSeenAttractions, ArrayList<DesiredHoursInDay> desiredHoursInDays) {
         setArrivingDate(LocalDate.parse(((desiredHoursInDays.get(0)).getDate())));
@@ -32,8 +37,12 @@ public class RouteTrip {
         setHotel(hotel);
         setPlanForDays(desiredHoursInDays,this.hotel);
 
-        tripId++;
+    }
 
+    public RouteTrip createRouteTripFromJson(ResultSet results) throws SQLException {
+        Gson gson = new Gson();
+        String str = results.getString("trip");
+         return  gson.fromJson(str, RouteTrip.class);
     }
 
     public int getTripDuration() { return tripDuration; }
@@ -82,6 +91,9 @@ public class RouteTrip {
             for (Attraction attraction : mustSeenAttractions)
                 this.mustSeenAttractions.add(attraction);
         }
+    }
+    public void setTripId(int tripId) {
+        this.tripId = tripId;
     }
 
     public void setPlanForDays(ArrayList<DesiredHoursInDay> planForDays, Attraction hotel) {

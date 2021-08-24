@@ -20,6 +20,10 @@ public class OnePlan {
         attractionId = attraction.getPlaceID();
     }
 
+    public String getAttractionId() {
+        return attractionId;
+    }
+
     public Attraction getAttraction() {return attraction;}
     public Boolean getIsFavoriteAttraction() {
         return isFavoriteAttraction;
@@ -33,13 +37,15 @@ public class OnePlan {
         isFavoriteAttraction = favoriteAttraction;
     }
 
-
     @Override
     public String toString() {
         return "OnePlan{" +
                 "attraction=" + attraction +
                 ", startTime=" + startTime +
                 ", finishTime=" + finishTime +
+                ", isFavoriteAttraction=" + isFavoriteAttraction +
+                ", attractionId='" + attractionId + '\'' +
                 '}';
     }
+
 }

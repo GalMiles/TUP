@@ -18,6 +18,7 @@ public class DayPlan {
     LocalTime finishTime;
     int durationDay = 0;
     ArrayList<Attraction> mustSeenAttractionsForDay = new ArrayList<>();
+    String hotelID;
 
 
     public DayPlan(LocalDate date, LocalTime startTime, LocalTime finishTime ,Attraction hotel){
@@ -26,6 +27,11 @@ public class DayPlan {
         setStartTime(startTime);
         setFinishTime(finishTime);
         setDurationDesireByUser((startTime.until(finishTime,ChronoUnit.MINUTES))/60.0);
+        setHotelID(hotel.getPlaceID());
+    }
+
+    private void setHotelID(String placeID) {
+        hotelID = placeID;
     }
 
 
@@ -75,6 +81,9 @@ public class DayPlan {
     }
     public void setDurationDay(int durationDay) {
         this.durationDay = durationDay;
+    }
+    public void setNullMustSeenAttractionsForDay(){
+        this.mustSeenAttractionsForDay = null;
     }
 
     public void setMustSeenAttractionsForDay(ArrayList<Attraction> mustSeenAttractions) {
@@ -249,10 +258,6 @@ public class DayPlan {
     }
     * */
 
-
-
-
-
 //    @Override
 //    public String toString() {
 //        return "DayPlan{" +
@@ -263,11 +268,12 @@ public class DayPlan {
 //                ", startTime=" + startTime +
 //                ", finishTime=" + finishTime +
 //                ", durationDay=" + durationDay +
+//                ", mustSeenAttractionsForDay=" + mustSeenAttractionsForDay +
+//                ", hotelID='" + hotelID + '\'' +
 //                '}';
-
 //    }
 
-    @Override
+        @Override
     public String toString() {
         printDaySchedule(daySchedule,date);
         return "";

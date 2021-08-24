@@ -1,15 +1,20 @@
 package client;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import common.DesiredHoursInDay;
 //import common.OpeningHours;
+import common.Destinations;
 import database.DBManager;
 import engine.Engine;
 import engine.attraction.Attraction;
 import engine.planTrip.DayPlan;
 import engine.planTrip.OnePlan;
+import engine.planTrip.RouteTrip;
+import netscape.javascript.JSObject;
 
 import java.io.IOException;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -41,10 +46,6 @@ public class main {
         Gson gson = new Gson();
         DBManager db = new DBManager();
         Engine engine = new Engine();
-
-
-
-
         TripDetails trip = new TripDetails();
 
         trip.destination = "london";
@@ -68,19 +69,19 @@ public class main {
         trip.hoursEveryDay.get(2).setStartTime("15:00");
         trip.hoursEveryDay.get(2).setEndTime("20:00");
 
-        //System.out.println(gson.toJson(trip));
+        ArrayList<Attraction> mustSeenAttractions1 = engine.createArrayListOfMustSeenAttractions(trip.mustSeenAttractionsID, db, trip.destination);
+        RouteTrip routeTrip = new RouteTrip(trip.destination,db.getHotelFromDBByID(trip.hotelID,Destinations.london), mustSeenAttractions1, trip.hoursEveryDay);
 
+        routeTrip.planRouteTrip(db.getAllAttractionsByDestination("london"));
+        ArrayList<DayPlan> res = routeTrip.getPlanForDays();
+        System.out.println(res);
+        System.out.println("-------------------------------------");
 
-        ArrayList<DayPlan> res = engine.createTripForUser(trip.destination, trip.hotelID, trip.mustSeenAttractionsID, trip.hoursEveryDay);
+//
+        //db.getTripsFromDbByTravelerId("1");
 
-        for(DayPlan d: res){
-            ArrayList<OnePlan> re = d.getDaySchedule();
-            for(OnePlan p: re){
-              p.setAttraction(null);
-            }
-
-        }
-        System.out.println(gson.toJson(res));
+        ArrayList<ArrayList<DayPlan>> trips =  db.getTripsFromDbByTravelerId("3");
+        System.out.println(trips.get(0));
 
       ///  System.out.println(engine.getAttractions("london"));
 

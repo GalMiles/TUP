@@ -1,9 +1,12 @@
 package database;
 
+import com.google.gson.Gson;
 import common.AttractionType;
 import common.DayOpeningHours;
 import common.Destinations;
 import engine.attraction.Attraction;
+import engine.planTrip.DayPlan;
+import engine.planTrip.OnePlan;
 import engine.planTrip.RouteTrip;
 import engine.traveler.Traveler;
 import googleAPI.APIManager;
@@ -22,11 +25,11 @@ public class DBManager {
 
     private APIManager apiManager = new APIManager();
     private Statement statement;
-    private Connection sqlConnection;
+    public Connection sqlConnection;
 
 
     public DBManager() throws SQLException {
-        this.sqlConnection = DriverManager.getConnection("jdbc:mysql://localhost:3306/tup", "root", "123456ma");
+        this.sqlConnection = DriverManager.getConnection("jdbc:mysql://localhost:3306/tup", "root", "Galmiles31051960");
         this.statement = sqlConnection.createStatement();
 
         DriverManager.registerDriver(new com.mysql.cj.jdbc.Driver());
@@ -210,7 +213,7 @@ public class DBManager {
             Attraction attraction = getAttractionFromDBByID(attractionId, destination.london);
             attractions.add(attraction);
         }
-    return attractions;
+        return attractions;
     }
 
     public void deleteUserOneFavoriteAttraction(String attractionId, String travelerID) throws SQLException {
@@ -220,6 +223,7 @@ public class DBManager {
         p.setString(2, attractionId);
         p.execute();
     }
+
     public void addFavoriteAttraction(String attractionId, String travelerID) throws SQLException {
         PreparedStatement p = sqlConnection.prepareStatement("INSERT INTO favorites_attractions (traveler_id, attractionAPI_ID) VALUES (?, ?)");
         p.setString(1, travelerID);
@@ -238,7 +242,7 @@ public class DBManager {
 
     public Attraction getHotelFromDBByID(String id, Destinations destination) throws SQLException {
         Attraction resAttracion = null;
-        String query = "SELECT * FROM tup." + destination.toString() +"_hotels" + " WHERE attractionAPI_ID =\"" + id + "\"";
+        String query = "SELECT * FROM tup." + destination.toString() + "_hotels" + " WHERE attractionAPI_ID =\"" + id + "\"";
         ResultSet resultSet = this.statement.executeQuery(query);
         if (resultSet.next()) {
             resAttracion = new Attraction(resultSet);
@@ -249,7 +253,7 @@ public class DBManager {
 
     public ArrayList<Attraction> getAllHotelsFromDB(String destination) throws SQLException {
         ArrayList<Attraction> attractions = new ArrayList<>();
-        String sql = "SELECT * FROM tup." + destination.toString()+"_hotels";
+        String sql = "SELECT * FROM tup." + destination.toString() + "_hotels";
         PreparedStatement ps = this.sqlConnection.prepareStatement(sql);
         ResultSet results = ps.executeQuery();
         while (results.next()) {
@@ -257,6 +261,7 @@ public class DBManager {
         }
         return attractions;
     }
+
     public void insertHotelsImagesToDB() throws SQLException, IOException {
 
         String image = null;
@@ -288,6 +293,7 @@ public class DBManager {
         }
 
     }
+
     public void insertAttractionsDescriptionToDB() throws SQLException, IOException {
 
         String description = null;
@@ -308,7 +314,7 @@ public class DBManager {
 
         wikiAPIManager w = new wikiAPIManager();
 
-        String attID=null;
+        String attID = null;
         String atractionName = "Britannia_Hotels";
         attID = "ChIJyZap4LsCdkgR15bK4_L6-m0";
 
@@ -320,7 +326,7 @@ public class DBManager {
 //        p.setString(2, attID);
 //        p.execute();
 
-        String url = "https://en.wikipedia.org/w/api.php?action=query&titles=" + atractionName +"&prop=pageimages&format=json&pithumbsize=150";
+        String url = "https://en.wikipedia.org/w/api.php?action=query&titles=" + atractionName + "&prop=pageimages&format=json&pithumbsize=150";
         String image = w.getAttractionImageFromWikiWithUrl(url);
 
 
@@ -331,7 +337,7 @@ public class DBManager {
     }
 
     public void updateTravelerDetailsOnDB(Traveler newTraveler, String currentTravelerID, Boolean isSameEmail) throws Traveler.AlreadyExistsException, SQLException {
-        if(!isSameEmail)
+        if (!isSameEmail)
             checkIfEmailIsFound(newTraveler.getEmailAddress());
 
         PreparedStatement p = sqlConnection.prepareStatement("UPDATE travelers SET Email = ? , Password = ? , FirstName = ? , " +
@@ -356,6 +362,63 @@ public class DBManager {
             resTraveler = new Traveler(resultSet);
         }
         return resTraveler;
+    }
+
+    public ArrayList<ArrayList<DayPlan>> getTripsFromDbByTravelerId(String travelerID) throws SQLException {
+        ArrayList<ArrayList<DayPlan>> trips = new ArrayList<>();
+        PreparedStatement p = sqlConnection.prepareStatement("SELECT * FROM trips WHERE traveler_id = ? ");
+        p.setString(1, travelerID);
+        ResultSet results = p.executeQuery();
+
+        while (results.next()) {
+            RouteTrip routeTrip = new RouteTrip();
+            routeTrip = routeTrip.createRouteTripFromJson(results);
+            fillRouteTrip(routeTrip);
+            trips.add(routeTrip.getPlanForDays());
+        }
+        return trips;
+    }
+
+
+    private void fillRouteTrip(RouteTrip routeTrip) throws SQLException {
+        ArrayList<DayPlan> res = routeTrip.getPlanForDays();
+        for (DayPlan d : res) {
+            ArrayList<OnePlan> re = d.getDaySchedule();
+            for (OnePlan p1 : re) {
+                Attraction attraction = getAttractionFromDBByID(p1.getAttractionId(), routeTrip.getDestination());
+                if (attraction == null)
+                    attraction = getHotelFromDBByID(p1.getAttractionId(), routeTrip.getDestination());
+                p1.setAttraction(attraction);
+            }
+        }
+    }
+
+    public void insertTripToDB(RouteTrip routeTrip, String currentTravelerID) throws SQLException {
+        Gson gson = new Gson();
+        routeTrip.setHotel(null);
+        routeTrip.setMustSeenAttractions(null);
+        ArrayList<DayPlan> res = routeTrip.getPlanForDays();
+        for (DayPlan d : res) {
+            ArrayList<OnePlan> re = d.getDaySchedule();
+            d.setHotel(null);
+            d.setNullMustSeenAttractionsForDay();
+            for (OnePlan p : re) {
+                p.setAttraction(null);
+            }
+        }
+        //insert RoutTrip to DB
+        PreparedStatement p = sqlConnection.prepareStatement("INSERT INTO trips (traveler_id, trip) VALUES (? ,? )");
+        p.setString(1, currentTravelerID);
+        p.setString(2, gson.toJson(routeTrip));
+        p.execute();
+
+        //get RouteTripID from DB
+        p = sqlConnection.prepareStatement("SELECT trip_id FROM trips WHERE trip = ? )");
+        p.setString(1, gson.toJson(routeTrip));
+        ResultSet results = p.executeQuery();
+        if(results.next()){
+            routeTrip.setTripId(results.getInt("trip_id"));
+        }
     }
 
     /*

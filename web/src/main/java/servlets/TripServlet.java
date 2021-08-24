@@ -31,7 +31,7 @@ public class TripServlet extends HttpServlet {
         Engine engine = ContextServletUtils.getEngine(req);
 
         try {
-            Collection<RouteTrip> userTrips = engine.getUserTrips();
+            ArrayList<ArrayList<DayPlan>> userTrips = engine.getUserTrips();
             servletUtils.writeJsonResponse(userTrips);
         } catch (SQLException | RouteTrip.NotFoundException e) {
             servletUtils.writeJsonResponse("error", e.getMessage());

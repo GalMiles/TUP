@@ -62,10 +62,9 @@ public class Engine {
         }
     }
 
-    public Collection<RouteTrip> getUserTrips() throws SQLException, RouteTrip.NotFoundException {
+    public ArrayList<ArrayList<DayPlan>> getUserTrips() throws SQLException, RouteTrip.NotFoundException {
         DBManager db = new DBManager();
-        //return db.getUserTripsFromDB(currentTravelerID);
-        return null;
+        return db.getTripsFromDbByTravelerId(currentTravelerID);
     }
 
     public void deleteTripFromUserTrips(String tripId) throws SQLException {
@@ -94,6 +93,7 @@ public class Engine {
 //        ArrayList<Attraction> attractionsAvailable = null;
 
         routeTrip.planRouteTrip(attractionsAvailable);
+        db.insertTripToDB(routeTrip, currentTravelerID);
         return routeTrip.getPlanForDays();
 
     }
