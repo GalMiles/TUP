@@ -93,7 +93,6 @@ public class Engine {
 //        ArrayList<Attraction> attractionsAvailable = null;
 
         routeTrip.planRouteTrip(attractionsAvailable);
-        db.insertTripToDB(routeTrip, currentTravelerID);
         return routeTrip.getPlanForDays();
 
     }
@@ -132,7 +131,9 @@ public class Engine {
     }
 
 
-
-
-
+    public int saveTripForUser(String tripName, ArrayList<DayPlan> tripPlan) throws SQLException {
+        DBManager db = new DBManager();
+        return 1;
+       // return db.insertTripToDB(tripName,tripPlan, currentTravelerID);
+    }
 }

@@ -80,11 +80,35 @@ public class TripServlet extends HttpServlet {
         }
     }
 
+    @Override
+    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+
+        ServletUtils servletUtils = new ServletUtils(req);
+        Engine engine = ContextServletUtils.getEngine(req);
+
+        TripPlan tripPlan = (TripPlan)servletUtils.gsonFromJson(TripPlan.class);
+
+        try {
+            int tripID = engine.saveTripForUser(tripPlan.name, tripPlan.plans);
+            servletUtils.writeJsonResponse(tripID);
+        } catch (SQLException e) {
+            servletUtils.writeJsonResponse("error", e.getMessage());
+        }
+
+        try (PrintWriter out = resp.getWriter()) {
+            out.println(servletUtils.createOutResponse());
+        }
+    }
+
+
         public static class TripDetails {
         String destination;
         String hotelID;
         ArrayList<String> mustSeenAttractionsID = new ArrayList<>();
         ArrayList<DesiredHoursInDay> hoursEveryDay = new ArrayList<>();
-
     }
+        static class TripPlan{
+            private String name;
+            private ArrayList<DayPlan> plans = new ArrayList<>();
+        }
 }

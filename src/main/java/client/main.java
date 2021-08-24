@@ -82,7 +82,7 @@ public class main {
 
 //        ArrayList<ArrayList<DayPlan>> trips =  db.getTripsFromDbByTravelerId("3");
   //      System.out.println(trips.get(0));
-        db.insertTripToDB(routeTrip,"3");
+        //db.insertTripToDB(routeTrip,"3");
 
       ///  System.out.println(engine.getAttractions("london"));
 

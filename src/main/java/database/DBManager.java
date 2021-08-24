@@ -393,8 +393,9 @@ public class DBManager {
         }
     }
 
-    public void insertTripToDB(RouteTrip routeTrip, String currentTravelerID) throws SQLException, RouteTrip.AlreadyExistException {
+    public void insertTripToDB(String tripName, ArrayList<DayPlan> tripPlan, String currentTravelerID) throws SQLException, RouteTrip.AlreadyExistException {
         Gson gson = new Gson();
+        RouteTrip routeTrip = new RouteTrip();
         routeTrip.setHotel(null);
         routeTrip.setMustSeenAttractions(null);
         ArrayList<DayPlan> res = routeTrip.getPlanForDays();
