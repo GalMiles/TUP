@@ -71,7 +71,7 @@ public class TripServlet extends HttpServlet {
         try {
             ArrayList<DayPlan> trip = engine.createTripForUser(tripDetails.destination,tripDetails.hotelID,tripDetails.mustSeenAttractionsID,tripDetails.hoursEveryDay);
             servletUtils.writeJsonResponse(trip);
-        } catch (SQLException e) {
+        } catch (SQLException | RouteTrip.AlreadyExistException e) {
             servletUtils.writeJsonResponse("error", e.getMessage());
         }
 

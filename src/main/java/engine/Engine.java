@@ -73,7 +73,7 @@ public class Engine {
     }
 
     public ArrayList<DayPlan> createTripForUser(String destination, String stringHotelID,
-             ArrayList<String> mustSeenAttractionsID, ArrayList<DesiredHoursInDay> desiredHoursInDays) throws SQLException{
+             ArrayList<String> mustSeenAttractionsID, ArrayList<DesiredHoursInDay> desiredHoursInDays) throws SQLException, RouteTrip.AlreadyExistException {
         DBManager db = new DBManager();
         Attraction hotel  = db.getHotelFromDBByID(stringHotelID, Destinations.valueOf(destination));
 

@@ -351,4 +351,10 @@ public class RouteTrip {
     }
 
 
+    public static class AlreadyExistException extends Exception {
+        public AlreadyExistException(String message) {
+            super(message);
+        }
+
+    }
 }

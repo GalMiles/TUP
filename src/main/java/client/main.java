@@ -41,7 +41,7 @@ public class main {
         }
     }
 
-    public static void main(String[] args) throws IOException, SQLException, ParseException {
+    public static void main(String[] args) throws IOException, SQLException, ParseException, RouteTrip.AlreadyExistException {
 
         Gson gson = new Gson();
         DBManager db = new DBManager();
@@ -80,8 +80,9 @@ public class main {
 //
         //db.getTripsFromDbByTravelerId("1");
 
-        ArrayList<ArrayList<DayPlan>> trips =  db.getTripsFromDbByTravelerId("3");
-        System.out.println(trips.get(0));
+//        ArrayList<ArrayList<DayPlan>> trips =  db.getTripsFromDbByTravelerId("3");
+  //      System.out.println(trips.get(0));
+        db.insertTripToDB(routeTrip,"3");
 
       ///  System.out.println(engine.getAttractions("london"));
 
