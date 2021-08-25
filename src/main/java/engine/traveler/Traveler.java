@@ -9,6 +9,7 @@ public class Traveler {
     private String lastName;
     private String emailAddress;
     private String password;
+    private int travelerId;
 
     public Traveler(String firstName, String lastName, String emailAddress, String password) {
         this.firstName = firstName;
@@ -42,6 +43,10 @@ public class Traveler {
     }
     public String getPassword() {
         return password;
+    }
+
+    public void setTravelerId(int travelerId) {
+        this.travelerId = travelerId;
     }
 
     public void setFirstName(String firstName) throws IllegalValueException {

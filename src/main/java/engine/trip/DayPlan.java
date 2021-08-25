@@ -97,9 +97,11 @@ public class DayPlan {
                 if(closestAttraction == null)
                     break;
                 this.mustSeenAttractionsForDay.add(new Attraction(closestAttraction));
+                durationDay += closestAttraction.getDuration();
             }
         }
          mustSeenAttractions.removeIf(a -> this.mustSeenAttractionsForDay.contains(a));
+
     }
 
     private Attraction findClosestAttractionToSource(Attraction sourceAttraction, ArrayList<Attraction> mustSeenAttractions)
@@ -133,18 +135,18 @@ public class DayPlan {
         if(this.mustSeenAttractionsForDay.isEmpty()){
             return;
         }
-        calculateDayPlan(this.mustSeenAttractionsForDay, true);
+        calculateDayPlan(this.mustSeenAttractionsForDay, true, finishTime);
     }
 
 
-    public void calculateDayPlan(ArrayList<Attraction> attractionsAvailable, Boolean isFavoriteAttraction) {
+    public void calculateDayPlan(ArrayList<Attraction> attractionsAvailable, Boolean isFavoriteAttraction, LocalTime endOfDayHour) {
 
         Attraction nextAttraction;
         Attraction currentAttraction = daySchedule.get(daySchedule.size()-1).getAttraction();
         LocalTime currentTime = startTime.plusHours(durationDay);
 
         while (durationDay < durationDesireByUser) {
-            nextAttraction = chooseBestNextAttraction(currentAttraction, currentTime,attractionsAvailable);
+            nextAttraction = chooseBestNextAttraction(currentAttraction, currentTime,attractionsAvailable, endOfDayHour);
             if(nextAttraction != null) {
                 daySchedule.add(new OnePlan(nextAttraction, currentTime, isFavoriteAttraction));
                 attractionsAvailable.remove(nextAttraction); // -object of any class are reference so this action delete chosen attraction so we dont add visited attraction to rhe next day
@@ -159,12 +161,12 @@ public class DayPlan {
 
     }
 
-    private Attraction chooseBestNextAttraction(Attraction currentAttraction, LocalTime time, ArrayList<Attraction> possibleAttractions){
+    private Attraction chooseBestNextAttraction(Attraction currentAttraction, LocalTime time, ArrayList<Attraction> possibleAttractions,LocalTime endOfDayHour){
         Attraction nextAttraction = null;
         double minScore = Integer.MAX_VALUE;
         double currentScore;
         for(Attraction attraction : possibleAttractions){
-            currentScore = calculateScore(currentAttraction,attraction,time,this.date);
+            currentScore = calculateScore(currentAttraction,attraction,time,this.date, endOfDayHour);
             if (currentScore < minScore){
                 nextAttraction = attraction;
                 minScore = currentScore;
@@ -174,13 +176,14 @@ public class DayPlan {
     }
 
 
-    private double calculateScore(Attraction currentAttraction,Attraction nextAttraction, LocalTime hourOnClock, LocalDate date) {
+    private double calculateScore(Attraction currentAttraction,Attraction nextAttraction, LocalTime hourOnClock, LocalDate date,LocalTime endOfDayHour) {
         double scoreDistance = currentAttraction.calcDistanceBetweenAttractions(nextAttraction);
         long differenceBetweenClockAndStartTime;
         long minValue = Integer.MAX_VALUE;
         double scoreTime;
         Boolean closeAttraction;  //in case the next attraction is close on the hourOnClock - cant go to close attraction
         Boolean overPossibleDuration;  //in case according to duration of attraction we'll stay longer then we can
+        Boolean stayMoreThenUserWish;
 
         DayOpeningHours dayOpeningHoursNext = nextAttraction.getOpeningHoursByDay(date.getDayOfWeek());
         ArrayList<LocalTime> openingHoursNext = new ArrayList<>(dayOpeningHoursNext.getOpeningHoursLocalTime());
@@ -195,8 +198,9 @@ public class DayPlan {
 
             closeAttraction = hourOnClock.isBefore(openingHoursNext.get(i));
             overPossibleDuration = closingHoursNext.get(i).isBefore(hourOnClockAfterEnjoying);
+            stayMoreThenUserWish = hourOnClockAfterEnjoying.isAfter(endOfDayHour.plusHours(1));
 
-            if (closeAttraction || overPossibleDuration) {
+            if (closeAttraction || overPossibleDuration || stayMoreThenUserWish) {
                 openingHoursNextPossible.set(i, false);
                 closingHoursNextPossible.set(i, false);
 
@@ -279,13 +283,22 @@ public class DayPlan {
         return "";
     }
 
-    private void printDaySchedule(ArrayList<OnePlan> daySchedule,LocalDate date)
-    {
+    private void printDaySchedule(ArrayList<OnePlan> daySchedule,LocalDate date)  {
         int i = 0;
         for (OnePlan plan : daySchedule) {
             System.out.println(plan.getStartTime() + "-" + plan.getFinishTime() + "  " + date +" DAY " +String.valueOf(i)+ ":"+ (plan.getAttraction() != null ? plan.getAttraction().getName() : null) + "                favorite: " + plan.getIsFavoriteAttraction());
             i++;
         }
+
+    }
+
+    public void updateMustSeenAttractions(ArrayList<Attraction> mustSeenAttractionsLocal) {
+        if(mustSeenAttractionsLocal.isEmpty())
+            return;
+        for(Attraction mustAttraction : mustSeenAttractionsForDay){
+            mustSeenAttractionsLocal.add(mustAttraction);
+        }
+        mustSeenAttractionsForDay = mustSeenAttractionsLocal;
 
     }
 }

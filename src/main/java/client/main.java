@@ -1,10 +1,8 @@
 package client;
 
 import com.google.gson.Gson;
-import common.DesiredHoursInDay;
+import common.*;
 //import common.OpeningHours;
-import common.Destinations;
-import common.TripPlan;
 import database.DBManager;
 import engine.Engine;
 import engine.attraction.Attraction;
@@ -45,27 +43,61 @@ public class main {
         DBManager db = new DBManager();
         Engine engine = new Engine();
         TripDetails trip = new TripDetails();
-//
-//        trip.destination = "london";
-//        trip.hotelID = "ChIJ1TVZs1UFdkgRIeWxo-jEYaE";
-//        trip.mustSeenAttractionsID = new ArrayList<>();
-//        trip.mustSeenAttractionsID.add("ChIJ_R7u-6QcdkgR_TvWQJZsm3k");
-//        trip.mustSeenAttractionsID.add("ChIJ2_19mdYEdkgRadLE5rfxLPU");
-//        trip.mustSeenAttractionsID.add("ChIJ7bDgv2IadkgRkIbzf3FdF5M");
-//        trip.mustSeenAttractionsID.add("ChIJG1YB2m4RdkgRsetv9D40NGY");
-//        trip.mustSeenAttractionsID.add("ChIJVbSVrt0EdkgRQH_FO4ZkHc0");
-//        ArrayList<Attraction> mustSeenAttractions = engine.createArrayListOfMustSeenAttractions(trip.mustSeenAttractionsID,db,"london" );
-//        trip.hoursEveryDay = new ArrayList<>();
-//        trip.hoursEveryDay.add(new DesiredHoursInDay("2021-08-11"));
-//
-//        trip.hoursEveryDay.get(0).setStartTime("10:00");
-//        trip.hoursEveryDay.get(0).setEndTime("20:00");
-//        trip.hoursEveryDay.add(new DesiredHoursInDay("2021-08-12"));
-//        trip.hoursEveryDay.get(1).setStartTime("10:00");
-//        trip.hoursEveryDay.get(1).setEndTime("18:00");
-//        trip.hoursEveryDay.add(new DesiredHoursInDay("2021-08-13"));
-//        trip.hoursEveryDay.get(2).setStartTime("15:00");
-//        trip.hoursEveryDay.get(2).setEndTime("20:00");
+
+        trip.destination = "london";
+        trip.hotelID = "ChIJ1TVZs1UFdkgRIeWxo-jEYaE";
+        trip.mustSeenAttractionsID = new ArrayList<>();
+        trip.mustSeenAttractionsID.add("ChIJ_R7u-6QcdkgR_TvWQJZsm3k");
+        trip.mustSeenAttractionsID.add("ChIJ2_19mdYEdkgRadLE5rfxLPU");
+        trip.mustSeenAttractionsID.add("ChIJ7bDgv2IadkgRkIbzf3FdF5M");
+        trip.mustSeenAttractionsID.add("ChIJG1YB2m4RdkgRsetv9D40NGY");
+        trip.mustSeenAttractionsID.add("ChIJVbSVrt0EdkgRQH_FO4ZkHc0");
+        ArrayList<Attraction> mustSeenAttractions = engine.createArrayListOfMustSeenAttractions(trip.mustSeenAttractionsID,db,"london" );
+
+        ArrayList<AttractionType> typesHotel = new ArrayList<>();
+        typesHotel.add(AttractionType.lodging);
+        Attraction hotel = new Attraction("Baglioni Hotel - London", "60 Hyde Park Gate, South Kensington, London SW7 5BB, UK",
+                "020 7368 5700", null, new Geometry("51.50167580000001", "-0.1847417"), "ChIJFSZeB1kFdkgRTixgFHqP13g",
+                typesHotel, null);
+
+
+        ArrayList<DesiredHoursInDay> desiredHoursInDays = new ArrayList<>();
+        DesiredHoursInDay d1 = new DesiredHoursInDay();
+        d1.setDate("2021-09-01");
+        d1.setStartTime("10:00");
+        d1.setEndTime("20:00");
+        desiredHoursInDays.add(d1);
+
+        DesiredHoursInDay d2 = new DesiredHoursInDay();
+        d2.setDate("2021-09-02");
+        d2.setStartTime("10:00");
+        d2.setEndTime("20:00");
+        desiredHoursInDays.add(d2);
+
+        DesiredHoursInDay d3 = new DesiredHoursInDay();
+        d3.setDate("2021-09-03");
+        d3.setStartTime("10:00");
+        d3.setEndTime("20:00");
+        desiredHoursInDays.add(d3);
+
+
+        ArrayList<Attraction> allPossibleAttractions = db.getAllAttractionsByDestination("london");
+        ArrayList<Attraction> attractionsAvailable = new ArrayList<Attraction>();
+        for (Attraction attraction : allPossibleAttractions){
+            if(!mustSeenAttractions.contains(attraction))
+                attractionsAvailable.add(attraction);
+        }
+
+
+        RouteTrip routeTrip = new RouteTrip("london",hotel,mustSeenAttractions, desiredHoursInDays);
+
+
+
+
+
+        routeTrip.planRouteTrip(attractionsAvailable);
+        System.out.println(routeTrip.getPlanForDays());
+
 //
 //        ArrayList<Attraction> mustSeenAttractions1 = engine.createArrayListOfMustSeenAttractions(trip.mustSeenAttractionsID, db, trip.destination);
 //        RouteTrip routeTrip = new RouteTrip(trip.destination,db.getHotelFromDBByID(trip.hotelID,Destinations.london), mustSeenAttractions1, trip.hoursEveryDay);
@@ -76,7 +108,7 @@ public class main {
 //        System.out.println("-------------------------------------");
 
         //db.insertTripToDB("best trip2", res, "1", "london");
-        ArrayList<TripPlan> arr = db.getTripsFromDbByTravelerId("1");
+//        ArrayList<TripPlan> arr = db.getTripsFromDbByTravelerId("1");
 //        try {
 //            System.out.println();
 //            db.insertTripToDB("best trip",res,"5");
@@ -95,46 +127,18 @@ public class main {
       ///  System.out.println(engine.getAttractions("london"));
 
 
-//        ArrayList<AttractionType> typesHotel = new ArrayList<>();
-//        typesHotel.add(AttractionType.lodging);
-//        Attraction hotel = new Attraction("Baglioni Hotel - London", "60 Hyde Park Gate, South Kensington, London SW7 5BB, UK",
-//                "020 7368 5700", null, new Geometry("51.50167580000001", "-0.1847417"), "ChIJFSZeB1kFdkgRTixgFHqP13g",
-//                typesHotel, null);
 
 
 
-
-//        ArrayList<DesiredHoursInDay> desiredHoursInDays = new ArrayList<>();
-//        DesiredHoursInDay d1 = new DesiredHoursInDay();
-//        d1.setDate("2021-09-01");
-//        d1.setStartTime("10:00");
-//        d1.setEndTime("20:00");
-//        desiredHoursInDays.add(d1);
-//
-//        DesiredHoursInDay d2 = new DesiredHoursInDay();
-//        d2.setDate("2021-09-02");
-//        d2.setStartTime("10:00");
-//        d2.setEndTime("20:00");
-//        desiredHoursInDays.add(d2);
-//
-//        DesiredHoursInDay d3 = new DesiredHoursInDay();
-//        d3.setDate("2021-09-03");
-//        d3.setStartTime("10:00");
-//        d3.setEndTime("20:00");
-//        desiredHoursInDays.add(d3);
-//
-//        RouteTrip routeTrip = new RouteTrip("london",hotel,mustSeenAttractions, desiredHoursInDays);
-////        routeTrip.divideMustSeenAttractionsForEachDay();
-////        int i =1;
-////        for(DayPlan d: routeTrip.getPlanForDays()){
-////            System.out.println("day " + i );
-////            i++;
-////            for(Attraction a: d.getMustSeenAttractionsForDay()){
-////                System.out.println(a.getName() + " , ");
-////            }
-////        }
-//        routeTrip.planRouteTrip(db.getAllAttractionsByDestination("london"));
-//        System.out.println(routeTrip.getPlanForDays());
+//        routeTrip.divideMustSeenAttractionsForEachDay();
+//        int i =1;
+//        for(DayPlan d: routeTrip.getPlanForDays()){
+//            System.out.println("day " + i );
+//            i++;
+//            for(Attraction a: d.getMustSeenAttractionsForDay()){
+//                System.out.println(a.getName() + " , ");
+//            }
+//        }
 
 //
 //        for(Attraction at: mustSeenAttractions){

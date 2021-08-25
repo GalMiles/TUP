@@ -84,7 +84,10 @@ public class DBManager {
             String password = results.getString("Password");
             String firstName = results.getString("FirstName");
             String lastName = results.getString("LastName");
+            int travelerId = results.getInt("traveler_id");
             traveler = new Traveler(firstName, lastName, userName, password);
+            traveler.setTravelerId(travelerId);
+
         } else {
             throw new Traveler.NotFoundException("Traveler not found");
         }

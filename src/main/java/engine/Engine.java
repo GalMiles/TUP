@@ -114,7 +114,6 @@ public class Engine {
         return mustSeenAttractions;
     }
 
-
     public ArrayList<String> getDestinations() {
         ArrayList<String> destinations = new ArrayList<>();
         Destinations[] destinationsList = Destinations.values();
@@ -127,9 +126,7 @@ public class Engine {
         DBManager db = new DBManager();
         Boolean isSameEmail = newTraveler.getEmailAddress().equals(db.getTravelerFromDBByID(currentTravelerID).getEmailAddress());
         db.updateTravelerDetailsOnDB(newTraveler,currentTravelerID, isSameEmail);
-
     }
-
 
     public int saveUserTripOnDB(TripPlan tripPlan) throws SQLException, RouteTrip.AlreadyExistException, RouteTrip.NotFoundException {
         DBManager db = new DBManager();

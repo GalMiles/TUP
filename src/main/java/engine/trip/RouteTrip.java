@@ -113,9 +113,18 @@ public class RouteTrip {
 
     public void planRouteTrip(ArrayList<Attraction> attractionsAvailable){
         divideMustSeenAttractionsForEachDay();
+
+        for(DayPlan dayPlan: this.planForDays) {
+            System.out.println(dayPlan.getDate());
+            for(Attraction a : dayPlan.getMustSeenAttractionsForDay())
+                System.out.println(a.getName());
+        }
+        ArrayList<Attraction> mustSeenAttractionsLocal = new ArrayList<Attraction>();
         for(DayPlan dayPlan: this.planForDays){
+            dayPlan.updateMustSeenAttractions(mustSeenAttractionsLocal);
             dayPlan.calculateDayPlanWithMustSeenAttractions();
-            dayPlan.calculateDayPlan(attractionsAvailable, false);
+            mustSeenAttractionsLocal = dayPlan.getMustSeenAttractionsForDay();
+            dayPlan.calculateDayPlan(attractionsAvailable, false, dayPlan.getFinishTime());
         }
     }
 
@@ -128,6 +137,7 @@ public class RouteTrip {
             }
             numberOfIterations += 1;
         }
+        this.planForDays.forEach(dayPlan -> dayPlan.setDurationDay(0));
     }
 
     @Override
