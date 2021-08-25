@@ -133,7 +133,7 @@ public class Engine {
 
     public int saveUserTripOnDB(TripPlan tripPlan) throws SQLException, RouteTrip.AlreadyExistException, RouteTrip.NotFoundException {
         DBManager db = new DBManager();
-       return db.insertTripToDB(tripPlan.getTripName(), tripPlan.getPlans(), currentTravelerID);
+       return db.insertTripToDB(tripPlan.getTripName(), tripPlan.getPlans(), currentTravelerID, tripPlan.getDestination());
     }
 
     public ArrayList<Attraction> getHotelsByDestination(String destination) throws SQLException, Attraction.NoHotelsOnDestination {

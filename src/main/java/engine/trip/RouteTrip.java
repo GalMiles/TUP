@@ -38,8 +38,10 @@ public class RouteTrip {
 
     }
 
-    public RouteTrip(ArrayList<DayPlan> tripPlan) {
+    public RouteTrip(ArrayList<DayPlan> tripPlan, String destination) {
+
         planForDays = new ArrayList<>(tripPlan);
+        setDestination(Destinations.valueOf(destination));
     }
 
     public RouteTrip createRouteTripFromJson(ResultSet results) throws SQLException {

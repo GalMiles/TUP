@@ -4,13 +4,17 @@ import com.google.gson.Gson;
 import common.DesiredHoursInDay;
 //import common.OpeningHours;
 import common.Destinations;
+import common.TripPlan;
 import database.DBManager;
 import engine.Engine;
 import engine.attraction.Attraction;
+import engine.traveler.Traveler;
 import engine.trip.DayPlan;
 import engine.trip.RouteTrip;
 
 import java.io.IOException;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -35,42 +39,44 @@ public class main {
         }
     }
 
-    public static void main(String[] args) throws IOException, SQLException, ParseException, RouteTrip.AlreadyExistException {
+    public static void main(String[] args) throws IOException, SQLException, ParseException, RouteTrip.AlreadyExistException, Traveler.HasNoTripsException, RouteTrip.NotFoundException {
 
         Gson gson = new Gson();
         DBManager db = new DBManager();
         Engine engine = new Engine();
         TripDetails trip = new TripDetails();
+//
+//        trip.destination = "london";
+//        trip.hotelID = "ChIJ1TVZs1UFdkgRIeWxo-jEYaE";
+//        trip.mustSeenAttractionsID = new ArrayList<>();
+//        trip.mustSeenAttractionsID.add("ChIJ_R7u-6QcdkgR_TvWQJZsm3k");
+//        trip.mustSeenAttractionsID.add("ChIJ2_19mdYEdkgRadLE5rfxLPU");
+//        trip.mustSeenAttractionsID.add("ChIJ7bDgv2IadkgRkIbzf3FdF5M");
+//        trip.mustSeenAttractionsID.add("ChIJG1YB2m4RdkgRsetv9D40NGY");
+//        trip.mustSeenAttractionsID.add("ChIJVbSVrt0EdkgRQH_FO4ZkHc0");
+//        ArrayList<Attraction> mustSeenAttractions = engine.createArrayListOfMustSeenAttractions(trip.mustSeenAttractionsID,db,"london" );
+//        trip.hoursEveryDay = new ArrayList<>();
+//        trip.hoursEveryDay.add(new DesiredHoursInDay("2021-08-11"));
+//
+//        trip.hoursEveryDay.get(0).setStartTime("10:00");
+//        trip.hoursEveryDay.get(0).setEndTime("20:00");
+//        trip.hoursEveryDay.add(new DesiredHoursInDay("2021-08-12"));
+//        trip.hoursEveryDay.get(1).setStartTime("10:00");
+//        trip.hoursEveryDay.get(1).setEndTime("18:00");
+//        trip.hoursEveryDay.add(new DesiredHoursInDay("2021-08-13"));
+//        trip.hoursEveryDay.get(2).setStartTime("15:00");
+//        trip.hoursEveryDay.get(2).setEndTime("20:00");
+//
+//        ArrayList<Attraction> mustSeenAttractions1 = engine.createArrayListOfMustSeenAttractions(trip.mustSeenAttractionsID, db, trip.destination);
+//        RouteTrip routeTrip = new RouteTrip(trip.destination,db.getHotelFromDBByID(trip.hotelID,Destinations.london), mustSeenAttractions1, trip.hoursEveryDay);
+//
+//        routeTrip.planRouteTrip(db.getAllAttractionsByDestination("london"));
+//        ArrayList<DayPlan> res = routeTrip.getPlanForDays();
+//        System.out.println(gson.toJson(res));
+//        System.out.println("-------------------------------------");
 
-        trip.destination = "london";
-        trip.hotelID = "ChIJ1TVZs1UFdkgRIeWxo-jEYaE";
-        trip.mustSeenAttractionsID = new ArrayList<>();
-        trip.mustSeenAttractionsID.add("ChIJ_R7u-6QcdkgR_TvWQJZsm3k");
-        trip.mustSeenAttractionsID.add("ChIJ2_19mdYEdkgRadLE5rfxLPU");
-        trip.mustSeenAttractionsID.add("ChIJ7bDgv2IadkgRkIbzf3FdF5M");
-        trip.mustSeenAttractionsID.add("ChIJG1YB2m4RdkgRsetv9D40NGY");
-        trip.mustSeenAttractionsID.add("ChIJVbSVrt0EdkgRQH_FO4ZkHc0");
-        ArrayList<Attraction> mustSeenAttractions = engine.createArrayListOfMustSeenAttractions(trip.mustSeenAttractionsID,db,"london" );
-        trip.hoursEveryDay = new ArrayList<>();
-        trip.hoursEveryDay.add(new DesiredHoursInDay("2021-08-11"));
-
-        trip.hoursEveryDay.get(0).setStartTime("10:00");
-        trip.hoursEveryDay.get(0).setEndTime("20:00");
-        trip.hoursEveryDay.add(new DesiredHoursInDay("2021-08-12"));
-        trip.hoursEveryDay.get(1).setStartTime("10:00");
-        trip.hoursEveryDay.get(1).setEndTime("18:00");
-        trip.hoursEveryDay.add(new DesiredHoursInDay("2021-08-13"));
-        trip.hoursEveryDay.get(2).setStartTime("15:00");
-        trip.hoursEveryDay.get(2).setEndTime("20:00");
-
-        ArrayList<Attraction> mustSeenAttractions1 = engine.createArrayListOfMustSeenAttractions(trip.mustSeenAttractionsID, db, trip.destination);
-        RouteTrip routeTrip = new RouteTrip(trip.destination,db.getHotelFromDBByID(trip.hotelID,Destinations.london), mustSeenAttractions1, trip.hoursEveryDay);
-
-        routeTrip.planRouteTrip(db.getAllAttractionsByDestination("london"));
-        ArrayList<DayPlan> res = routeTrip.getPlanForDays();
-        System.out.println(res);
-        System.out.println("-------------------------------------");
-
+        //db.insertTripToDB("best trip2", res, "1", "london");
+        ArrayList<TripPlan> arr = db.getTripsFromDbByTravelerId("1");
 //        try {
 //            System.out.println();
 //            db.insertTripToDB("best trip",res,"5");
@@ -79,7 +85,7 @@ public class main {
 //
 //        }
 ////
-        db.deleteTripFromUserTripsInDB("4","5");
+//        db.deleteTripFromUserTripsInDB("4","5");
 
         //db.getTripsFromDbByTravelerId("1");
 

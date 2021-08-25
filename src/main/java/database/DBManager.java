@@ -30,13 +30,14 @@ public class DBManager {
 
 
     public DBManager() throws SQLException {
-        this.sqlConnection = DriverManager.getConnection("jdbc:mysql://localhost:3306/tup", "root", "123456ma");
-        this.statement = sqlConnection.createStatement();
+//        this.sqlConnection = DriverManager.getConnection("jdbc:mysql://localhost:3306/tup", "root", "Galmiles31051960");
+//        this.statement = sqlConnection.createStatement();
 
         DriverManager.registerDriver(new com.mysql.cj.jdbc.Driver());
 
-//        sqlConnection = DriverManager.getConnection("jdbc:mysql://database-1.cxfxbg1niylb.us-west-2.rds.amazonaws.com:3306/tup", "admin", "Galmiles1105");
-//        statement = sqlConnection.createStatement();
+        sqlConnection = DriverManager.getConnection("jdbc:mysql://database-1.cxfxbg1niylb.us-west-2.rds.amazonaws.com:3306/tup", "admin", "Galmiles1105");
+        statement = sqlConnection.createStatement();
+
     }
 
     public void closeConnection() throws SQLException {
@@ -62,7 +63,7 @@ public class DBManager {
                 + "\"" + traveler.getEmailAddress() + "\", \"" + traveler.getPassword() + "\", \"" + traveler.getFirstName() +
                 "\", \"" + traveler.getLastName() + "\")";
         this.statement.executeUpdate(query);
-        query = "SELECT id FROM travelers WHERE Email =  \"" + traveler.getEmailAddress() + "\"";
+        query = "SELECT traveler_id FROM travelers WHERE Email =  \"" + traveler.getEmailAddress() + "\"";
         ResultSet resultSet = this.statement.executeQuery(query);
         if (resultSet.next()) {
             idString = resultSet.getString("id");
@@ -368,17 +369,17 @@ public class DBManager {
 
     public ArrayList<TripPlan> getTripsFromDbByTravelerId(String travelerID) throws SQLException, Traveler.HasNoTripsException {
         ArrayList<TripPlan> trips = new ArrayList<>();
-        PreparedStatement p = sqlConnection.prepareStatement("SELECT * FROM trips WHERE traveler_id = ? ");
+        PreparedStatement p = sqlConnection.prepareStatement("SELECT * FROM trips WHERE traveler_id = ?");
         p.setString(1, travelerID);
         ResultSet results = p.executeQuery();
 
-        if(!results.next()) { throw new Traveler.HasNoTripsException("Traveler with id " + travelerID); }
+        //if(!results.next()) { throw new Traveler.HasNoTripsException("Traveler with id " + travelerID); }
 
         while (results.next()) {
             RouteTrip routeTrip = new RouteTrip();
             routeTrip = routeTrip.createRouteTripFromJson(results);
             fillRouteTrip(routeTrip);
-            TripPlan tripPlan = new TripPlan(results.getString("trip_name"),routeTrip.getPlanForDays());
+            TripPlan tripPlan = new TripPlan(results.getString("trip_name"),routeTrip.getPlanForDays(), routeTrip.getDestination().name());
             trips.add(tripPlan);
         }
         return trips;
@@ -397,9 +398,9 @@ public class DBManager {
         }
     }
 
-    public int insertTripToDB(String tripName, ArrayList<DayPlan> tripPlan, String currentTravelerID) throws SQLException, RouteTrip.AlreadyExistException, RouteTrip.NotFoundException {
+    public int insertTripToDB(String tripName, ArrayList<DayPlan> tripPlan, String currentTravelerID, String destination) throws SQLException, RouteTrip.AlreadyExistException, RouteTrip.NotFoundException {
         Gson gson = new Gson();
-        RouteTrip routeTrip = createRouteTripToDB(tripPlan);
+        RouteTrip routeTrip = createRouteTripToDB(tripPlan, destination);
         CheckIfTripExists(routeTrip,currentTravelerID, gson);
 
        // insert RoutTrip to DB
@@ -413,8 +414,8 @@ public class DBManager {
     }
 
 
-    private RouteTrip createRouteTripToDB(ArrayList<DayPlan> tripPlan){
-        RouteTrip routeTrip = new RouteTrip(tripPlan);
+    private RouteTrip createRouteTripToDB(ArrayList<DayPlan> tripPlan, String destination){
+        RouteTrip routeTrip = new RouteTrip(tripPlan, destination);
         ArrayList<DayPlan> res = routeTrip.getPlanForDays();
         for (DayPlan d : res) {
             ArrayList<OnePlan> re = d.getDaySchedule();
@@ -440,10 +441,10 @@ public class DBManager {
         else
          throw new RouteTrip.NotFoundException("cant find trip to update its tripID");
 
-        p = sqlConnection.prepareStatement("UPDATE trips SET trip = ? WHERE trip_id = ?");
-        p.setString(1,gson.toJson(routeTrip));
-        p.setInt(2, tripID);
-        p.execute();
+//        p = sqlConnection.prepareStatement("UPDATE trips SET trip = ? WHERE trip_id = ?");
+//        p.setString(1,gson.toJson(routeTrip));
+//        p.setInt(2, tripID);
+//        p.execute();
         return tripID;
     }
 
