@@ -100,4 +100,8 @@ public class Traveler {
                 ", password='" + password + '\'' +
                 '}';
     }
+
+    public static class HasNoTripsException extends Exception {
+        public HasNoTripsException(String message) { super(message); }
+    }
 }

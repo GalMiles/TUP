@@ -61,7 +61,7 @@ public class Engine {
         }
     }
 
-    public ArrayList<ArrayList<DayPlan>> getUserTrips() throws SQLException, RouteTrip.NotFoundException {
+    public ArrayList<TripPlan> getUserTrips() throws SQLException, Traveler.HasNoTripsException {
         DBManager db = new DBManager();
         return db.getTripsFromDbByTravelerId(currentTravelerID);
     }
@@ -134,5 +134,11 @@ public class Engine {
     public int saveUserTripOnDB(TripPlan tripPlan) throws SQLException, RouteTrip.AlreadyExistException, RouteTrip.NotFoundException {
         DBManager db = new DBManager();
        return db.insertTripToDB(tripPlan.getTripName(), tripPlan.getPlans(), currentTravelerID);
+    }
+
+    public ArrayList<Attraction> getHotelsByDestination(String destination) throws SQLException, Attraction.NoHotelsOnDestination {
+        DBManager db = new DBManager();
+        return db.getAllHotelsFromDB(destination);
+
     }
 }

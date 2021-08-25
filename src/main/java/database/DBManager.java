@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import common.AttractionType;
 import common.DayOpeningHours;
 import common.Destinations;
+import common.TripPlan;
 import engine.attraction.Attraction;
 import engine.trip.DayPlan;
 import engine.trip.OnePlan;
@@ -251,18 +252,19 @@ public class DBManager {
 
     }
 
-    public ArrayList<Attraction> getAllHotelsFromDB(String destination) throws SQLException {
-        ArrayList<Attraction> attractions = new ArrayList<>();
-        String sql = "SELECT * FROM tup." + destination.toString() + "_hotels";
+    public ArrayList<Attraction> getAllHotelsFromDB(String destination) throws SQLException, Attraction.NoHotelsOnDestination {
+        ArrayList<Attraction> hotels = new ArrayList<>();
+        String sql = "SELECT * FROM tup." + destination + "_hotels";
         PreparedStatement ps = this.sqlConnection.prepareStatement(sql);
         ResultSet results = ps.executeQuery();
+        if(!results.next()) {throw new Attraction.NoHotelsOnDestination("there are not hotels on this destination");}
         while (results.next()) {
-            attractions.add(new Attraction(results));
+            hotels.add(new Attraction(results));
         }
-        return attractions;
+        return hotels;
     }
 
-    public void insertHotelsImagesToDB() throws SQLException, IOException {
+    public void insertHotelsImagesToDB() throws SQLException, IOException, Attraction.NoHotelsOnDestination {
 
         String image = null;
         wikiAPIManager wiki = new wikiAPIManager();
@@ -364,17 +366,20 @@ public class DBManager {
         return resTraveler;
     }
 
-    public ArrayList<ArrayList<DayPlan>> getTripsFromDbByTravelerId(String travelerID) throws SQLException {
-        ArrayList<ArrayList<DayPlan>> trips = new ArrayList<>();
+    public ArrayList<TripPlan> getTripsFromDbByTravelerId(String travelerID) throws SQLException, Traveler.HasNoTripsException {
+        ArrayList<TripPlan> trips = new ArrayList<>();
         PreparedStatement p = sqlConnection.prepareStatement("SELECT * FROM trips WHERE traveler_id = ? ");
         p.setString(1, travelerID);
         ResultSet results = p.executeQuery();
+
+        if(!results.next()) { throw new Traveler.HasNoTripsException("Traveler with id " + travelerID); }
 
         while (results.next()) {
             RouteTrip routeTrip = new RouteTrip();
             routeTrip = routeTrip.createRouteTripFromJson(results);
             fillRouteTrip(routeTrip);
-            trips.add(routeTrip.getPlanForDays());
+            TripPlan tripPlan = new TripPlan(results.getString("trip_name"),routeTrip.getPlanForDays());
+            trips.add(tripPlan);
         }
         return trips;
     }
@@ -394,6 +399,21 @@ public class DBManager {
 
     public int insertTripToDB(String tripName, ArrayList<DayPlan> tripPlan, String currentTravelerID) throws SQLException, RouteTrip.AlreadyExistException, RouteTrip.NotFoundException {
         Gson gson = new Gson();
+        RouteTrip routeTrip = createRouteTripToDB(tripPlan);
+        CheckIfTripExists(routeTrip,currentTravelerID, gson);
+
+       // insert RoutTrip to DB
+        PreparedStatement p = sqlConnection.prepareStatement("INSERT INTO trips (traveler_id, trip, trip_name) VALUES (? ,?,? )");
+        p.setString(1, currentTravelerID);
+        p.setString(2, gson.toJson(routeTrip));
+        p.setString(3,tripName);
+        p.execute();
+
+        return updateTripID(routeTrip, currentTravelerID, gson);
+    }
+
+
+    private RouteTrip createRouteTripToDB(ArrayList<DayPlan> tripPlan){
         RouteTrip routeTrip = new RouteTrip(tripPlan);
         ArrayList<DayPlan> res = routeTrip.getPlanForDays();
         for (DayPlan d : res) {
@@ -404,29 +424,7 @@ public class DBManager {
                 p.setAttraction(null);
             }
         }
-
-        CheckIfTripExists(routeTrip,currentTravelerID, gson);
-
-       // insert RoutTrip to DB
-        PreparedStatement p = sqlConnection.prepareStatement("INSERT INTO trips (traveler_id, trip, trip_name) VALUES (? ,?,? )");
-        p.setString(1, currentTravelerID);
-        p.setString(2, gson.toJson(routeTrip));
-        p.setString(3,tripName);
-        p.execute();
-
-
-
-//        String query = "INSERT INTO trips(traveler_id, trip, trip_name) VALUES ( "
-//                + "\"" + currentTravelerID + "\", \"" + gson.toJson(routeTrip) + "\", \"" + tripName +"\")";
-//        this.statement.executeUpdate(query);
-
-
-
-
-        return updateTripID(routeTrip, currentTravelerID, gson);
-
-
-
+        return routeTrip;
     }
 
     private int updateTripID(RouteTrip routeTrip, String currentTravelerID, Gson gson) throws SQLException, RouteTrip.NotFoundException {

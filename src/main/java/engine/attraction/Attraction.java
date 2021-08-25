@@ -309,5 +309,9 @@ public class Attraction {
         return  jSonString;
     }
 
+    public static class NoHotelsOnDestination extends Exception {
+        public NoHotelsOnDestination(String message) { super(message); }
+
+    }
 }
 

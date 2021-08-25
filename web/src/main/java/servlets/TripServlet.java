@@ -1,9 +1,9 @@
 package servlets;
 
-
 import common.DesiredHoursInDay;
 import common.TripPlan;
 import engine.Engine;
+import engine.traveler.Traveler;
 import engine.trip.DayPlan;
 import engine.trip.RouteTrip;
 import servlets.utils.ContextServletUtils;
@@ -23,15 +23,15 @@ import java.util.ArrayList;
 public class TripServlet extends HttpServlet {
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 
         ServletUtils servletUtils = new ServletUtils(req);
         Engine engine = ContextServletUtils.getEngine(req);
 
         try {
-            ArrayList<ArrayList<DayPlan>> userTrips = engine.getUserTrips();
+            ArrayList<TripPlan> userTrips = engine.getUserTrips();
             servletUtils.writeJsonResponse(userTrips);
-        } catch (SQLException | RouteTrip.NotFoundException e) {
+        } catch (SQLException | Traveler.HasNoTripsException e) {
             servletUtils.writeJsonResponse("error", e.getMessage());
         }
 
@@ -48,7 +48,7 @@ public class TripServlet extends HttpServlet {
         TripsToDelete tripsToDelete = (TripsToDelete)servletUtils.gsonFromJson(TripsToDelete.class);
 
         try {
-            engine.deleteTripFromUserTrips(tripsToDelete.tripsToDeleteList);
+            engine.deleteTripFromUserTrips(tripsToDelete.tripsIdToDeleteList);
         } catch (SQLException e) {
             servletUtils.writeJsonResponse("error", e.getMessage());
         }
@@ -109,6 +109,6 @@ public class TripServlet extends HttpServlet {
 
 
         static class TripsToDelete{
-            ArrayList<String> tripsToDeleteList;
+            ArrayList<String> tripsIdToDeleteList;
         }
 }

@@ -8,6 +8,11 @@ public class TripPlan {
     private String tripName;
     private ArrayList<DayPlan> plans = new ArrayList<>();
 
+    public TripPlan(String tripName, ArrayList<DayPlan> planForDays) {
+        setTripName(tripName);
+        setPlans(planForDays);
+    }
+
 
     public String getTripName() {
         return tripName;
