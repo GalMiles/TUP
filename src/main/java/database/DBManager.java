@@ -37,7 +37,6 @@ public class DBManager {
 
         sqlConnection = DriverManager.getConnection("jdbc:mysql://database-1.cxfxbg1niylb.us-west-2.rds.amazonaws.com:3306/tup", "admin", "Galmiles1105");
         statement = sqlConnection.createStatement();
-
     }
 
     public void closeConnection() throws SQLException {
@@ -66,7 +65,7 @@ public class DBManager {
         query = "SELECT traveler_id FROM travelers WHERE Email =  \"" + traveler.getEmailAddress() + "\"";
         ResultSet resultSet = this.statement.executeQuery(query);
         if (resultSet.next()) {
-            idString = resultSet.getString("id");
+            idString = resultSet.getString("traveler_id");
         }
         return idString;
     }
@@ -344,7 +343,7 @@ public class DBManager {
             checkIfEmailIsFound(newTraveler.getEmailAddress());
 
         PreparedStatement p = sqlConnection.prepareStatement("UPDATE travelers SET Email = ? , Password = ? , FirstName = ? , " +
-                "LastName =? WHERE id =?");
+                "LastName =? WHERE traveler_id =?");
 
         p.setString(1, newTraveler.getEmailAddress());
         p.setString(2, newTraveler.getPassword());
@@ -359,7 +358,7 @@ public class DBManager {
 
     public Traveler getTravelerFromDBByID(String id) throws SQLException, Traveler.IllegalValueException {
         Traveler resTraveler = null;
-        String query = "SELECT * FROM tup.travelers WHERE id =\"" + id + "\"";
+        String query = "SELECT * FROM tup.travelers WHERE traveler_id =\"" + id + "\"";
         ResultSet resultSet = this.statement.executeQuery(query);
         if (resultSet.next()) {
             resTraveler = new Traveler(resultSet);
