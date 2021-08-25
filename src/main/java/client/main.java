@@ -79,7 +79,7 @@ public class main {
 //
 //        }
 ////
-        db.deleteTripFromUserTripsInDB("4","5");
+        //db.deleteTripFromUserTripsInDB("4","5");
 
         //db.getTripsFromDbByTravelerId("1");
 

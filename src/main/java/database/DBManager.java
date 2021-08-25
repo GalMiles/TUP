@@ -368,11 +368,21 @@ public class DBManager {
 
     public ArrayList<TripPlan> getTripsFromDbByTravelerId(String travelerID) throws SQLException, Traveler.HasNoTripsException {
         ArrayList<TripPlan> trips = new ArrayList<>();
-        PreparedStatement p = sqlConnection.prepareStatement("SELECT * FROM trips WHERE traveler_id = ? ");
-        p.setString(1, travelerID);
-        ResultSet results = p.executeQuery();
 
-        if(!results.next()) { throw new Traveler.HasNoTripsException("Traveler with id " + travelerID); }
+//        PreparedStatement p = sqlConnection.prepareStatement("SELECT * FROM tup.trips WHERE traveler_id = 5");
+//        //p.setString(1, travelerID);
+//        ResultSet results = p.executeQuery();
+
+        String query = "SELECT * FROM tup.travelers WHERE traveler_id =\"" + travelerID + "\"";
+        ResultSet results = this.statement.executeQuery(query);
+
+        if(results.next() == true) {
+            System.out.println("hello");
+        }
+        if(results.next() == false) {
+            throw new Traveler.HasNoTripsException("Traveler with id " + travelerID + "doesn't have trips"); }
+
+
 
         while (results.next()) {
             RouteTrip routeTrip = new RouteTrip();
@@ -440,10 +450,10 @@ public class DBManager {
         else
          throw new RouteTrip.NotFoundException("cant find trip to update its tripID");
 
-        p = sqlConnection.prepareStatement("UPDATE trips SET trip = ? WHERE trip_id = ?");
-        p.setString(1,gson.toJson(routeTrip));
-        p.setInt(2, tripID);
-        p.execute();
+//        p = sqlConnection.prepareStatement("UPDATE trips SET trip = ? WHERE trip_id = ?");
+//        p.setString(1,gson.toJson(routeTrip));
+//        p.setInt(2, tripID);
+//        p.execute();
         return tripID;
     }
 
