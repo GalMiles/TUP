@@ -25,6 +25,8 @@ public class LoginServlet extends HttpServlet {
         try {
             Engine engine = ContextServletUtils.getEngine(req);
             Traveler user = engine.login(newUser.emailAddress,newUser.password);
+            resp.setHeader("travelerID", String.valueOf(user.getTravelerId()));
+
             servletUtils.writeJsonResponse(user);
         }catch (SQLException | Traveler.NotFoundException e){
             servletUtils.writeJsonResponse("error", e.getMessage());

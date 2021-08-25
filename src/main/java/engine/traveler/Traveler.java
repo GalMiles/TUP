@@ -45,6 +45,10 @@ public class Traveler {
         return password;
     }
 
+    public int getTravelerId() {
+        return travelerId;
+    }
+
     public void setTravelerId(int travelerId) {
         this.travelerId = travelerId;
     }
