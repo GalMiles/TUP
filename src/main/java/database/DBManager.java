@@ -449,9 +449,9 @@ public class DBManager {
     }
 
     private void CheckIfTripExists(RouteTrip routeTrip, String currentTravelerID, Gson gson) throws SQLException, RouteTrip.AlreadyExistException{
-            PreparedStatement p = sqlConnection.prepareStatement("SELECT * FROM trips WHERE traveler_id = ? AND trip = ?");
-            p.setString(1, currentTravelerID);
-            p.setString(2, gson.toJson(routeTrip));
+        PreparedStatement p = sqlConnection.prepareStatement("SELECT * FROM trips WHERE (trip = CAST(? AS JSON) AND traveler_id = ?)");
+        p.setString(1, gson.toJson(routeTrip));
+        p.setString(2, currentTravelerID);
             ResultSet results = p.executeQuery();
             if (results.next()) {
                 throw new RouteTrip.AlreadyExistException("route trip with the same plans already exists by name" + results.getString("trip_name"));
