@@ -24,16 +24,16 @@ public class TravelerServlet extends HttpServlet {
     // register
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         ServletUtils servletUtils = new ServletUtils(req);
-        Engine engine = ContextServletUtils.getEngine(req);
         Traveler jsonTraveler = (Traveler) servletUtils.gsonFromJson(Traveler.class);
 
         try {
+            Engine engine = ContextServletUtils.getEngine(req);
             Traveler newTraveler = ResponseJson.travelerFromJson(jsonTraveler, req);
             String idString = engine.Register(newTraveler);
             resp.setHeader("travelerID", idString);
             servletUtils.writeJsonResponse(newTraveler);
 
-        } catch (SQLException | Traveler.IllegalValueException | Traveler.AlreadyExistsException e) {
+        } catch (SQLException | Traveler.IllegalValueException | Traveler.AlreadyExistsException | Traveler.NotFoundException e) {
             servletUtils.writeJsonResponse("error", e.getMessage());
         }
 
@@ -46,15 +46,15 @@ public class TravelerServlet extends HttpServlet {
     //edit profile
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         ServletUtils servletUtils = new ServletUtils(req);
-        Engine engine = ContextServletUtils.getEngine(req);
         Traveler jsonTraveler = (Traveler) servletUtils.gsonFromJson(Traveler.class);
 
         try {
+            Engine engine = ContextServletUtils.getEngine(req);
             Traveler newTraveler = ResponseJson.travelerFromJson(jsonTraveler, req);
             engine.updateTravelerDetails(newTraveler);
             servletUtils.writeJsonResponse(newTraveler);
 
-        } catch (SQLException | Traveler.IllegalValueException | Traveler.AlreadyExistsException e) {
+        } catch (SQLException | Traveler.IllegalValueException | Traveler.AlreadyExistsException | Traveler.NotFoundException e) {
             servletUtils.writeJsonResponse("error", e.getMessage());
         }
         try (PrintWriter out = resp.getWriter()) {

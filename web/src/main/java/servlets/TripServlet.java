@@ -26,12 +26,12 @@ public class TripServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 
         ServletUtils servletUtils = new ServletUtils(req);
-        Engine engine = ContextServletUtils.getEngine(req);
 
         try {
+            Engine engine = ContextServletUtils.getEngine(req);
             ArrayList<TripPlan> userTrips = engine.getUserTrips();
             servletUtils.writeJsonResponse(userTrips);
-        } catch (SQLException | Traveler.HasNoTripsException e) {
+        } catch (SQLException | Traveler.HasNoTripsException | Traveler.NotFoundException e) {
             servletUtils.writeJsonResponse("error", e.getMessage());
         }
 
@@ -44,12 +44,12 @@ public class TripServlet extends HttpServlet {
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         ServletUtils servletUtils = new ServletUtils(req);
-        Engine engine = ContextServletUtils.getEngine(req);
         TripsToDelete tripsToDelete = (TripsToDelete)servletUtils.gsonFromJson(TripsToDelete.class);
 
         try {
+            Engine engine = ContextServletUtils.getEngine(req);
             engine.deleteTripFromUserTrips(tripsToDelete.tripsIdToDeleteList);
-        } catch (SQLException e) {
+        } catch (SQLException | Traveler.NotFoundException e) {
             servletUtils.writeJsonResponse("error", e.getMessage());
         }
 
@@ -63,14 +63,14 @@ public class TripServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 
         ServletUtils servletUtils = new ServletUtils(req);
-        Engine engine = ContextServletUtils.getEngine(req);
 
         TripDetails tripDetails = (TripDetails)servletUtils.gsonFromJson(TripDetails.class);
 
         try {
+            Engine engine = ContextServletUtils.getEngine(req);
             ArrayList<DayPlan> trip = engine.createTripForUser(tripDetails.destination,tripDetails.hotelID,tripDetails.mustSeenAttractionsID,tripDetails.hoursEveryDay);
             servletUtils.writeJsonResponse(trip);
-        } catch (SQLException | RouteTrip.AlreadyExistException e) {
+        } catch (SQLException | RouteTrip.AlreadyExistException | Traveler.NotFoundException e) {
             servletUtils.writeJsonResponse("error", e.getMessage());
         }
 
@@ -83,14 +83,14 @@ public class TripServlet extends HttpServlet {
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 
         ServletUtils servletUtils = new ServletUtils(req);
-        Engine engine = ContextServletUtils.getEngine(req);
 
         TripPlan tripPlan = (TripPlan)servletUtils.gsonFromJson(TripPlan.class);
 
         try {
+            Engine engine = ContextServletUtils.getEngine(req);
             int tripID = engine.saveUserTripOnDB(tripPlan);
             servletUtils.writeJsonResponse(tripID);
-        } catch (SQLException | RouteTrip.NotFoundException | RouteTrip.AlreadyExistException e) {
+        } catch (SQLException | RouteTrip.NotFoundException | RouteTrip.AlreadyExistException | Traveler.NotFoundException e) {
             servletUtils.writeJsonResponse("error", e.getMessage());
         }
 

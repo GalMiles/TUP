@@ -20,10 +20,10 @@ public class LoginServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         ServletUtils servletUtils = new ServletUtils(req);
-        Engine engine = ContextServletUtils.getEngine(req);
         User newUser = (User)servletUtils.gsonFromJson(User.class);
 
         try {
+            Engine engine = ContextServletUtils.getEngine(req);
             Traveler user = engine.login(newUser.emailAddress,newUser.password);
             servletUtils.writeJsonResponse(user);
         }catch (SQLException | Traveler.NotFoundException e){
