@@ -16,7 +16,7 @@ public class converter {
             newTime+=time.charAt(3);
             time = newTime;
         }
-        return(LocalTime.parse(time, formatter));
+        return(LocalTime.parse(time.trim(), formatter));
     }
 
 }
