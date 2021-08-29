@@ -54,7 +54,6 @@ public class DBManager {
         return attractions;
     }
 
-
     public String Register(Traveler traveler) throws SQLException, Traveler.AlreadyExistsException {
         String idString = null;
         checkIfEmailIsFound(traveler.getEmailAddress());
@@ -69,7 +68,6 @@ public class DBManager {
         }
         return idString;
     }
-
 
     public Traveler Login(String Email, String Password) throws SQLException, Traveler.NotFoundException, Traveler.IllegalValueException {
         Traveler traveler = null;
@@ -93,47 +91,6 @@ public class DBManager {
         return traveler;
     }
 
-
-    public void insertAttractionToDB(Attraction attraction, Destinations destination) throws SQLException {
-        ArrayList<StringBuilder> dayStrArr = new ArrayList<>();
-        for (int i = 0; i < 7; ++i) {
-            dayStrArr.add(i, new StringBuilder());
-        }
-        PreparedStatement ps = this.sqlConnection.prepareStatement(
-                "INSERT INTO " + destination.name() + " (attractionAPI_ID, Name, Address, PhoneNumber,Website, Geometry, types," +
-                        "Sunday, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday)" +
-                        "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
-        ps.setString(1, attraction.getPlaceID());
-        ps.setString(2, attraction.getName());
-        ps.setString(3, attraction.getAddress());//ADDRESS
-        ps.setString(4, this.checkParameter(attraction.getPhoneNumber()));//PHONENUMBER
-        ps.setString(5, this.checkParameter(attraction.getWebsite()));//Website
-        ps.setString(6, attraction.getGeometry().toString());//Geometry
-        ps.setString(7, this.getTypesStr(attraction.getTypes()));
-        int index = 8;
-        for (DayOpeningHours day : attraction.getOpeningHoursArr()) {
-            if (day.isAllDayLongOpened()) {
-                ps.setString(index, "All Day Long");
-            } else {
-                if (!day.isOpen()) {
-                    ps.setString(index, "Closed");
-                } else {
-                    int arraySize = day.getOpeningHours().size();
-                    String dayOpeningHours = "";
-                    for (int j = 0; j < arraySize - 1; ++j) {
-                        String currentOpeningHour = day.getOpeningHours().get(j) + "-" + day.getClosingHours().get(j);
-                        dayOpeningHours += currentOpeningHour + ", ";
-                    }
-                    String currentOpeningHour = day.getOpeningHours().get(arraySize - 1) + "-" + day.getClosingHours().get(arraySize - 1);
-                    dayOpeningHours += currentOpeningHour;
-                    ps.setString(index, dayOpeningHours);
-                }
-            }
-            index++;
-        }
-        ps.executeUpdate();
-    }
-
     private String getTypesStr(ArrayList<AttractionType> types) {
         StringBuilder typesStr = new StringBuilder();
         int typesArrSize = types.size();
@@ -148,7 +105,6 @@ public class DBManager {
         return typesStr.toString();
     }
 
-
     private String checkParameter(String param) {
         if (param == null) {
             return "N\\A";
@@ -156,24 +112,6 @@ public class DBManager {
             return param;
         }
     }
-
-    public Attraction getAttractionFromDataBaseByName(String attractionName, Destinations destination) throws SQLException, IOException, ParseException {
-        Attraction resAttraction;
-        String query = "SELECT * FROM " + destination.toString() + " WHERE Name=\"" + attractionName + "\"";
-        ResultSet res = this.statement.executeQuery(query);
-        if (res.next())  //check of there is a result from the query
-        {
-            //if there is a result, make an attraction
-            resAttraction = new Attraction(res);
-        } else {  //there is no result from the query(the attraction doesnt found in the database)
-            JsonAttraction jsonAttraction = apiManager.getAttractionFromAPI(attractionName);
-            jsonAttraction.getResult().setOpening_hours(null);
-            resAttraction = new Attraction(jsonAttraction);
-            this.insertAttractionToDB(resAttraction, destination);
-        }
-        return resAttraction;
-    }
-
 
     public Attraction getAttractionFromDBByID(String id, Destinations destination) throws SQLException {
         Attraction resAttracion = null;
@@ -183,25 +121,14 @@ public class DBManager {
             resAttracion = new Attraction(resultSet);
         }
         return resAttracion;
-
     }
 
     public void checkIfEmailIsFound(String email) throws SQLException, Traveler.AlreadyExistsException {
         String query = "SELECT * FROM travelers WHERE Email = \"" + email + "\"";
         ResultSet resultSet = this.statement.executeQuery(query);
         if (resultSet.next()) {
-            //throw new Traveler.NotFoundException("Invalid Username\\Password");
             throw new Traveler.AlreadyExistsException("Traveler is exist in the DB");
         }
-    }
-
-    public ArrayList<Attraction> getAttractionsByOperationTime(String operationTime) {
-        ArrayList<Attraction> attractionsArr = new ArrayList<>();
-        String[] operationTimeSplitArr = operationTime.split("-");
-        String openingHour = operationTimeSplitArr[0];
-        String closingHour = operationTimeSplitArr[1];
-
-        return attractionsArr;
     }
 
     public ArrayList<Attraction> getFavoriteAttractions(String travelerID) throws SQLException {
@@ -235,15 +162,6 @@ public class DBManager {
         p.execute();
     }
 
-    public Collection<RouteTrip> getMyTripsFromDB() {
-        return null;
-    }
-
-
-    public Attraction getHotelFromDBByName(String hotelName, Destinations destination) throws SQLException, IOException, ParseException {
-        return this.getAttractionFromDataBaseByName(hotelName, destination);
-    }
-
     public Attraction getHotelFromDBByID(String id, Destinations destination) throws SQLException {
         Attraction resAttracion = null;
         String query = "SELECT * FROM tup." + destination.toString() + "_hotels" + " WHERE attractionAPI_ID =\"" + id + "\"";
@@ -267,6 +185,139 @@ public class DBManager {
         return hotels;
     }
 
+    public void updateTravelerDetailsOnDB(Traveler newTraveler, String currentTravelerID, Boolean isSameEmail) throws Traveler.AlreadyExistsException, SQLException {
+        if (!isSameEmail)
+            checkIfEmailIsFound(newTraveler.getEmailAddress());
+
+        PreparedStatement p = sqlConnection.prepareStatement("UPDATE travelers SET Email = ? , Password = ? , FirstName = ? , " +
+                "LastName =? WHERE traveler_id =?");
+
+        p.setString(1, newTraveler.getEmailAddress());
+        p.setString(2, newTraveler.getPassword());
+        p.setString(3, newTraveler.getFirstName());
+        p.setString(4, newTraveler.getLastName());
+        p.setString(5, currentTravelerID);
+
+        p.execute();
+    }
+
+    public Traveler getTravelerFromDBByID(String id) throws SQLException, Traveler.IllegalValueException {
+        Traveler resTraveler = null;
+        String query = "SELECT * FROM tup.travelers WHERE traveler_id =\"" + id + "\"";
+        ResultSet resultSet = this.statement.executeQuery(query);
+        if (resultSet.next()) {
+            resTraveler = new Traveler(resultSet);
+        }
+        return resTraveler;
+    }
+
+    public ArrayList<TripPlan> getTripsFromDbByTravelerId(String travelerID) throws SQLException, Traveler.HasNoTripsException {
+        ArrayList<TripPlan> trips = new ArrayList<>();
+        PreparedStatement p = sqlConnection.prepareStatement("SELECT * FROM trips WHERE traveler_id = ?");
+        p.setString(1, travelerID);
+        ResultSet results = p.executeQuery();
+
+        //if(!results.next()) { throw new Traveler.HasNoTripsException("Traveler with id " + travelerID); }
+
+        while (results.next()) {
+            RouteTrip routeTrip = new RouteTrip();
+            routeTrip = routeTrip.createRouteTripFromJson(results);
+            fillRouteTrip(routeTrip);
+            TripPlan tripPlan = new TripPlan(results.getString("trip_name"),routeTrip.getPlanForDays(), routeTrip.getDestination().name(),results.getInt("trip_id"));
+            trips.add(tripPlan);
+        }
+        return trips;
+    }
+
+    private void fillRouteTrip(RouteTrip routeTrip) throws SQLException {
+        ArrayList<DayPlan> res = routeTrip.getPlanForDays();
+        for (DayPlan d : res) {
+            ArrayList<OnePlan> re = d.getDaySchedule();
+            for (OnePlan p1 : re) {
+                Attraction attraction = getAttractionFromDBByID(p1.getAttractionId(), routeTrip.getDestination());
+                if (attraction == null)
+                    attraction = getHotelFromDBByID(p1.getAttractionId(), routeTrip.getDestination());
+                p1.setAttraction(attraction);
+            }
+        }
+    }
+
+    public int insertTripToDB(String tripName, ArrayList<DayPlan> tripPlan, String currentTravelerID, String destination) throws SQLException, RouteTrip.AlreadyExistException, RouteTrip.NotFoundException {
+        Gson gson = new Gson();
+        RouteTrip routeTrip = createRouteTripToDB(tripPlan, destination);
+        CheckIfTripExists(routeTrip,currentTravelerID, gson);
+
+       // insert RoutTrip to DB
+        PreparedStatement p = sqlConnection.prepareStatement("INSERT INTO trips (traveler_id, trip, trip_name) VALUES (? ,?,? )");
+        p.setString(1, currentTravelerID);
+        p.setString(2, gson.toJson(routeTrip));
+        p.setString(3,tripName);
+        p.execute();
+
+        return updateTripID(routeTrip, currentTravelerID, gson);
+    }
+
+    private RouteTrip createRouteTripToDB(ArrayList<DayPlan> tripPlan, String destination){
+        RouteTrip routeTrip = new RouteTrip(tripPlan, destination);
+        ArrayList<DayPlan> res = routeTrip.getPlanForDays();
+        for (DayPlan d : res) {
+            ArrayList<OnePlan> re = d.getDaySchedule();
+            //d.setHotel(null);
+            d.setNullMustSeenAttractionsForDay();
+            for (OnePlan p : re) {
+                p.setAttractionId(p.getAttractionId());
+                p.setAttraction(null);
+            }
+        }
+        return routeTrip;
+    }
+
+    private int updateTripID(RouteTrip routeTrip, String currentTravelerID, Gson gson) throws SQLException, RouteTrip.NotFoundException {
+        PreparedStatement p = sqlConnection.prepareStatement("SELECT trip_id FROM trips WHERE (trip = CAST(? AS JSON) AND traveler_id = ?)");
+        p.setString(1, gson.toJson(routeTrip));
+        p.setString(2, currentTravelerID);
+        ResultSet results = p.executeQuery();
+        int tripID = 0;
+        if(results.next()) {
+            tripID = results.getInt("trip_id");
+            routeTrip.setTripId(tripID);
+        }
+        else
+         throw new RouteTrip.NotFoundException("cant find trip to update its tripID");
+
+//        p = sqlConnection.prepareStatement("UPDATE trips SET trip = ? WHERE trip_id = ?");
+//        p.setString(1,gson.toJson(routeTrip));
+//        p.setInt(2, tripID);
+//        p.execute();
+        return tripID;
+    }
+
+    private void CheckIfTripExists(RouteTrip routeTrip, String currentTravelerID, Gson gson) throws SQLException, RouteTrip.AlreadyExistException{
+        PreparedStatement p = sqlConnection.prepareStatement("SELECT * FROM trips WHERE (trip = CAST(? AS JSON) AND traveler_id = ?)");
+        p.setString(1, gson.toJson(routeTrip));
+        p.setString(2, currentTravelerID);
+            ResultSet results = p.executeQuery();
+            if (results.next()) {
+                throw new RouteTrip.AlreadyExistException("route trip with the same plans already exists by name" + results.getString("trip_name"));
+            }
+        }
+
+    public void deleteTripFromUserTripsInDB(String tripId, String currentTravelerID) throws SQLException {
+        PreparedStatement p = sqlConnection.prepareStatement("DELETE FROM trips WHERE traveler_id = ? AND trip_id = ?");
+        p.setString(1, currentTravelerID);
+        p.setString(2, tripId);
+        p.execute();
+    }
+
+    public void isTravelerExistInDB(String travelerID) throws SQLException, Traveler.NotFoundException {
+        String query = "SELECT * FROM travelers WHERE traveler_id=?";
+        PreparedStatement ps = this.sqlConnection.prepareStatement(query);
+        ps.setString(1, travelerID);
+        ResultSet results = ps.executeQuery();
+        if(!results.next()){
+            throw new Traveler.NotFoundException("Traveler id doesn't exist!");
+        }
+    }
     public void insertHotelsImagesToDB() throws SQLException, IOException, Attraction.NoHotelsOnDestination {
 
         String image = null;
@@ -340,147 +391,7 @@ public class DBManager {
         p.setString(2, attID);
         p.execute();
     }
-
-    public void updateTravelerDetailsOnDB(Traveler newTraveler, String currentTravelerID, Boolean isSameEmail) throws Traveler.AlreadyExistsException, SQLException {
-        if (!isSameEmail)
-            checkIfEmailIsFound(newTraveler.getEmailAddress());
-
-        PreparedStatement p = sqlConnection.prepareStatement("UPDATE travelers SET Email = ? , Password = ? , FirstName = ? , " +
-                "LastName =? WHERE traveler_id =?");
-
-        p.setString(1, newTraveler.getEmailAddress());
-        p.setString(2, newTraveler.getPassword());
-        p.setString(3, newTraveler.getFirstName());
-        p.setString(4, newTraveler.getLastName());
-        p.setString(5, currentTravelerID);
-
-
-        p.execute();
-
-    }
-
-    public Traveler getTravelerFromDBByID(String id) throws SQLException, Traveler.IllegalValueException {
-        Traveler resTraveler = null;
-        String query = "SELECT * FROM tup.travelers WHERE traveler_id =\"" + id + "\"";
-        ResultSet resultSet = this.statement.executeQuery(query);
-        if (resultSet.next()) {
-            resTraveler = new Traveler(resultSet);
-        }
-        return resTraveler;
-    }
-
-    public ArrayList<TripPlan> getTripsFromDbByTravelerId(String travelerID) throws SQLException, Traveler.HasNoTripsException {
-        ArrayList<TripPlan> trips = new ArrayList<>();
-        PreparedStatement p = sqlConnection.prepareStatement("SELECT * FROM trips WHERE traveler_id = ?");
-        p.setString(1, travelerID);
-        ResultSet results = p.executeQuery();
-
-        //if(!results.next()) { throw new Traveler.HasNoTripsException("Traveler with id " + travelerID); }
-
-        while (results.next()) {
-            RouteTrip routeTrip = new RouteTrip();
-            routeTrip = routeTrip.createRouteTripFromJson(results);
-            fillRouteTrip(routeTrip);
-            TripPlan tripPlan = new TripPlan(results.getString("trip_name"),routeTrip.getPlanForDays(), routeTrip.getDestination().name(),results.getInt("trip_id"));
-            trips.add(tripPlan);
-        }
-        return trips;
-    }
-
-    private void fillRouteTrip(RouteTrip routeTrip) throws SQLException {
-        ArrayList<DayPlan> res = routeTrip.getPlanForDays();
-        for (DayPlan d : res) {
-            ArrayList<OnePlan> re = d.getDaySchedule();
-            for (OnePlan p1 : re) {
-                Attraction attraction = getAttractionFromDBByID(p1.getAttractionId(), routeTrip.getDestination());
-                if (attraction == null)
-                    attraction = getHotelFromDBByID(p1.getAttractionId(), routeTrip.getDestination());
-                p1.setAttraction(attraction);
-            }
-        }
-    }
-
-    public int insertTripToDB(String tripName, ArrayList<DayPlan> tripPlan, String currentTravelerID, String destination) throws SQLException, RouteTrip.AlreadyExistException, RouteTrip.NotFoundException {
-        Gson gson = new Gson();
-        RouteTrip routeTrip = createRouteTripToDB(tripPlan, destination);
-        CheckIfTripExists(routeTrip,currentTravelerID, gson);
-
-       // insert RoutTrip to DB
-        PreparedStatement p = sqlConnection.prepareStatement("INSERT INTO trips (traveler_id, trip, trip_name) VALUES (? ,?,? )");
-        p.setString(1, currentTravelerID);
-        p.setString(2, gson.toJson(routeTrip));
-        p.setString(3,tripName);
-        p.execute();
-
-        return updateTripID(routeTrip, currentTravelerID, gson);
-    }
-
-
-    private RouteTrip createRouteTripToDB(ArrayList<DayPlan> tripPlan, String destination){
-        RouteTrip routeTrip = new RouteTrip(tripPlan, destination);
-        ArrayList<DayPlan> res = routeTrip.getPlanForDays();
-        for (DayPlan d : res) {
-            ArrayList<OnePlan> re = d.getDaySchedule();
-            //d.setHotel(null);
-            d.setNullMustSeenAttractionsForDay();
-            for (OnePlan p : re) {
-                p.setAttractionId(p.getAttractionId());
-                p.setAttraction(null);
-            }
-        }
-        return routeTrip;
-    }
-
-    private int updateTripID(RouteTrip routeTrip, String currentTravelerID, Gson gson) throws SQLException, RouteTrip.NotFoundException {
-        PreparedStatement p = sqlConnection.prepareStatement("SELECT trip_id FROM trips WHERE (trip = CAST(? AS JSON) AND traveler_id = ?)");
-        p.setString(1, gson.toJson(routeTrip));
-        p.setString(2, currentTravelerID);
-        ResultSet results = p.executeQuery();
-        int tripID = 0;
-        if(results.next()) {
-            tripID = results.getInt("trip_id");
-            routeTrip.setTripId(tripID);
-        }
-        else
-         throw new RouteTrip.NotFoundException("cant find trip to update its tripID");
-
-//        p = sqlConnection.prepareStatement("UPDATE trips SET trip = ? WHERE trip_id = ?");
-//        p.setString(1,gson.toJson(routeTrip));
-//        p.setInt(2, tripID);
-//        p.execute();
-        return tripID;
-    }
-
-    private void CheckIfTripExists(RouteTrip routeTrip, String currentTravelerID, Gson gson) throws SQLException, RouteTrip.AlreadyExistException{
-        PreparedStatement p = sqlConnection.prepareStatement("SELECT * FROM trips WHERE (trip = CAST(? AS JSON) AND traveler_id = ?)");
-        p.setString(1, gson.toJson(routeTrip));
-        p.setString(2, currentTravelerID);
-            ResultSet results = p.executeQuery();
-            if (results.next()) {
-                throw new RouteTrip.AlreadyExistException("route trip with the same plans already exists by name" + results.getString("trip_name"));
-            }
-        }
-
-    public void deleteTripFromUserTripsInDB(String tripId, String currentTravelerID) throws SQLException {
-        PreparedStatement p = sqlConnection.prepareStatement("DELETE FROM trips WHERE traveler_id = ? AND trip_id = ?");
-        p.setString(1, currentTravelerID);
-        p.setString(2, tripId);
-        p.execute();
-    }
-
-
-
-
-    /*
-    public void insetAttractionToDBByID(String id, Destinations destination) throws IOException, SQLException, ParseException {
-        JsonAttraction attraction = apiManager.getAttractionByID(id);
-        Attraction finalAttraction = new Attraction(attraction);
-        this.insertAttractionToDB( finalAttraction, destination);
-    }
-
-        public void insertAttractionToDataBase(JsonAttraction attraction, Destinations destination) throws SQLException, ParseException {
-
-        JsonAttraction.JsonResult result = attraction.getResult();
+    public void insertAttractionToDB(Attraction attraction, Destinations destination) throws SQLException {
         ArrayList<StringBuilder> dayStrArr = new ArrayList<>();
         for (int i = 0; i < 7; ++i) {
             dayStrArr.add(i, new StringBuilder());
@@ -489,48 +400,35 @@ public class DBManager {
                 "INSERT INTO " + destination.name() + " (attractionAPI_ID, Name, Address, PhoneNumber,Website, Geometry, types," +
                         "Sunday, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday)" +
                         "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
-        ps.setString(1, attraction.getResult().getPlace_id());//ID
-        ps.setString(2, attraction.getResult().getName());//NAME
-        ps.setString(3, attraction.getResult().getFormatted_address());//ADDRESS
-        if (result.getFormatted_phone_number() != null) {
-            ps.setString(4, attraction.getResult().getFormatted_phone_number());//PHONENUMBER
-        } else {
-            ps.setString(4, "N\\A");//PHONENUMBER
-        }
-        if (result.getWebsite() != null) {
-            ps.setString(5, attraction.getResult().getWebsite());//Website
-        } else {
-            ps.setString(5, "N\\A");//Website
-
-        }
-        ps.setString(6, attraction.getResult().getGeometryAPI().toString());//Geometry
-
-        StringBuilder typesIndexesString = new StringBuilder();
-        ps.setString(7, attraction.getResult().AttractionTypesToStr());
-        if (result.getOpening_hours() != null) {
-            for (OpeningHours.DayOpeningHoursJson currentOpening : attraction.getResult().getOpening_hours().getPeriods()) {
-                int day = currentOpening.getOpen().getDay();//0=Sunday....6=Saturday
-                //if the current day is not empty
-                if (!dayStrArr.get(day).toString().equals("")) {
-                    dayStrArr.get(day).append(",");
+        ps.setString(1, attraction.getPlaceID());
+        ps.setString(2, attraction.getName());
+        ps.setString(3, attraction.getAddress());//ADDRESS
+        ps.setString(4, this.checkParameter(attraction.getPhoneNumber()));//PHONENUMBER
+        ps.setString(5, this.checkParameter(attraction.getWebsite()));//Website
+        ps.setString(6, attraction.getGeometry().toString());//Geometry
+        ps.setString(7, this.getTypesStr(attraction.getTypes()));
+        int index = 8;
+        for (DayOpeningHours day : attraction.getOpeningHoursArr()) {
+            if (day.isAllDayLongOpened()) {
+                ps.setString(index, "All Day Long");
+            } else {
+                if (!day.isOpen()) {
+                    ps.setString(index, "Closed");
+                } else {
+                    int arraySize = day.getOpeningHours().size();
+                    String dayOpeningHours = "";
+                    for (int j = 0; j < arraySize - 1; ++j) {
+                        String currentOpeningHour = day.getOpeningHours().get(j) + "-" + day.getClosingHours().get(j);
+                        dayOpeningHours += currentOpeningHour + ", ";
+                    }
+                    String currentOpeningHour = day.getOpeningHours().get(arraySize - 1) + "-" + day.getClosingHours().get(arraySize - 1);
+                    dayOpeningHours += currentOpeningHour;
+                    ps.setString(index, dayOpeningHours);
                 }
-                dayStrArr.get(day).append(currentOpening.toString());
             }
-            for (int i = 0; i < 7; ++i) {
-                if (dayStrArr.get(i).toString().equals("")) {
-                    dayStrArr.get(i).append("Closed");
-                }
-                ps.setString(i + 8, dayStrArr.get(i).toString());
-            }
-        } else {
-            for (int i = 0; i < 7; ++i) {
-                dayStrArr.get(i).append("All Day Long");
-                ps.setString(i + 8, dayStrArr.get(i).toString());
-            }
-            ps.executeUpdate();
+            index++;
         }
+        ps.executeUpdate();
     }
-
-     */
 
 }
