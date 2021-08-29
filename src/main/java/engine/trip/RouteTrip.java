@@ -114,11 +114,6 @@ public class RouteTrip {
     public void planRouteTrip(ArrayList<Attraction> attractionsAvailable){
         divideMustSeenAttractionsForEachDay();
 
-        for(DayPlan dayPlan: this.planForDays) {
-            System.out.println(dayPlan.getDate());
-            for(Attraction a : dayPlan.getMustSeenAttractionsForDay())
-                System.out.println(a.getName());
-        }
         ArrayList<Attraction> mustSeenAttractionsLocal = new ArrayList<Attraction>();
         for(DayPlan dayPlan: this.planForDays){
             dayPlan.updateMustSeenAttractions(mustSeenAttractionsLocal);

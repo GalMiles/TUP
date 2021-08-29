@@ -202,7 +202,7 @@ public class Attraction {
         return OpeningHoursArr;
     }
     public DayOpeningHours getOpeningHoursByDay(DayOfWeek day){
-        return OpeningHoursArr.get(day.getValue());
+        return OpeningHoursArr.get(day.getValue() % 7);
     }
     public String getImageUrl() {
         return imageUrl;

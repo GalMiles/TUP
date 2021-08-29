@@ -46,8 +46,6 @@ public class DayOpeningHours {
         this.day = DayOfWeek.of(day);
     }
 
-
-
     public boolean isAllDayLongOpened() {
         return isAllDayLongOpened;
     }
@@ -83,7 +81,6 @@ public class DayOpeningHours {
 
     public DayOpeningHours(int day) {
         //set the day(0=Sunday....6= Saturday]
-
         this.day = DayOfWeek.of(day);
         this.isOpen = false;
     }
@@ -101,8 +98,6 @@ public class DayOpeningHours {
     public void setOpen(boolean open) {
         isOpen = open;
     }
-
-
 
     @Override
     public String toString() {

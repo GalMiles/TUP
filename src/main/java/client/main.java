@@ -39,6 +39,9 @@ public class main {
 
     public static void main(String[] args) throws IOException, SQLException, ParseException, RouteTrip.AlreadyExistException, Traveler.HasNoTripsException, RouteTrip.NotFoundException {
 
+        System.out.println(2 % 7);
+
+
         Gson gson = new Gson();
         DBManager db = new DBManager();
         Engine engine = new Engine();

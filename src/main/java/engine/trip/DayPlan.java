@@ -154,6 +154,9 @@ public class DayPlan {
                 currentTime = currentTime.plusHours(nextAttraction.getDuration());
 
                 durationDay += nextAttraction.getDuration();
+
+                if (attractionsAvailable.isEmpty())
+                    break;
             }
             else
                 break;
