@@ -71,7 +71,7 @@ public class DBManager {
     }
 
 
-    public Traveler Login(String Email, String Password) throws SQLException, Traveler.NotFoundException {
+    public Traveler Login(String Email, String Password) throws SQLException, Traveler.NotFoundException, Traveler.IllegalValueException {
         Traveler traveler = null;
         String query = "SELECT * FROM travelers WHERE Email=? and Password=?";
         PreparedStatement ps = this.sqlConnection.prepareStatement(query);
@@ -381,7 +381,7 @@ public class DBManager {
             RouteTrip routeTrip = new RouteTrip();
             routeTrip = routeTrip.createRouteTripFromJson(results);
             fillRouteTrip(routeTrip);
-            TripPlan tripPlan = new TripPlan(results.getString("trip_name"),routeTrip.getPlanForDays(), routeTrip.getDestination().name());
+            TripPlan tripPlan = new TripPlan(results.getString("trip_name"),routeTrip.getPlanForDays(), routeTrip.getDestination().name(),results.getInt("trip_id"));
             trips.add(tripPlan);
         }
         return trips;
@@ -421,9 +421,10 @@ public class DBManager {
         ArrayList<DayPlan> res = routeTrip.getPlanForDays();
         for (DayPlan d : res) {
             ArrayList<OnePlan> re = d.getDaySchedule();
-            d.setHotel(null);
+            //d.setHotel(null);
             d.setNullMustSeenAttractionsForDay();
             for (OnePlan p : re) {
+                p.setAttractionId(p.getAttractionId());
                 p.setAttraction(null);
             }
         }

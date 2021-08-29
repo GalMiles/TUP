@@ -17,7 +17,15 @@ public class OnePlan {
         setStartTime(startTime);
         setFinishTime(startTime.plusHours(attraction.getDuration()));
         setFavoriteAttraction(isFavoriteAttraction);
-        attractionId = attraction.getPlaceID();
+        setAttractionId(attraction.getPlaceID());
+    }
+
+    public Boolean getFavoriteAttraction() {
+        return isFavoriteAttraction;
+    }
+
+    public void setAttractionId(String attractionId) {
+        this.attractionId = attractionId;
     }
 
     public String getAttractionId() {

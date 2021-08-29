@@ -164,7 +164,7 @@ public class Main {
          */
 
 
-        Attraction hotel = db.getHotelFromDBByName("Central Park Hotel london", Destinations.london_hotels);
+        //Attraction hotel = db.getHotelFromDBByName("Central Park Hotel london", Destinations.london_hotels);
 
 
 

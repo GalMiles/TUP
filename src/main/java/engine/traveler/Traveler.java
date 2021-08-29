@@ -11,11 +11,12 @@ public class Traveler {
     private String password;
     private int travelerId;
 
-    public Traveler(String firstName, String lastName, String emailAddress, String password) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.emailAddress = emailAddress;
-        this.password = password;
+    public Traveler(String firstName, String lastName, String emailAddress, String password) throws IllegalValueException {
+        setFirstName(firstName);
+        setLastName(lastName);
+        setEmailAddress(emailAddress);
+        setPassword(password);
+
     }
 
     public Traveler(Traveler other) throws IllegalValueException {
@@ -100,6 +101,10 @@ public class Traveler {
         public InvalidUsernameOrPasswordException(String message) {super(message);}
     }
 
+    public static class HasNoTripsException extends Exception {
+        public HasNoTripsException(String message) { super(message); }
+    }
+
     @Override
     public String toString() {
         return "Traveler{" +
@@ -108,9 +113,5 @@ public class Traveler {
                 ", emailAddress='" + emailAddress + '\'' +
                 ", password='" + password + '\'' +
                 '}';
-    }
-
-    public static class HasNoTripsException extends Exception {
-        public HasNoTripsException(String message) { super(message); }
     }
 }

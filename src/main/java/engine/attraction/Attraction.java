@@ -31,19 +31,17 @@ public class Attraction {
 
     public Attraction(String name, String address, String phoneNumber, String website, Geometry geometry, String placeID,
                       ArrayList<AttractionType> types, ArrayList<DayOpeningHours> openingHoursArr) {
-        this.setName(name);
-        this.setAddress(address);
-        this.setPhoneNumber(phoneNumber);
-        this.setWebsite(website);
-        this.setPlaceID(placeID);
-        this.setTypes(types);
-        this.setDuration(types);
-
-        this.setGeometry(geometry);
-        this.setOpeningHoursArr(openingHoursArr);
+        setName(name);
+        setAddress(address);
+        setPhoneNumber(phoneNumber);
+        setWebsite(website);
+        setPlaceID(placeID);
+        setTypes(types);
+        setDuration(types);
+        setGeometry(geometry);
+        setOpeningHoursArr(openingHoursArr);
     }
 
-    ///// need to ADD duration field
     public Attraction(ResultSet resultSet) throws SQLException {
         this.website = resultSet.getString("Website");
         this.placeID = resultSet.getString("attractionAPI_ID");  //ID
@@ -96,26 +94,21 @@ public class Attraction {
             this.description = resultSet.getString("Description");
             this.imageUrl = resultSet.getString("Image");
         }
-
     }
-
-
-
-
 
     public Attraction(Attraction other)
     {
-        this.setName(other.name);
-        this.setAddress(other.address);
-        this.setPhoneNumber(other.phoneNumber);
-        this.setWebsite(other.website);
-        this.setPlaceID(other.placeID);
-        this.setDuration(other.getTypes());
-        this.setImageUrl(other.imageUrl);
-        this.setDescription(other.description);
-        this.setGeometry(other.geometry);
-        this.setTypes(other.types);
-        this.setOpeningHoursArr(other.OpeningHoursArr);
+        setName(other.name);
+        setAddress(other.address);
+        setPhoneNumber(other.phoneNumber);
+        setWebsite(other.website);
+        setPlaceID(other.placeID);
+        setDuration(other.getTypes());
+        setImageUrl(other.imageUrl);
+        setDescription(other.description);
+        setGeometry(other.geometry);
+        setTypes(other.types);
+        setOpeningHoursArr(other.OpeningHoursArr);
     }
 
 
@@ -202,6 +195,22 @@ public class Attraction {
     }
     public String getWebsite() {return website;}
     public int getDuration() {return duration;}
+    public ArrayList<AttractionType> getTypes() {
+        return types;
+    }
+    public ArrayList<DayOpeningHours> getOpeningHoursArr() {
+        return OpeningHoursArr;
+    }
+    public DayOpeningHours getOpeningHoursByDay(DayOfWeek day){
+        return OpeningHoursArr.get(day.getValue());
+    }
+    public String getImageUrl() {
+        return imageUrl;
+    }
+    public String getDescription() {
+        return description;
+    }
+
     public void setDuration(int duration) {
         this.duration = duration;
     }
@@ -213,11 +222,9 @@ public class Attraction {
     public void setPlaceID(String placeID) {this.placeID = placeID;}
     public void setTypes(ArrayList<AttractionType> types) {this.types = types;}
     public void setOpeningHoursArr(ArrayList<DayOpeningHours> openingHoursArr) {OpeningHoursArr = openingHoursArr;}
-
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
     }
-
     public void setDescription(String description) {
         this.description = description;
     }
@@ -249,26 +256,6 @@ public class Attraction {
             duration = 3;
     }
 
-    public ArrayList<AttractionType> getTypes() {
-        return types;
-    }
-
-    public ArrayList<DayOpeningHours> getOpeningHoursArr() {
-        return OpeningHoursArr;
-    }
-
-    public DayOpeningHours getOpeningHoursByDay(DayOfWeek day){
-        return OpeningHoursArr.get(day.getValue());
-    }
-
-    public String getImageUrl() {
-        return imageUrl;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
     @Override
     public String toString() {
         return "Attraction{" +
@@ -284,11 +271,7 @@ public class Attraction {
                 '}';
     }
 
-    public static class NotFoundException extends Exception {
-        public NotFoundException(String message) {
-            super(message);
-        }
-    }
+
 
     @Override
     public boolean equals(Object o) {
@@ -303,15 +286,14 @@ public class Attraction {
         return Objects.hash(placeID);
     }
 
-    public String attractionToJson() {
-        Gson gson = new Gson();
-        String jSonString = gson.toJson(this);
-        return  jSonString;
+    public static class NotFoundException extends Exception {
+        public NotFoundException(String message) {
+            super(message);
+        }
     }
 
     public static class NoHotelsOnDestination extends Exception {
         public NoHotelsOnDestination(String message) { super(message); }
-
     }
 }
 

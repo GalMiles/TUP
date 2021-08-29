@@ -96,7 +96,7 @@ public class main {
 
 
         routeTrip.planRouteTrip(attractionsAvailable);
-        System.out.println(routeTrip.getPlanForDays());
+        System.out.println(gson.toJson(routeTrip.getPlanForDays()));
 
 //
 //        ArrayList<Attraction> mustSeenAttractions1 = engine.createArrayListOfMustSeenAttractions(trip.mustSeenAttractionsID, db, trip.destination);

@@ -26,7 +26,7 @@ public class Engine {
     }
 
     //here we need to implements all the action we wand the app will have
-    public Traveler login(String emailAddress, String password) throws Traveler.NotFoundException, SQLException {
+    public Traveler login(String emailAddress, String password) throws Traveler.NotFoundException, SQLException, Traveler.IllegalValueException {
         DBManager db = new DBManager();
         return db.Login(emailAddress,password);
     }

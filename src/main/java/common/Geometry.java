@@ -5,8 +5,8 @@ public class Geometry {
     private String lng;
 
     public Geometry(String lat, String lng) {
-        this.lat = lat;
-        this.lng = lng;
+        setLat(lat);
+        setLng(lng);
     }
 
     public String getLat() {return lat;}

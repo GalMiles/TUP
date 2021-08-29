@@ -18,7 +18,7 @@ import java.sql.SQLException;
 public class LoginServlet extends HttpServlet {
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         ServletUtils servletUtils = new ServletUtils(req);
         User newUser = (User)servletUtils.gsonFromJson(User.class);
 
@@ -26,9 +26,8 @@ public class LoginServlet extends HttpServlet {
             Engine engine = ContextServletUtils.getEngine(req);
             Traveler user = engine.login(newUser.emailAddress,newUser.password);
             resp.setHeader("travelerID", String.valueOf(user.getTravelerId()));
-
             servletUtils.writeJsonResponse(user);
-        }catch (SQLException | Traveler.NotFoundException e){
+        }catch (SQLException | Traveler.NotFoundException | Traveler.IllegalValueException e){
             servletUtils.writeJsonResponse("error", e.getMessage());
         }
 
@@ -38,7 +37,7 @@ public class LoginServlet extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         doGet(req, resp);
     }
 

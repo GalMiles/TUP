@@ -1,9 +1,7 @@
 package common;
 
-import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Scanner;
 
 public class converter {
 
@@ -19,11 +17,6 @@ public class converter {
             time = newTime;
         }
         return(LocalTime.parse(time, formatter));
-    }
-
-    public static LocalDate convertStringToLocalDate(String date){
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/M/yyyy");
-        return(LocalDate.parse(date, formatter));
     }
 
 }
