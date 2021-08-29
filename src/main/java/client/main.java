@@ -8,6 +8,7 @@ import engine.Engine;
 import engine.attraction.Attraction;
 import engine.traveler.Traveler;
 import engine.trip.DayPlan;
+import engine.trip.OnePlan;
 import engine.trip.RouteTrip;
 
 import java.io.IOException;
@@ -16,30 +17,16 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 
 
 public class main {
 
-    public static class TripDetails {
-        String destination;
-        String hotelID;
-        ArrayList<String> mustSeenAttractionsID;
-        ArrayList<DesiredHoursInDay> hoursEveryDay;
 
-        @Override
-        public String toString() {
-            return "TripDetails{" +
-                    "destination='" + destination + '\'' +
-                    ", hotelID='" + hotelID + '\'' +
-                    ", mustSeenAttractionsID=" + mustSeenAttractionsID +
-                    ", hoursEveryDay=" + hoursEveryDay +
-                    '}';
-        }
-    }
 
     public static void main(String[] args) throws IOException, SQLException, ParseException, RouteTrip.AlreadyExistException, Traveler.HasNoTripsException, RouteTrip.NotFoundException {
 
-        System.out.println(2 % 7);
 
 
         Gson gson = new Gson();
@@ -50,56 +37,96 @@ public class main {
         trip.destination = "london";
         trip.hotelID = "ChIJ1TVZs1UFdkgRIeWxo-jEYaE";
         trip.mustSeenAttractionsID = new ArrayList<>();
-        trip.mustSeenAttractionsID.add("ChIJ_R7u-6QcdkgR_TvWQJZsm3k");
-        trip.mustSeenAttractionsID.add("ChIJ2_19mdYEdkgRadLE5rfxLPU");
-        trip.mustSeenAttractionsID.add("ChIJ7bDgv2IadkgRkIbzf3FdF5M");
+        trip.mustSeenAttractionsID.add("ChIJ2dGMjMMEdkgRqVqkuXQkj7c");
+        trip.mustSeenAttractionsID.add("ChIJ__8_XtYEdkgRtTLtWfASNFg");
+        trip.mustSeenAttractionsID.add("ChIJc2nSALkEdkgRkuoJJBfzkUI");
         trip.mustSeenAttractionsID.add("ChIJG1YB2m4RdkgRsetv9D40NGY");
         trip.mustSeenAttractionsID.add("ChIJVbSVrt0EdkgRQH_FO4ZkHc0");
+//        trip.mustSeenAttractionsID.add("ChIJh7MHVRyo2EcR39q58wztHZg");
+//        trip.mustSeenAttractionsID.add("ChIJH7Vh1YYFdkgR6E9kkPZbg5M");
+//        trip.mustSeenAttractionsID.add("ChIJh7wHoqwEdkgR3l-vqQE1HTo");
+//        trip.mustSeenAttractionsID.add("ChIJIRauBakEdkgRjoeyuI53AOc");
+//        trip.mustSeenAttractionsID.add("ChIJJX-rQLYcdkgRjiQDyLmOB-E");
+//        trip.mustSeenAttractionsID.add("ChIJKZQaXxwbdkgRWLo89tC-_V8");
+
         ArrayList<Attraction> mustSeenAttractions = engine.createArrayListOfMustSeenAttractions(trip.mustSeenAttractionsID,db,"london" );
 
-        ArrayList<AttractionType> typesHotel = new ArrayList<>();
-        typesHotel.add(AttractionType.lodging);
-        Attraction hotel = new Attraction("Baglioni Hotel - London", "60 Hyde Park Gate, South Kensington, London SW7 5BB, UK",
-                "020 7368 5700", null, new Geometry("51.50167580000001", "-0.1847417"), "ChIJFSZeB1kFdkgRTixgFHqP13g",
-                typesHotel, null);
+//        ArrayList<AttractionType> typesHotel = new ArrayList<>();
+//        typesHotel.add(AttractionType.lodging);
+//        Attraction hotel = new Attraction("Baglioni Hotel - London", "60 Hyde Park Gate, South Kensington, London SW7 5BB, UK",
+//                "020 7368 5700", null, new Geometry("51.50167580000001", "-0.1847417"), "ChIJFSZeB1kFdkgRTixgFHqP13g",
+//                typesHotel, null);
 
 
         ArrayList<DesiredHoursInDay> desiredHoursInDays = new ArrayList<>();
         DesiredHoursInDay d1 = new DesiredHoursInDay();
-        d1.setDate("2021-09-01");
-        d1.setStartTime("10:00");
-        d1.setEndTime("20:00");
+        d1.setDate("2021-08-30");
+        d1.setStartTime("09:00");
+        d1.setEndTime("21:00");
         desiredHoursInDays.add(d1);
 
         DesiredHoursInDay d2 = new DesiredHoursInDay();
-        d2.setDate("2021-09-02");
+        d2.setDate("2021-08-31");
         d2.setStartTime("10:00");
         d2.setEndTime("20:00");
         desiredHoursInDays.add(d2);
 
-        DesiredHoursInDay d3 = new DesiredHoursInDay();
-        d3.setDate("2021-09-03");
-        d3.setStartTime("10:00");
-        d3.setEndTime("20:00");
-        desiredHoursInDays.add(d3);
+//        DesiredHoursInDay d3 = new DesiredHoursInDay();
+//        d3.setDate("2021-09-01");
+//        d3.setStartTime("10:00");
+//        d3.setEndTime("20:00");
+//        desiredHoursInDays.add(d3);
+//
+//        DesiredHoursInDay d4 = new DesiredHoursInDay();
+//        d4.setDate("2021-09-02");
+//        d4.setStartTime("10:00");
+//        d4.setEndTime("20:00");
+//        desiredHoursInDays.add(d4);
 
 
-        ArrayList<Attraction> allPossibleAttractions = db.getAllAttractionsByDestination("london");
-        ArrayList<Attraction> attractionsAvailable = new ArrayList<Attraction>();
-        for (Attraction attraction : allPossibleAttractions){
-            if(!mustSeenAttractions.contains(attraction))
-                attractionsAvailable.add(attraction);
+//        ArrayList<Attraction> allPossibleAttractions = db.getAllAttractionsByDestination("london");
+//        ArrayList<Attraction> attractionsAvailable = new ArrayList<Attraction>();
+//        for (Attraction attraction : allPossibleAttractions){
+//            if(!mustSeenAttractions.contains(attraction))
+//                attractionsAvailable.add(attraction);
+//        }
+
+//        attractionsAvailable.forEach(attraction -> System.out.println(attraction.getName()));
+//        Collections.shuffle(attractionsAvailable);
+//        System.out.println("--------------------------------------------");
+//        attractionsAvailable.forEach(attraction -> System.out.println(attraction.getName()));
+//        System.out.println("--------------------------------------------");
+//        Collections.shuffle(attractionsAvailable);
+//        attractionsAvailable.forEach(attraction -> System.out.println(attraction.getName()));
+//
+
+        trip.hoursEveryDay = desiredHoursInDays;
+       // RouteTrip routeTrip = new RouteTrip("london",hotel,mustSeenAttractions, desiredHoursInDays);
+
+        ArrayList<DayPlan> trip1 = engine.createTripForUser(trip.destination,trip.hotelID,trip.mustSeenAttractionsID,trip.hoursEveryDay);
+
+
+        System.out.println(trip1);
+
+        for(String attraction :trip.mustSeenAttractionsID){
+            System.out.println(db.getAttractionFromDBByID(attraction,Destinations.valueOf("london")).getName());
         }
 
 
-        RouteTrip routeTrip = new RouteTrip("london",hotel,mustSeenAttractions, desiredHoursInDays);
+ //       Attraction hotel = db.getHotelFromDBByID(trip.hotelID, Destinations.valueOf("london"));
 
+//        for(String att: trip.mustSeenAttractionsID) {
+//            Attraction a = db.getAttractionFromDBByID(att,Destinations.valueOf("london"));
+//            System.out.println("hotel -> "+ a.getName() + hotel.calcDistanceBetweenAttractions(a));
+//        }
+//        ArrayList<OnePlan> d =  trip1.get(1).getDaySchedule();
+//        for(OnePlan op : d){
+//            System.out.println("hotel -> "+ op.getAttraction().getName() + "  "+ hotel.calcDistanceBetweenAttractions(op.getAttraction()));
+//
+//        }
 
-
-
-
-        routeTrip.planRouteTrip(attractionsAvailable);
-        System.out.println(gson.toJson(routeTrip.getPlanForDays()));
+//        routeTrip.planRouteTrip(attractionsAvailable);
+//        System.out.println(gson.toJson(routeTrip.getPlanForDays()));
 
 //
 //        ArrayList<Attraction> mustSeenAttractions1 = engine.createArrayListOfMustSeenAttractions(trip.mustSeenAttractionsID, db, trip.destination);
@@ -167,6 +194,23 @@ public class main {
 
 
 
+    }
+
+    public static class TripDetails {
+        String destination;
+        String hotelID;
+        ArrayList<String> mustSeenAttractionsID;
+        ArrayList<DesiredHoursInDay> hoursEveryDay;
+
+        @Override
+        public String toString() {
+            return "TripDetails{" +
+                    "destination='" + destination + '\'' +
+                    ", hotelID='" + hotelID + '\'' +
+                    ", mustSeenAttractionsID=" + mustSeenAttractionsID +
+                    ", hoursEveryDay=" + hoursEveryDay +
+                    '}';
+        }
     }
 
 

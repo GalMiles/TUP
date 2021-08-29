@@ -5,20 +5,15 @@ import java.util.ArrayList;
 public class OpeningHours {
     Boolean open_now;
     ArrayList<DayOpeningHoursJson> periods = new ArrayList();
-
     ArrayList<String> weekday_text = new ArrayList();
 
     public ArrayList<String> getWeekday_text(){ return weekday_text;}
-
-
     public Boolean getOpen_now() {
         return open_now;
     }
-
     public ArrayList<DayOpeningHoursJson> getPeriods() {
         return periods;
     }
-
 
 
     @Override

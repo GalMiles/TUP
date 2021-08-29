@@ -99,8 +99,8 @@ public class DayPlan {
                 this.mustSeenAttractionsForDay.add(new Attraction(closestAttraction));
                 durationDay += closestAttraction.getDuration();
             }
-        }
-         mustSeenAttractions.removeIf(a -> this.mustSeenAttractionsForDay.contains(a));
+       }
+        mustSeenAttractions.removeIf(a -> this.mustSeenAttractionsForDay.contains(a));
 
     }
 
@@ -115,7 +115,7 @@ public class DayPlan {
              CellDetails cellDetails = new CellDetails();
              cellDetails.attraction = att;
              cellDetails.distance = att.calcDistanceBetweenAttractions(sourceAttraction);
-             if(this.mustSeenAttractionsForDay.contains(cellDetails.attraction) ||
+             if(this.mustSeenAttractionsForDay.contains(cellDetails.attraction)  ||
                      att.getDuration() > durationDesireByUser - durationDay)
                  cellDetails.isOptional = false;
              dist.add(cellDetails);

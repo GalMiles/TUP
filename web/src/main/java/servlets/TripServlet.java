@@ -99,14 +99,12 @@ public class TripServlet extends HttpServlet {
         }
     }
 
-
         static class TripDetails {
             String destination;
             String hotelID;
             ArrayList<String> mustSeenAttractionsID = new ArrayList<>();
             ArrayList<DesiredHoursInDay> hoursEveryDay = new ArrayList<>();
         }
-
 
         static class TripsToDelete{
             ArrayList<String> tripsIdToDeleteList;
