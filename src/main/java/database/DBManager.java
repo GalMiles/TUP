@@ -217,7 +217,7 @@ public class DBManager {
         p.setString(1, travelerID);
         ResultSet results = p.executeQuery();
 
-        //if(!results.next()) { throw new Traveler.HasNoTripsException("Traveler with id " + travelerID); }
+        if(!results.next()) { throw new Traveler.HasNoTripsException("Traveler with id " + travelerID + "has no trips yet!"); }
 
         while (results.next()) {
             RouteTrip routeTrip = new RouteTrip();
@@ -315,7 +315,7 @@ public class DBManager {
         ps.setString(1, travelerID);
         ResultSet results = ps.executeQuery();
         if(!results.next()){
-            throw new Traveler.NotFoundException("Traveler id doesn't exist!");
+            throw new Traveler.NotFoundException("Traveler id doesn't exist in DB!");
         }
     }
     public void insertHotelsImagesToDB() throws SQLException, IOException, Attraction.NoHotelsOnDestination {
@@ -334,36 +334,41 @@ public class DBManager {
 
     }
 
-    public void insertAttractionsImagesToDB() throws SQLException, IOException {
-
-        String image = null;
-        wikiAPIManager wiki = new wikiAPIManager();
+    public void insertAllAttractionsImagesToDB() throws SQLException,IOException {
         ArrayList<Attraction> attractions = this.getAllAttractionsByDestination("london");
         for (Attraction att : attractions) {
-            image = wiki.getAttractionImageFromWiki(att.getName());
-
-            PreparedStatement p = sqlConnection.prepareStatement("UPDATE london SET Image = ? WHERE attractionAPI_ID = ?");
-            p.setString(1, image);
-            p.setString(2, att.getPlaceID());
-            p.execute();
+            insertOneAttractionsImagesToDB(att);
         }
-
     }
 
-    public void insertAttractionsDescriptionToDB() throws SQLException, IOException {
+    public void insertOneAttractionsImagesToDB(Attraction attraction) throws SQLException, IOException {
+        String image = null;
+        wikiAPIManager wiki = new wikiAPIManager();
+        image = wiki.getAttractionImageFromWiki(attraction.getName());
+
+        PreparedStatement p = sqlConnection.prepareStatement("UPDATE london SET Image = ? WHERE attractionAPI_ID = ?");
+        p.setString(1, image);
+        p.setString(2, attraction.getPlaceID());
+        p.execute();
+    }
+
+    public void insertAllAttractionsDescriptionToDB() throws SQLException, IOException {
+        ArrayList<Attraction> attractions = this.getAllAttractionsByDestination("london");
+        for (Attraction att : attractions) {
+            insertOneAttractionDescriptionToDB(att);
+
+        }
+    }
+    public void insertOneAttractionDescriptionToDB(Attraction attraction) throws SQLException, IOException {
 
         String description = null;
         wikiAPIManager wiki = new wikiAPIManager();
-        ArrayList<Attraction> attractions = this.getAllAttractionsByDestination("london");
-        for (Attraction att : attractions) {
-            description = wiki.getAttractionDescriptionFromWiki(att.getName());
+        description = wiki.getAttractionDescriptionFromWiki(attraction.getName());
 
-            PreparedStatement p = sqlConnection.prepareStatement("UPDATE london SET Description = ? WHERE attractionAPI_ID = ?");
-            p.setString(1, description);
-            p.setString(2, att.getPlaceID());
-            p.execute();
-        }
-
+        PreparedStatement p = sqlConnection.prepareStatement("UPDATE london SET Description = ? WHERE attractionAPI_ID = ?");
+        p.setString(1, description);
+        p.setString(2, attraction.getPlaceID());
+        p.execute();
     }
 
     public void insertToDB() throws SQLException, IOException, ParseException {

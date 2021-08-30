@@ -73,7 +73,8 @@ public class Engine {
     }
 
     public ArrayList<DayPlan> createTripForUser(String destination, String stringHotelID,
-             ArrayList<String> mustSeenAttractionsID, ArrayList<DesiredHoursInDay> desiredHoursInDays) throws SQLException, RouteTrip.AlreadyExistException {
+             ArrayList<String> mustSeenAttractionsID, ArrayList<DesiredHoursInDay> desiredHoursInDays) throws SQLException, RouteTrip.AlreadyExistException, Traveler.IllegalValueException {
+        checkIfHoursAreValid(desiredHoursInDays);
         DBManager db = new DBManager();
         Attraction hotel  = db.getHotelFromDBByID(stringHotelID, Destinations.valueOf(destination));
 
@@ -95,6 +96,13 @@ public class Engine {
         routeTrip.planRouteTrip(attractionsAvailable);
         return routeTrip.getPlanForDays();
 
+    }
+    private void checkIfHoursAreValid(ArrayList<DesiredHoursInDay> desiredHoursInDays) throws Traveler.IllegalValueException {
+        for(DesiredHoursInDay hour : desiredHoursInDays){
+            hour.checkHour();
+        }
+        if(desiredHoursInDays.size() > 7 || desiredHoursInDays.isEmpty())
+            throw new Traveler.IllegalValueException("too many days of trip");
     }
 
     private ArrayList<Attraction> createListOfRestAttractionAvailableInDestination(DBManager db,String destination, ArrayList<Attraction> mustSeenAttractions) throws SQLException {
@@ -137,5 +145,9 @@ public class Engine {
         DBManager db = new DBManager();
         return db.getAllHotelsFromDB(destination);
 
+    }
+    public void checkIfTravelerExistsInDB(String stringId) throws SQLException, Traveler.NotFoundException {
+        DBManager db = new DBManager();
+        db.isTravelerExistInDB(stringId);
     }
 }

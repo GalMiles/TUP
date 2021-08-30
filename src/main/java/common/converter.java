@@ -1,5 +1,6 @@
 package common;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
@@ -17,6 +18,12 @@ public class converter {
             time = newTime;
         }
         return(LocalTime.parse(time, formatter));
+    }
+
+    public static LocalDate convertStringToLocalDate(String date){
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+        return(LocalDate.parse(date, formatter));
     }
 
 }

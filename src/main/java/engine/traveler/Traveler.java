@@ -81,6 +81,7 @@ public class Traveler {
         this.password = password;
     }
 
+
     public static class IllegalValueException extends Exception{
         public IllegalValueException(String message) {
             super(message);
@@ -97,9 +98,6 @@ public class Traveler {
         public NotFoundException(String message) {super(message);}
     }
 
-    public static class InvalidUsernameOrPasswordException extends Exception {
-        public InvalidUsernameOrPasswordException(String message) {super(message);}
-    }
 
     public static class HasNoTripsException extends Exception {
         public HasNoTripsException(String message) { super(message); }
@@ -114,4 +112,6 @@ public class Traveler {
                 ", password='" + password + '\'' +
                 '}';
     }
+
+
 }

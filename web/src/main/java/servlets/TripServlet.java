@@ -19,7 +19,7 @@ import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-@WebServlet(name = "TripServlet", urlPatterns = {"/trip"})
+@WebServlet(name = "TripServlet", urlPatterns = {"/trip", "/trip/delete"})
 public class TripServlet extends HttpServlet {
 
     @Override
@@ -40,9 +40,18 @@ public class TripServlet extends HttpServlet {
         }
     }
 
-    //delete trip from my trips
-    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        if (req.getServletPath().endsWith("/delete"))
+            processPostRequestDeleteTrips(req, resp);
+
+
+        else
+            processPostRequestTrips(req, resp);
+    }
+
+    private void processPostRequestDeleteTrips(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         ServletUtils servletUtils = new ServletUtils(req);
         TripsToDelete tripsToDelete = (TripsToDelete)servletUtils.gsonFromJson(TripsToDelete.class);
 
@@ -58,10 +67,7 @@ public class TripServlet extends HttpServlet {
         }
     }
 
-
-    @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-
+    private void processPostRequestTrips(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         ServletUtils servletUtils = new ServletUtils(req);
 
         TripDetails tripDetails = (TripDetails)servletUtils.gsonFromJson(TripDetails.class);
@@ -70,7 +76,7 @@ public class TripServlet extends HttpServlet {
             Engine engine = ContextServletUtils.getEngine(req);
             ArrayList<DayPlan> trip = engine.createTripForUser(tripDetails.destination,tripDetails.hotelID,tripDetails.mustSeenAttractionsID,tripDetails.hoursEveryDay);
             servletUtils.writeJsonResponse(trip);
-        } catch (SQLException | RouteTrip.AlreadyExistException | Traveler.NotFoundException e) {
+        } catch (SQLException | RouteTrip.AlreadyExistException | Traveler.NotFoundException | Traveler.IllegalValueException e) {
             servletUtils.writeJsonResponse("error", e.getMessage());
         }
 
