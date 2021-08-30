@@ -67,7 +67,7 @@ public class Engine {
         return db.getTripsFromDbByTravelerId(currentTravelerID);
     }
 
-    public void deleteTripFromUserTrips(ArrayList<String> tripsListToDelete) throws SQLException {
+    public void deleteTripFromUserTrips(ArrayList<String> tripsListToDelete) throws SQLException, Traveler.HasNoTripsException {
         DBManager db = new DBManager();
         for(String tripId : tripsListToDelete)
             db.deleteTripFromUserTripsInDB(tripId,currentTravelerID);

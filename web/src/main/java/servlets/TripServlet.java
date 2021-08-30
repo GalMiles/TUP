@@ -58,7 +58,7 @@ public class TripServlet extends HttpServlet {
         try {
             Engine engine = ContextServletUtils.getEngine(req);
             engine.deleteTripFromUserTrips(tripsToDelete.tripsIdToDeleteList);
-        } catch (SQLException | Traveler.NotFoundException e) {
+        } catch (SQLException | Traveler.NotFoundException | Traveler.HasNoTripsException e) {
             servletUtils.writeJsonResponse("error", e.getMessage());
         }
 

@@ -302,11 +302,14 @@ public class DBManager {
             }
         }
 
-    public void deleteTripFromUserTripsInDB(String tripId, String currentTravelerID) throws SQLException {
+    public void deleteTripFromUserTripsInDB(String tripId, String currentTravelerID) throws SQLException, Traveler.HasNoTripsException {
         PreparedStatement p = sqlConnection.prepareStatement("DELETE FROM trips WHERE traveler_id = ? AND trip_id = ?");
         p.setString(1, currentTravelerID);
         p.setString(2, tripId);
-        p.execute();
+        int deletedRows = p.executeUpdate();
+        if(deletedRows ==0){
+            throw new Traveler.HasNoTripsException("Trip id or traveler id doesn't exist in DB!");
+        }
     }
 
     public void isTravelerExistInDB(String travelerID) throws SQLException, Traveler.NotFoundException {
