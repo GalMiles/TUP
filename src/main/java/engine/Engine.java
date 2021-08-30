@@ -13,6 +13,7 @@ import java.sql.SQLException;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 
 public class Engine {
 
@@ -78,20 +79,9 @@ public class Engine {
         DBManager db = new DBManager();
         Attraction hotel  = db.getHotelFromDBByID(stringHotelID, Destinations.valueOf(destination));
 
-//        ArrayList<AttractionType> typesHotel = new ArrayList<>();
-//        typesHotel.add(AttractionType.lodging);
-//        Attraction hotel = new Attraction("Baglioni Hotel - London", "60 Hyde Park Gate, South Kensington, London SW7 5BB, UK",
-//                "020 7368 5700", null, new Geometry("51.50167580000001", "-0.1847417"), "ChIJFSZeB1kFdkgRTixgFHqP13g",
-//                typesHotel, null);
-
         ArrayList<Attraction> mustSeenAttractions = createArrayListOfMustSeenAttractions(mustSeenAttractionsID, db, destination);
         RouteTrip routeTrip = new RouteTrip(destination,hotel, mustSeenAttractions, desiredHoursInDays);
         ArrayList<Attraction> attractionsAvailable = createListOfRestAttractionAvailableInDestination(db,destination,mustSeenAttractions);
-
-//        ArrayList<Attraction> mustSeenAttractions = null;
-//        RouteTrip routeTrip = new RouteTrip(destination,hotel, mustSeenAttractions, desiredHoursInDays);
-//
-//        ArrayList<Attraction> attractionsAvailable = null;
 
         routeTrip.planRouteTrip(attractionsAvailable);
         return routeTrip.getPlanForDays();
