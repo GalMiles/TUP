@@ -216,16 +216,22 @@ public class DBManager {
         PreparedStatement p = sqlConnection.prepareStatement("SELECT * FROM trips WHERE traveler_id = ?");
         p.setString(1, travelerID);
         ResultSet results = p.executeQuery();
+        boolean tripsExist = false;
 
-        if(!results.next()) { throw new Traveler.HasNoTripsException("Traveler with id " + travelerID + "has no trips yet!"); }
+//        if(!results.next()) {
+//            throw new Traveler.HasNoTripsException("Traveler with id " + travelerID + "has no trips yet!"); }
 
         while (results.next()) {
+            tripsExist = true;
             RouteTrip routeTrip = new RouteTrip();
             routeTrip = routeTrip.createRouteTripFromJson(results);
             fillRouteTrip(routeTrip);
             TripPlan tripPlan = new TripPlan(results.getString("trip_name"),routeTrip.getPlanForDays(), routeTrip.getDestination().name(),results.getInt("trip_id"));
             trips.add(tripPlan);
         }
+        if(!tripsExist)
+            throw new Traveler.HasNoTripsException("Traveler with id " + travelerID + " has no trips yet!");
+
         return trips;
     }
 
