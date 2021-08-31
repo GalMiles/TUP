@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 
-@WebServlet(name = "AttractionsServlet", urlPatterns = {"/attractions/favorites", "/attractions/all"})
+@WebServlet(name = "AttractionsServlet", urlPatterns = {"/attractions/favorites", "/attractions/all", "/attractions/favorites/delete"})
 public class AttractionsServlet extends HttpServlet {
 
     @Override
@@ -34,7 +34,13 @@ public class AttractionsServlet extends HttpServlet {
 
     //delete favorite attractions
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
+        if (req.getServletPath().endsWith("/delete"))
+            processDeleteFavoriteRequest(req, resp);
+        else
+            doGet(req, resp);
+    }
+    private void processDeleteFavoriteRequest(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         ServletUtils servletUtils = new ServletUtils(req);
         FavoriteAttractions jsonFavoriteAttractions = (FavoriteAttractions) servletUtils.gsonFromJson(FavoriteAttractions.class);
 
@@ -49,7 +55,6 @@ public class AttractionsServlet extends HttpServlet {
             out.println(servletUtils.createOutResponse());
         }
     }
-
     private void processGetRequestAllAttractions(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         ServletUtils servletUtils = new ServletUtils(req);
         Collection<Attraction> attractions;

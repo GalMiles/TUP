@@ -19,7 +19,7 @@ import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-@WebServlet(name = "TripServlet", urlPatterns = {"/trip", "/trip/delete"})
+@WebServlet(name = "TripServlet", urlPatterns = {"/trip", "/trip/delete", "/trip/create"})
 public class TripServlet extends HttpServlet {
 
     @Override
@@ -46,8 +46,7 @@ public class TripServlet extends HttpServlet {
         if (req.getServletPath().endsWith("/delete"))
             processPostRequestDeleteTrips(req, resp);
 
-
-        else
+        if (req.getServletPath().endsWith("/create"))
             processPostRequestTrips(req, resp);
     }
 
