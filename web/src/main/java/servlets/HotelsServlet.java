@@ -29,7 +29,7 @@ public class HotelsServlet extends HttpServlet {
             Engine engine = ContextServletUtils.getEngine(req);
             String destination = servletUtils.lines;
             Destinations.valueOf(destination);
-            hotels = engine.getHotelsByDestination(destination); //destination
+            hotels = engine.getHotelsByDestination(destination);
             servletUtils.writeJsonResponse(hotels);
         } catch (SQLException | Attraction.NoHotelsOnDestination | Traveler.NotFoundException | IllegalArgumentException e) {
             servletUtils.writeJsonResponse("error", e.getMessage());

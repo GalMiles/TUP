@@ -23,7 +23,7 @@ public class ContextServletUtils {
         if(stringId.equals("0")){
             if(request.getMethod().equals("POST") && request.getServletPath().endsWith("/traveler"))
                 engine.setCurrentTravelerID(stringId);
-            if(request.getMethod().equals("POST") && request.getServletPath().endsWith("/login"))
+            else if(request.getMethod().equals("POST") && request.getServletPath().endsWith("/login"))
                 engine.setCurrentTravelerID(stringId);
             else
                 throw new Traveler.NotFoundException("traveler id equals 0 and not allowed!!");
