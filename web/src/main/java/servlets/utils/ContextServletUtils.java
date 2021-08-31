@@ -12,15 +12,23 @@ public class ContextServletUtils {
 
         System.out.println("ContextServletUtils");
         Engine engine = (Engine) request.getServletContext().getAttribute("engine");
-        String stringId = request.getHeader("travelerID");
-        if(stringId == null)
-            throw new Traveler.NotFoundException("travelerID = null");
-        if(!stringId.equals("0"))
-            engine.checkIfTravelerExistsInDB(stringId);
-        engine.setCurrentTravelerID(stringId);
+        verifyTravelerId(request, engine);
         return engine;
     }
+    private static void verifyTravelerId(HttpServletRequest request, Engine engine) throws Traveler.NotFoundException, SQLException {
+        String stringId = request.getHeader("travelerID");
+        if(stringId == null || stringId.isEmpty())
+            throw new Traveler.NotFoundException("travelerID = null");
 
+        if(stringId.equals("0")){
+            if(!request.getMethod().equals("POST") || !request.getServletPath().endsWith("/traveler"))
+                throw new Traveler.NotFoundException("traveler id equals 0 and not allowed!!");
+        }
+        else{
+            engine.checkIfTravelerExistsInDB(stringId);
+        }
+        engine.setCurrentTravelerID(stringId);
+    }
 
 
 }
