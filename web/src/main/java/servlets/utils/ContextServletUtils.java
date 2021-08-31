@@ -21,7 +21,8 @@ public class ContextServletUtils {
             throw new Traveler.NotFoundException("travelerID = null");
 
         if(stringId.equals("0")){
-            if(!request.getMethod().equals("POST") || !request.getServletPath().endsWith("/traveler"))
+            if(!request.getMethod().equals("POST") || !request.getServletPath().endsWith("/traveler")
+                    || !request.getServletPath().endsWith("/login"))
                 throw new Traveler.NotFoundException("traveler id equals 0 and not allowed!!");
         }
         else{

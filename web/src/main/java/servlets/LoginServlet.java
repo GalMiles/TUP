@@ -18,7 +18,7 @@ import java.sql.SQLException;
 public class LoginServlet extends HttpServlet {
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         ServletUtils servletUtils = new ServletUtils(req);
         User newUser = (User)servletUtils.gsonFromJson(User.class);
 
@@ -34,11 +34,6 @@ public class LoginServlet extends HttpServlet {
         try (PrintWriter out = resp.getWriter()) {
             out.println(servletUtils.createOutResponse());
         }
-    }
-
-    @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        doGet(req, resp);
     }
 
     static class User {
