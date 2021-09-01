@@ -30,13 +30,13 @@ public class DBManager {
 
 
     public DBManager() throws SQLException {
-//        this.sqlConnection = DriverManager.getConnection("jdbc:mysql://localhost:3306/tup", "root", "Galmiles31051960");
-//        this.statement = sqlConnection.createStatement();
+        this.sqlConnection = DriverManager.getConnection("jdbc:mysql://localhost:3306/tup", "root", "Galmiles31051960");
+        this.statement = sqlConnection.createStatement();
 
         DriverManager.registerDriver(new com.mysql.cj.jdbc.Driver());
-
-        sqlConnection = DriverManager.getConnection("jdbc:mysql://database-1.cxfxbg1niylb.us-west-2.rds.amazonaws.com:3306/tup", "admin", "Galmiles1105");
-        statement = sqlConnection.createStatement();
+//
+//        sqlConnection = DriverManager.getConnection("jdbc:mysql://database-1.cxfxbg1niylb.us-west-2.rds.amazonaws.com:3306/tup", "admin", "Galmiles1105");
+//        statement = sqlConnection.createStatement();
     }
 
     public void closeConnection() throws SQLException {
@@ -271,7 +271,7 @@ public class DBManager {
             //d.setHotel(null);
             d.setNullMustSeenAttractionsForDay();
             for (OnePlan p : re) {
-                p.setAttractionId(p.getAttractionId());
+                p.setAttractionId(p.getAttraction().getPlaceID());
                 p.setAttraction(null);
             }
         }
