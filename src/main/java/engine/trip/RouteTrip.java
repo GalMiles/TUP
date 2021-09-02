@@ -119,7 +119,10 @@ public class RouteTrip {
             dayPlan.updateMustSeenAttractions(mustSeenAttractionsLocal);
             dayPlan.calculateDayPlanWithMustSeenAttractions();
             mustSeenAttractionsLocal = dayPlan.getMustSeenAttractionsForDay();
-            dayPlan.calculateDayPlan(attractionsAvailable, false, dayPlan.getFinishTime());
+            //dayPlan.calculateDayPlanWithAllAttractions(attractionsAvailable, false, dayPlan.getFinishTime());
+            //dayPlan.calculateDayPlan(attractionsAvailable, false, dayPlan.getFinishTime());
+            dayPlan.managerFake(attractionsAvailable, false, dayPlan.getFinishTime());
+
         }
     }
 

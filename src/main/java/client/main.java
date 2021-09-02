@@ -16,6 +16,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.ParseException;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -26,6 +28,9 @@ public class main {
 
 
     public static void main(String[] args) throws IOException, SQLException, ParseException, RouteTrip.AlreadyExistException, Traveler.HasNoTripsException, RouteTrip.NotFoundException {
+
+
+
 
 
 
@@ -107,10 +112,21 @@ public class main {
 
 
         System.out.println(trip1);
+        DayPlan d = new DayPlan();
+        Attraction eye = db.getAttractionFromDBByID("ChIJc2nSALkEdkgRkuoJJBfzkUI",Destinations.valueOf("london"));
+        Attraction bfi = db.getAttractionFromDBByID("ChIJEYfH57cEdkgRvTdhVI3xJzQ", Destinations.valueOf("london"));
+        Attraction rfa = db.getAttractionFromDBByID("ChIJb2Mpz8UEdkgR6dpyR4XJgwE", Destinations.valueOf("london"));
+        double s1 = d.calculateScore(eye,bfi, LocalTime.parse("16:00"), LocalDate.parse("2021-08-31"),LocalTime.parse("20:00"));
+        double s2 = d.calculateScore(eye,rfa, LocalTime.parse("16:00"), LocalDate.parse("2021-08-31"),LocalTime.parse("20:00"));
 
-        for(String attraction :trip.mustSeenAttractionsID){
-            System.out.println(db.getAttractionFromDBByID(attraction,Destinations.valueOf("london")).getName());
-        }
+        System.out.println("eye -> bfi  " + eye.calcDistanceBetweenAttractions(bfi));
+        System.out.println("eye -> rfa  " + eye.calcDistanceBetweenAttractions(rfa));
+        System.out.println("bfi" +s1);
+        System.out.println("rfa" +s2);
+
+//        for(String attraction :trip.mustSeenAttractionsID){
+//            System.out.println(db.getAttractionFromDBByID(attraction,Destinations.valueOf("london")).getName());
+//        }
 
 
  //       Attraction hotel = db.getHotelFromDBByID(trip.hotelID, Destinations.valueOf("london"));

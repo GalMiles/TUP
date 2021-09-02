@@ -6,5 +6,6 @@ class CellDetails {
     public Attraction attraction;
     public Boolean isOptional = true;
     public double distance;
+    public double score = 0;
 
 }

@@ -19,6 +19,7 @@ public class DayPlan {
     int durationDay = 0;
     ArrayList<Attraction> mustSeenAttractionsForDay = new ArrayList<>();
     String hotelID;
+    int scoreDay = 0;
 
 
     public DayPlan(LocalDate date, LocalTime startTime, LocalTime finishTime ,Attraction hotel){
@@ -29,6 +30,21 @@ public class DayPlan {
         setDurationDesireByUser((startTime.until(finishTime,ChronoUnit.MINUTES))/60.0);
         setHotelID(hotel.getPlaceID());
     }
+
+    public DayPlan(DayPlan other) {
+        setHotel(other.hotel);
+        setDate(other.date);
+        setStartTime(other.startTime);
+        setFinishTime(other.finishTime);
+        setDurationDesireByUser(other.durationDesireByUser);
+        setHotelID(other.hotelID);
+        setDaySchedule(other.daySchedule);
+        setDurationDay(other.durationDay);
+        this.mustSeenAttractionsForDay = new ArrayList<>(other.getMustSeenAttractionsForDay());
+
+    }
+
+    public DayPlan() { }
 
     private void setHotelID(String placeID) {
         hotelID = placeID;
@@ -65,7 +81,7 @@ public class DayPlan {
         this.durationDesireByUser = durationDesireByUser;
     }
     public void setDaySchedule(ArrayList<OnePlan> daySchedule) {
-        this.daySchedule = daySchedule;
+        this.daySchedule = new ArrayList<OnePlan>(daySchedule);
     }
     public void setDate(LocalDate date) {
         this.date = date;
@@ -135,18 +151,98 @@ public class DayPlan {
         if(this.mustSeenAttractionsForDay.isEmpty()){
             return;
         }
-        calculateDayPlan(this.mustSeenAttractionsForDay, true, finishTime);
+        //calculateDayPlan(this.mustSeenAttractionsForDay, true, finishTime);
+        //calculateDayPlanWithAllAttractions(this.mustSeenAttractionsForDay, true, finishTime);
+        managerFake(this.mustSeenAttractionsForDay, true, finishTime);
+        for(OnePlan plan: daySchedule){
+            this.mustSeenAttractionsForDay.remove(plan.getAttraction());
+        }
+
     }
 
 
-    public void calculateDayPlan(ArrayList<Attraction> attractionsAvailable, Boolean isFavoriteAttraction, LocalTime endOfDayHour) {
+    public void managerFake(ArrayList<Attraction> attractionsAvailable, Boolean isFavoriteAttraction, LocalTime endOfDayHour){
+        int size =  (attractionsAvailable.size() < 6) ? attractionsAvailable.size() : 5;
+        double minScore = Integer.MAX_VALUE;
+        DayPlan chosenDayPlan = new DayPlan();
 
+        ArrayList<DayPlan> fiveDifferentRoutes = new ArrayList<>(size);
+        ArrayList<ArrayList<Attraction>> fiveDifferentAttractionsAvailable = new ArrayList<>(size);
+        ArrayList<Attraction> attractionsAvailableTemp = new ArrayList<>(attractionsAvailable);
+
+        for(int i = 0; i < size; i++){
+
+            fiveDifferentRoutes.add(i,new DayPlan(this));
+            CellDetails cellDetailsNextAttraction;
+            Attraction nextAttraction;
+            Attraction currentAttraction = fiveDifferentRoutes.get(i).daySchedule.get(fiveDifferentRoutes.get(i).daySchedule.size() - 1).getAttraction();
+            LocalTime currentTime = fiveDifferentRoutes.get(i).startTime.plusHours(fiveDifferentRoutes.get(i).durationDay);
+            cellDetailsNextAttraction = chooseBestNextAttraction(currentAttraction, currentTime, attractionsAvailableTemp, endOfDayHour);
+            nextAttraction = cellDetailsNextAttraction.attraction;
+            if (nextAttraction != null) {
+                fiveDifferentRoutes.get(i).daySchedule.add(new OnePlan(nextAttraction, currentTime, isFavoriteAttraction));
+                attractionsAvailableTemp.remove(nextAttraction);
+                fiveDifferentRoutes.get(i).durationDay += nextAttraction.getDuration();
+
+            }
+            attractionsAvailable.remove(nextAttraction);
+            fiveDifferentAttractionsAvailable.add(i, new ArrayList<Attraction>(attractionsAvailable));
+        }
+
+        for(int i = 0; i < size; i++){
+            calculateDayPlanFake(fiveDifferentAttractionsAvailable.get(i),isFavoriteAttraction,endOfDayHour,fiveDifferentRoutes.get(i));
+        }
+
+        for(DayPlan plan : fiveDifferentRoutes){
+            if (plan.scoreDay < minScore){
+                chosenDayPlan = plan;
+                minScore = plan.scoreDay;
+            }
+        }
+        this.daySchedule = chosenDayPlan.daySchedule;
+        this.durationDay = chosenDayPlan.durationDay;
+    }
+
+    public void calculateDayPlanFake(ArrayList<Attraction> attractionsAvailable, Boolean isFavoriteAttraction, LocalTime endOfDayHour, DayPlan fakePlan) {
+        CellDetails cellDetailsNextAttraction;
+        Attraction nextAttraction;
+        Attraction currentAttraction = fakePlan.daySchedule.get(fakePlan.daySchedule.size()-1).getAttraction();
+        LocalTime currentTime = fakePlan.startTime.plusHours(fakePlan.durationDay);
+
+        while (fakePlan.durationDay < fakePlan.durationDesireByUser) {
+            cellDetailsNextAttraction = chooseBestNextAttraction(currentAttraction, currentTime,attractionsAvailable, endOfDayHour);
+            nextAttraction = cellDetailsNextAttraction.attraction;
+            if(nextAttraction != null) {
+                fakePlan.daySchedule.add(new OnePlan(nextAttraction, currentTime, isFavoriteAttraction));
+                attractionsAvailable.remove(nextAttraction); // -object of any class are reference so this action delete chosen attraction so we dont add visited attraction to rhe next day
+                currentAttraction = nextAttraction;
+                currentTime = currentTime.plusHours(nextAttraction.getDuration());
+
+                fakePlan.durationDay += nextAttraction.getDuration();
+
+                if (attractionsAvailable.isEmpty())
+                    break;
+            }
+            else
+                break;
+        }
+
+    }
+
+
+/*
+
+
+
+    public void calculateDayPlan(ArrayList<Attraction> attractionsAvailable, Boolean isFavoriteAttraction, LocalTime endOfDayHour) {
+        CellDetails cellDetailsNextAttraction;
         Attraction nextAttraction;
         Attraction currentAttraction = daySchedule.get(daySchedule.size()-1).getAttraction();
         LocalTime currentTime = startTime.plusHours(durationDay);
 
         while (durationDay < durationDesireByUser) {
-            nextAttraction = chooseBestNextAttraction(currentAttraction, currentTime,attractionsAvailable, endOfDayHour);
+            cellDetailsNextAttraction = chooseBestNextAttraction(currentAttraction, currentTime,attractionsAvailable, endOfDayHour);
+            nextAttraction = cellDetailsNextAttraction.attraction;
             if(nextAttraction != null) {
                 daySchedule.add(new OnePlan(nextAttraction, currentTime, isFavoriteAttraction));
                 attractionsAvailable.remove(nextAttraction); // -object of any class are reference so this action delete chosen attraction so we dont add visited attraction to rhe next day
@@ -164,7 +260,57 @@ public class DayPlan {
 
     }
 
-    private Attraction chooseBestNextAttraction(Attraction currentAttraction, LocalTime time, ArrayList<Attraction> possibleAttractions,LocalTime endOfDayHour){
+    ////////////////////////////////
+    public void calculateDayPlanWithAllAttractions(ArrayList<Attraction> attractionsAvailable, Boolean isFavoriteAttraction, LocalTime endOfDayHour) {
+        int size =  (attractionsAvailable.size() < 6) ? attractionsAvailable.size() : 5;
+        CellDetails cellDetailsNextAttraction;
+        double minScore = Integer.MAX_VALUE;
+        DayPlan chosenDayPlan = new DayPlan();
+
+        Attraction nextAttraction;
+        Attraction currentAttraction = daySchedule.get(daySchedule.size()-1).getAttraction();
+        LocalTime currentTime = startTime.plusHours(durationDay);
+        ArrayList<DayPlan> fiveDifferentRoutes = new ArrayList<>(size);
+        ArrayList<ArrayList<Attraction>> fiveDifferentAttractionsAvailable = new ArrayList<>(size);
+        for(int i = 0; i < size; i++){
+
+            fiveDifferentRoutes.add(i,new DayPlan(this));
+            fiveDifferentAttractionsAvailable.add(i, new ArrayList<Attraction>(attractionsAvailable));
+        }
+
+        for(int i = 0; i < size; i++){
+            while (fiveDifferentRoutes.get(i).durationDay < durationDesireByUser) {
+                cellDetailsNextAttraction = chooseBestNextAttraction(currentAttraction, currentTime, attractionsAvailable, endOfDayHour);
+                nextAttraction = cellDetailsNextAttraction.attraction;
+                if (nextAttraction != null) {
+                    fiveDifferentRoutes.get(i).daySchedule.add(new OnePlan(nextAttraction, currentTime, isFavoriteAttraction));
+                    fiveDifferentAttractionsAvailable.get(i).remove(nextAttraction); // -object of any class are reference so this action delete chosen attraction so we dont add visited attraction to rhe next day
+                    currentAttraction = nextAttraction;
+                    currentTime = currentTime.plusHours(nextAttraction.getDuration());
+
+                    fiveDifferentRoutes.get(i).durationDay += nextAttraction.getDuration();
+                    fiveDifferentRoutes.get(i).scoreDay += cellDetailsNextAttraction.score;
+
+                    if (fiveDifferentAttractionsAvailable.get(i).isEmpty())
+                        break;
+                }else
+                    break;
+            }
+        }
+        for(DayPlan plan : fiveDifferentRoutes){
+            if (plan.scoreDay < minScore){
+                chosenDayPlan = plan;
+                minScore = plan.scoreDay;
+            }
+        }
+        this.daySchedule = chosenDayPlan.daySchedule;
+        this.durationDay = chosenDayPlan.durationDay;
+
+    }
+    //////////////////*/
+
+    private CellDetails chooseBestNextAttraction(Attraction currentAttraction, LocalTime time, ArrayList<Attraction> possibleAttractions,LocalTime endOfDayHour){
+        CellDetails cellDetails = new CellDetails();
         Attraction nextAttraction = null;
         double minScore = Integer.MAX_VALUE;
         double currentScore;
@@ -175,11 +321,13 @@ public class DayPlan {
                 minScore = currentScore;
             }
         }
-        return nextAttraction; //in case its null, it mean that the day is over
+        cellDetails.attraction = nextAttraction;
+        cellDetails.score = minScore;
+        return cellDetails; //in case its null, it mean that the day is over
     }
 
 
-    private double calculateScore(Attraction currentAttraction,Attraction nextAttraction, LocalTime hourOnClock, LocalDate date,LocalTime endOfDayHour) {
+    public double calculateScore(Attraction currentAttraction,Attraction nextAttraction, LocalTime hourOnClock, LocalDate date,LocalTime endOfDayHour) {
         double scoreDistance = currentAttraction.calcDistanceBetweenAttractions(nextAttraction);
         long differenceBetweenClockAndStartTime;
         long minValue = Integer.MAX_VALUE;
