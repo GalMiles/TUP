@@ -30,13 +30,13 @@ public class DBManager {
 
 
     public DBManager() throws SQLException {
-//        this.sqlConnection = DriverManager.getConnection("jdbc:mysql://localhost:3306/tup", "root", "Galmiles31051960");
-//        this.statement = sqlConnection.createStatement();
+        this.sqlConnection = DriverManager.getConnection("jdbc:mysql://localhost:3306/tup", "root", "Galmiles31051960");
+        this.statement = sqlConnection.createStatement();
 
         DriverManager.registerDriver(new com.mysql.cj.jdbc.Driver());
-
-        sqlConnection = DriverManager.getConnection("jdbc:mysql://database-1.cxfxbg1niylb.us-west-2.rds.amazonaws.com:3306/tup", "admin", "Galmiles1105");
-        statement = sqlConnection.createStatement();
+//
+//        sqlConnection = DriverManager.getConnection("jdbc:mysql://database-1.cxfxbg1niylb.us-west-2.rds.amazonaws.com:3306/tup", "admin", "Galmiles1105");
+//        statement = sqlConnection.createStatement();
     }
 
     public void closeConnection() throws SQLException {
@@ -216,16 +216,22 @@ public class DBManager {
         PreparedStatement p = sqlConnection.prepareStatement("SELECT * FROM trips WHERE traveler_id = ?");
         p.setString(1, travelerID);
         ResultSet results = p.executeQuery();
+        boolean tripsExist = false;
 
-        //if(!results.next()) { throw new Traveler.HasNoTripsException("Traveler with id " + travelerID); }
+//        if(!results.next()) {
+//            throw new Traveler.HasNoTripsException("Traveler with id " + travelerID + "has no trips yet!"); }
 
         while (results.next()) {
+            tripsExist = true;
             RouteTrip routeTrip = new RouteTrip();
             routeTrip = routeTrip.createRouteTripFromJson(results);
             fillRouteTrip(routeTrip);
             TripPlan tripPlan = new TripPlan(results.getString("trip_name"),routeTrip.getPlanForDays(), routeTrip.getDestination().name(),results.getInt("trip_id"));
             trips.add(tripPlan);
         }
+        if(!tripsExist)
+            throw new Traveler.HasNoTripsException("Traveler with id " + travelerID + " has no trips yet!");
+
         return trips;
     }
 
@@ -265,7 +271,7 @@ public class DBManager {
             //d.setHotel(null);
             d.setNullMustSeenAttractionsForDay();
             for (OnePlan p : re) {
-                p.setAttractionId(p.getAttractionId());
+                p.setAttractionId(p.getAttraction().getPlaceID());
                 p.setAttraction(null);
             }
         }
@@ -302,11 +308,14 @@ public class DBManager {
             }
         }
 
-    public void deleteTripFromUserTripsInDB(String tripId, String currentTravelerID) throws SQLException {
+    public void deleteTripFromUserTripsInDB(String tripId, String currentTravelerID) throws SQLException, Traveler.HasNoTripsException {
         PreparedStatement p = sqlConnection.prepareStatement("DELETE FROM trips WHERE traveler_id = ? AND trip_id = ?");
         p.setString(1, currentTravelerID);
         p.setString(2, tripId);
-        p.execute();
+        int deletedRows = p.executeUpdate();
+        if(deletedRows ==0){
+            throw new Traveler.HasNoTripsException("Trip id or traveler id doesn't exist in DB!");
+        }
     }
 
     public void isTravelerExistInDB(String travelerID) throws SQLException, Traveler.NotFoundException {
@@ -315,7 +324,7 @@ public class DBManager {
         ps.setString(1, travelerID);
         ResultSet results = ps.executeQuery();
         if(!results.next()){
-            throw new Traveler.NotFoundException("Traveler id doesn't exist!");
+            throw new Traveler.NotFoundException("Traveler id doesn't exist in DB!");
         }
     }
     public void insertHotelsImagesToDB() throws SQLException, IOException, Attraction.NoHotelsOnDestination {
@@ -334,36 +343,41 @@ public class DBManager {
 
     }
 
-    public void insertAttractionsImagesToDB() throws SQLException, IOException {
-
-        String image = null;
-        wikiAPIManager wiki = new wikiAPIManager();
+    public void insertAllAttractionsImagesToDB() throws SQLException,IOException {
         ArrayList<Attraction> attractions = this.getAllAttractionsByDestination("london");
         for (Attraction att : attractions) {
-            image = wiki.getAttractionImageFromWiki(att.getName());
-
-            PreparedStatement p = sqlConnection.prepareStatement("UPDATE london SET Image = ? WHERE attractionAPI_ID = ?");
-            p.setString(1, image);
-            p.setString(2, att.getPlaceID());
-            p.execute();
+            insertOneAttractionsImagesToDB(att);
         }
-
     }
 
-    public void insertAttractionsDescriptionToDB() throws SQLException, IOException {
+    public void insertOneAttractionsImagesToDB(Attraction attraction) throws SQLException, IOException {
+        String image = null;
+        wikiAPIManager wiki = new wikiAPIManager();
+        image = wiki.getAttractionImageFromWiki(attraction.getName());
+
+        PreparedStatement p = sqlConnection.prepareStatement("UPDATE london SET Image = ? WHERE attractionAPI_ID = ?");
+        p.setString(1, image);
+        p.setString(2, attraction.getPlaceID());
+        p.execute();
+    }
+
+    public void insertAllAttractionsDescriptionToDB() throws SQLException, IOException {
+        ArrayList<Attraction> attractions = this.getAllAttractionsByDestination("london");
+        for (Attraction att : attractions) {
+            insertOneAttractionDescriptionToDB(att);
+
+        }
+    }
+    public void insertOneAttractionDescriptionToDB(Attraction attraction) throws SQLException, IOException {
 
         String description = null;
         wikiAPIManager wiki = new wikiAPIManager();
-        ArrayList<Attraction> attractions = this.getAllAttractionsByDestination("london");
-        for (Attraction att : attractions) {
-            description = wiki.getAttractionDescriptionFromWiki(att.getName());
+        description = wiki.getAttractionDescriptionFromWiki(attraction.getName());
 
-            PreparedStatement p = sqlConnection.prepareStatement("UPDATE london SET Description = ? WHERE attractionAPI_ID = ?");
-            p.setString(1, description);
-            p.setString(2, att.getPlaceID());
-            p.execute();
-        }
-
+        PreparedStatement p = sqlConnection.prepareStatement("UPDATE london SET Description = ? WHERE attractionAPI_ID = ?");
+        p.setString(1, description);
+        p.setString(2, attraction.getPlaceID());
+        p.execute();
     }
 
     public void insertToDB() throws SQLException, IOException, ParseException {

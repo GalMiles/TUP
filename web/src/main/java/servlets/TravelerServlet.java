@@ -23,6 +23,7 @@ public class TravelerServlet extends HttpServlet {
     @Override
     // register
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        req.getMethod();
         ServletUtils servletUtils = new ServletUtils(req);
         Traveler jsonTraveler = (Traveler) servletUtils.gsonFromJson(Traveler.class);
 

@@ -78,8 +78,11 @@ public class Traveler {
     public void setPassword(String password) throws IllegalValueException {
         if (password == null || password.trim().isEmpty())
             throw new IllegalValueException("Password cannot be empty");
+        if(password.length() < 6 || password.length() > 20)
+            throw new IllegalValueException("Password length illegal");
         this.password = password;
     }
+
 
     public static class IllegalValueException extends Exception{
         public IllegalValueException(String message) {
@@ -97,9 +100,6 @@ public class Traveler {
         public NotFoundException(String message) {super(message);}
     }
 
-    public static class InvalidUsernameOrPasswordException extends Exception {
-        public InvalidUsernameOrPasswordException(String message) {super(message);}
-    }
 
     public static class HasNoTripsException extends Exception {
         public HasNoTripsException(String message) { super(message); }
@@ -114,4 +114,6 @@ public class Traveler {
                 ", password='" + password + '\'' +
                 '}';
     }
+
+
 }

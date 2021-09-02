@@ -1,5 +1,6 @@
 package servlets;
 
+import common.Destinations;
 import engine.Engine;
 import engine.attraction.Attraction;
 import engine.traveler.Traveler;
@@ -20,15 +21,17 @@ import java.util.ArrayList;
 public class HotelsServlet extends HttpServlet {
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         ServletUtils servletUtils = new ServletUtils(req);
 
         ArrayList<Attraction> hotels;
         try {
             Engine engine = ContextServletUtils.getEngine(req);
-            hotels = engine.getHotelsByDestination(servletUtils.lines); //destination
+            String destination = servletUtils.lines;
+            Destinations.valueOf(destination);
+            hotels = engine.getHotelsByDestination(destination);
             servletUtils.writeJsonResponse(hotels);
-        } catch (SQLException | Attraction.NoHotelsOnDestination | Traveler.NotFoundException e) {
+        } catch (SQLException | Attraction.NoHotelsOnDestination | Traveler.NotFoundException | IllegalArgumentException e) {
             servletUtils.writeJsonResponse("error", e.getMessage());
         }
 

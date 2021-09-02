@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 
-@WebServlet(name = "AttractionsServlet", urlPatterns = {"/attractions/favorites", "/attractions/all"})
+@WebServlet(name = "AttractionsServlet", urlPatterns = {"/attractions/favorites", "/attractions/all", "/attractions/favorites/delete"})
 public class AttractionsServlet extends HttpServlet {
 
     @Override
@@ -32,11 +32,29 @@ public class AttractionsServlet extends HttpServlet {
             processGetRequestFavoritesAttractions(req, resp);
     }
 
+    //delete favorite attractions
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        doGet(req, resp);
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
+        if (req.getServletPath().endsWith("/delete"))
+            processDeleteFavoriteRequest(req, resp);
+        else
+            doGet(req, resp);
     }
+    private void processDeleteFavoriteRequest(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        ServletUtils servletUtils = new ServletUtils(req);
+        FavoriteAttractions jsonFavoriteAttractions = (FavoriteAttractions) servletUtils.gsonFromJson(FavoriteAttractions.class);
 
+        try {
+            Engine engine = ContextServletUtils.getEngine(req);
+            engine.deleteFromFavoriteAttractions(jsonFavoriteAttractions.favoriteAttractionsList);
+        } catch (SQLException | Attraction.NotFoundException | Traveler.NotFoundException e) {
+            servletUtils.writeJsonResponse("error", e.getMessage());
+        }
+
+        try (PrintWriter out = resp.getWriter()) {
+            out.println(servletUtils.createOutResponse());
+        }
+    }
     private void processGetRequestAllAttractions(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         ServletUtils servletUtils = new ServletUtils(req);
         Collection<Attraction> attractions;
@@ -65,26 +83,6 @@ public class AttractionsServlet extends HttpServlet {
             servletUtils.writeJsonResponse(favoriteAttractions);
 
         } catch (SQLException | Traveler.NotFoundException e) {
-            servletUtils.writeJsonResponse("error", e.getMessage());
-        }
-
-        try (PrintWriter out = resp.getWriter()) {
-            out.println(servletUtils.createOutResponse());
-        }
-    }
-
-    //delete attraction from favorite attraction
-    @Override
-    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws  IOException {
-
-        ServletUtils servletUtils = new ServletUtils(req);
-        FavoriteAttractions jsonFavoriteAttractions = (FavoriteAttractions) servletUtils.gsonFromJson(FavoriteAttractions.class);
-
-
-        try {
-            Engine engine = ContextServletUtils.getEngine(req);
-            engine.deleteFromFavoriteAttractions(jsonFavoriteAttractions.favoriteAttractionsList);
-        } catch (SQLException | Attraction.NotFoundException | Traveler.NotFoundException e) {
             servletUtils.writeJsonResponse("error", e.getMessage());
         }
 

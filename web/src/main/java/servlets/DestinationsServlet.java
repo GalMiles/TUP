@@ -27,7 +27,7 @@ public class DestinationsServlet extends HttpServlet {
             Engine engine = ContextServletUtils.getEngine(req);
             destinations = engine.getDestinations();
             servletUtils.writeJsonResponse(destinations);
-        } catch (Traveler.NotFoundException e) {
+        } catch (Traveler.NotFoundException | SQLException e) {
             servletUtils.writeJsonResponse("error", e.getMessage());
         }
 
