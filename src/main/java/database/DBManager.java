@@ -30,7 +30,7 @@ public class DBManager {
 
 
     public DBManager() throws SQLException {
-        this.sqlConnection = DriverManager.getConnection("jdbc:mysql://localhost:3306/tup", "root", "Galmiles31051960");
+        this.sqlConnection = DriverManager.getConnection("jdbc:mysql://localhost:3306/tup", "root", "123456ma");
         this.statement = sqlConnection.createStatement();
 
         DriverManager.registerDriver(new com.mysql.cj.jdbc.Driver());

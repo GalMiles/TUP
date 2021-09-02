@@ -8,28 +8,37 @@ import engine.Engine;
 import engine.attraction.Attraction;
 import engine.traveler.Traveler;
 import engine.trip.DayPlan;
-import engine.trip.OnePlan;
 import engine.trip.RouteTrip;
+import googleAPI.APIManager;
 
 import java.io.IOException;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 
 
 public class main {
 
+    public static class TripDetails {
+        String destination;
+        String hotelID;
+        ArrayList<String> mustSeenAttractionsID;
+        ArrayList<DesiredHoursInDay> hoursEveryDay;
 
+        @Override
+        public String toString() {
+            return "TripDetails{" +
+                    "destination='" + destination + '\'' +
+                    ", hotelID='" + hotelID + '\'' +
+                    ", mustSeenAttractionsID=" + mustSeenAttractionsID +
+                    ", hoursEveryDay=" + hoursEveryDay +
+                    '}';
+        }
+    }
 
-    public static void main(String[] args) throws IOException, SQLException, ParseException, RouteTrip.AlreadyExistException, Traveler.HasNoTripsException, RouteTrip.NotFoundException {
-
-
+    public static void main(String[] args) throws IOException, SQLException, ParseException, RouteTrip.AlreadyExistException, Traveler.HasNoTripsException, RouteTrip.NotFoundException, Traveler.IllegalValueException {
 
 
 
@@ -38,80 +47,67 @@ public class main {
         DBManager db = new DBManager();
         Engine engine = new Engine();
         TripDetails trip = new TripDetails();
+        APIManager APIManager = new APIManager();
+//       Attraction attraction = new Attraction(APIManager.getAttractionFromAPI("West End of London"));
+//        System.out.println(attraction);
+//        db.insertOneAttractionDescriptionToDB(attraction);
+//        db.insertOneAttractionsImagesToDB(attraction);attraction
 
         trip.destination = "london";
         trip.hotelID = "ChIJ1TVZs1UFdkgRIeWxo-jEYaE";
         trip.mustSeenAttractionsID = new ArrayList<>();
-        trip.mustSeenAttractionsID.add("ChIJ2dGMjMMEdkgRqVqkuXQkj7c");
-        trip.mustSeenAttractionsID.add("ChIJ__8_XtYEdkgRtTLtWfASNFg");
-        trip.mustSeenAttractionsID.add("ChIJc2nSALkEdkgRkuoJJBfzkUI");
+        trip.mustSeenAttractionsID.add("ChIJ_R7u-6QcdkgR_TvWQJZsm3k");
+        trip.mustSeenAttractionsID.add("ChIJ2_19mdYEdkgRadLE5rfxLPU");
+        trip.mustSeenAttractionsID.add("ChIJ7bDgv2IadkgRkIbzf3FdF5M");
         trip.mustSeenAttractionsID.add("ChIJG1YB2m4RdkgRsetv9D40NGY");
         trip.mustSeenAttractionsID.add("ChIJVbSVrt0EdkgRQH_FO4ZkHc0");
-//        trip.mustSeenAttractionsID.add("ChIJh7MHVRyo2EcR39q58wztHZg");
-//        trip.mustSeenAttractionsID.add("ChIJH7Vh1YYFdkgR6E9kkPZbg5M");
-//        trip.mustSeenAttractionsID.add("ChIJh7wHoqwEdkgR3l-vqQE1HTo");
-//        trip.mustSeenAttractionsID.add("ChIJIRauBakEdkgRjoeyuI53AOc");
-//        trip.mustSeenAttractionsID.add("ChIJJX-rQLYcdkgRjiQDyLmOB-E");
-//        trip.mustSeenAttractionsID.add("ChIJKZQaXxwbdkgRWLo89tC-_V8");
-
         ArrayList<Attraction> mustSeenAttractions = engine.createArrayListOfMustSeenAttractions(trip.mustSeenAttractionsID,db,"london" );
 
-//        ArrayList<AttractionType> typesHotel = new ArrayList<>();
-//        typesHotel.add(AttractionType.lodging);
-//        Attraction hotel = new Attraction("Baglioni Hotel - London", "60 Hyde Park Gate, South Kensington, London SW7 5BB, UK",
-//                "020 7368 5700", null, new Geometry("51.50167580000001", "-0.1847417"), "ChIJFSZeB1kFdkgRTixgFHqP13g",
-//                typesHotel, null);
+        ArrayList<AttractionType> typesHotel = new ArrayList<>();
+        typesHotel.add(AttractionType.lodging);
+        Attraction hotel = new Attraction("Baglioni Hotel - London", "60 Hyde Park Gate, South Kensington, London SW7 5BB, UK",
+                "020 7368 5700", null, new Geometry("51.50167580000001", "-0.1847417"), "ChIJFSZeB1kFdkgRTixgFHqP13g",
+                typesHotel, null);
 
 
         ArrayList<DesiredHoursInDay> desiredHoursInDays = new ArrayList<>();
         DesiredHoursInDay d1 = new DesiredHoursInDay();
-        d1.setDate("2021-08-30");
-        d1.setStartTime("09:00");
-        d1.setEndTime("21:00");
+        d1.setDate("2021-09-20");
+        d1.setStartTime("10:00");
+        d1.setEndTime("20:00");
         desiredHoursInDays.add(d1);
 
         DesiredHoursInDay d2 = new DesiredHoursInDay();
-        d2.setDate("2021-08-31");
+        d2.setDate("2021-09-21");
         d2.setStartTime("10:00");
         d2.setEndTime("20:00");
         desiredHoursInDays.add(d2);
 
-//        DesiredHoursInDay d3 = new DesiredHoursInDay();
-//        d3.setDate("2021-09-01");
-//        d3.setStartTime("10:00");
-//        d3.setEndTime("20:00");
-//        desiredHoursInDays.add(d3);
-//
-//        DesiredHoursInDay d4 = new DesiredHoursInDay();
-//        d4.setDate("2021-09-02");
-//        d4.setStartTime("10:00");
-//        d4.setEndTime("20:00");
-//        desiredHoursInDays.add(d4);
+        DesiredHoursInDay d3 = new DesiredHoursInDay();
+        d3.setDate("2021-09-22");
+        d3.setStartTime("10:00");
+        d3.setEndTime("20:00");
+        desiredHoursInDays.add(d3);
 
 
-//        ArrayList<Attraction> allPossibleAttractions = db.getAllAttractionsByDestination("london");
-//        ArrayList<Attraction> attractionsAvailable = new ArrayList<Attraction>();
-//        for (Attraction attraction : allPossibleAttractions){
-//            if(!mustSeenAttractions.contains(attraction))
-//                attractionsAvailable.add(attraction);
-//        }
+        ArrayList<Attraction> allPossibleAttractions = db.getAllAttractionsByDestination("london");
+        ArrayList<Attraction> attractionsAvailable = new ArrayList<Attraction>();
+        for (Attraction at : allPossibleAttractions){
+            if(!mustSeenAttractions.contains(at))
+                attractionsAvailable.add(at);
+        }
 
-//        attractionsAvailable.forEach(attraction -> System.out.println(attraction.getName()));
-//        Collections.shuffle(attractionsAvailable);
-//        System.out.println("--------------------------------------------");
-//        attractionsAvailable.forEach(attraction -> System.out.println(attraction.getName()));
-//        System.out.println("--------------------------------------------");
-//        Collections.shuffle(attractionsAvailable);
-//        attractionsAvailable.forEach(attraction -> System.out.println(attraction.getName()));
-//
+
 
         trip.hoursEveryDay = desiredHoursInDays;
-       // RouteTrip routeTrip = new RouteTrip("london",hotel,mustSeenAttractions, desiredHoursInDays);
+        RouteTrip routeTrip = new RouteTrip("london",hotel,mustSeenAttractions, desiredHoursInDays);
 
         ArrayList<DayPlan> trip1 = engine.createTripForUser(trip.destination,trip.hotelID,trip.mustSeenAttractionsID,trip.hoursEveryDay);
 
 
         System.out.println(trip1);
+
+
         DayPlan d = new DayPlan();
         Attraction eye = db.getAttractionFromDBByID("ChIJc2nSALkEdkgRkuoJJBfzkUI",Destinations.valueOf("london"));
         Attraction bfi = db.getAttractionFromDBByID("ChIJEYfH57cEdkgRvTdhVI3xJzQ", Destinations.valueOf("london"));
@@ -138,9 +134,14 @@ public class main {
 //        ArrayList<OnePlan> d =  trip1.get(1).getDaySchedule();
 //        for(OnePlan op : d){
 //            System.out.println("hotel -> "+ op.getAttraction().getName() + "  "+ hotel.calcDistanceBetweenAttractions(op.getAttraction()));
-//
-//        }
 
+//
+//        RouteTrip routeTrip = new RouteTrip("london",hotel,mustSeenAttractions, desiredHoursInDays);
+//
+//
+//
+//
+//
 //        routeTrip.planRouteTrip(attractionsAvailable);
 //        System.out.println(gson.toJson(routeTrip.getPlanForDays()));
 
@@ -210,23 +211,6 @@ public class main {
 
 
 
-    }
-
-    public static class TripDetails {
-        String destination;
-        String hotelID;
-        ArrayList<String> mustSeenAttractionsID;
-        ArrayList<DesiredHoursInDay> hoursEveryDay;
-
-        @Override
-        public String toString() {
-            return "TripDetails{" +
-                    "destination='" + destination + '\'' +
-                    ", hotelID='" + hotelID + '\'' +
-                    ", mustSeenAttractionsID=" + mustSeenAttractionsID +
-                    ", hoursEveryDay=" + hoursEveryDay +
-                    '}';
-        }
     }
 
 
