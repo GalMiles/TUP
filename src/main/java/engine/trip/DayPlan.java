@@ -220,7 +220,7 @@ public class DayPlan {
 
                 fakePlan.durationDay += nextAttraction.getDuration();
 
-                if (attractionsAvailable.isEmpty())
+                if (attractionsAvailable.isEmpty()  )
                     break;
             }
             else
@@ -349,7 +349,9 @@ public class DayPlan {
 
             closeAttraction = hourOnClock.isBefore(openingHoursNext.get(i));
             overPossibleDuration = closingHoursNext.get(i).isBefore(hourOnClockAfterEnjoying);
-            stayMoreThenUserWish = hourOnClockAfterEnjoying.isAfter(endOfDayHour.plusHours(1));
+            ///////////// adding endOfDayHour.isBefore(LocalTime.parse("23:00")
+            stayMoreThenUserWish = hourOnClockAfterEnjoying.isAfter(endOfDayHour.plusHours(1)) && endOfDayHour.isBefore(LocalTime.parse("23:00"));
+
 
             if (closeAttraction || overPossibleDuration || stayMoreThenUserWish) {
                 openingHoursNextPossible.set(i, false);

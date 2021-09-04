@@ -74,7 +74,7 @@ public class main {
         DesiredHoursInDay d1 = new DesiredHoursInDay();
         d1.setDate("2021-09-20");
         d1.setStartTime("10:00");
-        d1.setEndTime("20:00");
+        d1.setEndTime("23:30");
         desiredHoursInDays.add(d1);
 
         DesiredHoursInDay d2 = new DesiredHoursInDay();
