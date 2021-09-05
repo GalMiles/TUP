@@ -202,6 +202,9 @@ public class DayPlan {
         }
         this.daySchedule = chosenDayPlan.daySchedule;
         this.durationDay = chosenDayPlan.durationDay;
+        for(OnePlan plan: this.daySchedule){
+            attractionsAvailable.remove(plan.getAttraction());
+        }
     }
 
     public void calculateDayPlanFake(ArrayList<Attraction> attractionsAvailable, Boolean isFavoriteAttraction, LocalTime endOfDayHour, DayPlan fakePlan) {
