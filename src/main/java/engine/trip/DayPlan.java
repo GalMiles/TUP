@@ -4,6 +4,7 @@ import common.DayOpeningHours;
 import engine.attraction.Attraction;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -343,14 +344,20 @@ public class DayPlan {
         ArrayList<Boolean> closingHoursNextPossible = new ArrayList<>(Collections.nCopies(closingHoursNext.size(), true));
 
         int sizeOpeningHoursNext = openingHoursNext.size();
-        LocalTime hourOnClockAfterEnjoying = hourOnClock.plusHours(nextAttraction.getDuration());
+        LocalDateTime hourOnClockAfterEnjoying = date.atStartOfDay();
+        hourOnClockAfterEnjoying = hourOnClockAfterEnjoying.plusHours(hourOnClock.getHour()).plusHours(nextAttraction.getDuration());
+        hourOnClockAfterEnjoying = hourOnClockAfterEnjoying.plusMinutes(hourOnClock.getMinute());
+
+
 
         for (int i = 0; i < sizeOpeningHoursNext; i++) {
 
             closeAttraction = hourOnClock.isBefore(openingHoursNext.get(i));
-            overPossibleDuration = closingHoursNext.get(i).isBefore(hourOnClockAfterEnjoying);
-            ///////////// adding endOfDayHour.isBefore(LocalTime.parse("23:00")
-            stayMoreThenUserWish = hourOnClockAfterEnjoying.isAfter(endOfDayHour.plusHours(1)) && endOfDayHour.isBefore(LocalTime.parse("23:00"));
+            overPossibleDuration = closingHoursNext.get(i).isBefore(LocalTime.from(hourOnClockAfterEnjoying));
+
+
+            stayMoreThenUserWish = checkIfStayMoreThenUserWish(hourOnClockAfterEnjoying,date,endOfDayHour);
+            //stayMoreThenUserWish = hourOnClockAfterEnjoying.isAfter(endOfDayHour.plusHours(1));
 
 
             if (closeAttraction || overPossibleDuration || stayMoreThenUserWish) {
@@ -390,6 +397,16 @@ public class DayPlan {
         }
         scoreTime = -1 * minValue;
         return scoreDistance + scoreTime;
+    }
+
+    private Boolean checkIfStayMoreThenUserWish(LocalDateTime hourOnClockAfterEnjoying, LocalDate date, LocalTime endOfDayHour){
+
+        LocalDateTime endOfDayCombined = date.atStartOfDay();
+        endOfDayCombined = endOfDayCombined.plusHours(endOfDayHour.getHour());
+        endOfDayCombined = endOfDayCombined.plusMinutes(endOfDayHour.getMinute());
+
+
+        return  hourOnClockAfterEnjoying.isAfter(endOfDayCombined.plusHours(1));
     }
 
     private ArrayList<LocalTime> removeNotPossibleHours(ArrayList<LocalTime> hoursNext, ArrayList<Boolean> hoursNextPossible) {

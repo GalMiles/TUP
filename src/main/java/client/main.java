@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 
@@ -39,6 +40,25 @@ public class main {
     }
 
     public static void main(String[] args) throws IOException, SQLException, ParseException, RouteTrip.AlreadyExistException, Traveler.HasNoTripsException, RouteTrip.NotFoundException, Traveler.IllegalValueException {
+
+        LocalTime endOfDayHour = LocalTime.parse("23:59");
+        LocalTime afterEnjoying = LocalTime.parse("01:00");
+
+        LocalDate date = LocalDate.parse("2021-09-20");
+//        LocalDateTime combinedTime1 = date.atStartOfDay();
+//        combinedTime1 =combinedTime1.plusHours(endOfDayHour.getHour());
+//        combinedTime1 =combinedTime1.plusMinutes(endOfDayHour.getMinute());
+
+        LocalDateTime afterEnjoyingCombined = date.atStartOfDay();
+        afterEnjoyingCombined = afterEnjoyingCombined.plusHours(afterEnjoying.getHour());
+        afterEnjoyingCombined = afterEnjoyingCombined.plusMinutes(afterEnjoying.getMinute());
+
+        LocalDateTime endOfDayCombined = date.atStartOfDay();
+        endOfDayCombined = endOfDayCombined.plusHours(endOfDayHour.getHour());
+        endOfDayCombined = endOfDayCombined.plusMinutes(endOfDayHour.getMinute());
+
+
+        Boolean b =  afterEnjoyingCombined.isAfter(endOfDayCombined.plusHours(1));
 
 
 
