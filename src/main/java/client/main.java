@@ -49,21 +49,12 @@ public class main {
             this.distance = distance;
         }
 
-        public static Comparator<NameAndDistance> StuDistanceComparator = new Comparator<NameAndDistance>() {
+        public static Comparator<NameAndDistance> StuDistanceComparator = (s1, s2) -> {
 
-            public int compare(NameAndDistance s1, NameAndDistance s2)
-            {
+            double d1 = s1.distance;
+            double d2 = s2.distance;
+            return (int) (d1-d2);
 
-                double d1 = s1.distance;
-                double d2 = s2.distance;
-                return (int) (d1-d2);
-                // ascending order
-
-
-                // descending order
-                // return
-                // StudentName2.compareTo(StudentName1);
-            }
         };
 
 

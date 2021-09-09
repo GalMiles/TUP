@@ -13,7 +13,6 @@ import java.sql.SQLException;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 
 public class Engine {
 
@@ -97,7 +96,7 @@ public class Engine {
 
     private ArrayList<Attraction> createListOfRestAttractionAvailableInDestination(DBManager db,String destination, ArrayList<Attraction> mustSeenAttractions) throws SQLException {
         ArrayList<Attraction> allPossibleAttractions = db.getAllAttractionsByDestination(destination);
-        ArrayList<Attraction> attractionsAvailable = new ArrayList<Attraction>();
+        ArrayList<Attraction> attractionsAvailable = new ArrayList<>();
         for (Attraction attraction : allPossibleAttractions){
             if(!mustSeenAttractions.contains(attraction))
                 attractionsAvailable.add(attraction);

@@ -42,6 +42,7 @@ public class DayPlan {
         setDaySchedule(other.daySchedule);
         setDurationDay(other.durationDay);
         this.mustSeenAttractionsForDay = new ArrayList<>(other.getMustSeenAttractionsForDay());
+        setScoreDay(other.scoreDay);
 
     }
 
@@ -90,7 +91,7 @@ public class DayPlan {
         this.durationDesireByUser = durationDesireByUser;
     }
     public void setDaySchedule(ArrayList<OnePlan> daySchedule) {
-        this.daySchedule = new ArrayList<OnePlan>(daySchedule);
+        this.daySchedule = new ArrayList<>(daySchedule);
     }
     public void setDate(LocalDate date) {
         this.date = date;
@@ -195,7 +196,7 @@ public class DayPlan {
 
             }
             attractionsAvailable.remove(nextAttraction);
-            fiveDifferentAttractionsAvailable.add(i, new ArrayList<Attraction>(attractionsAvailable));
+            fiveDifferentAttractionsAvailable.add(i, new ArrayList<>(attractionsAvailable));
         }
 
         for(int i = 0; i < size; i++){
@@ -225,7 +226,7 @@ public class DayPlan {
     private boolean checkIfOnlyHotelOnDaySchedule(DayPlan dayPlan){
         boolean onlyHotel = false;
         if(dayPlan.daySchedule.size() == 1){
-            if(dayPlan.daySchedule.get(0).getAttraction().getPlaceID() == hotelID)
+            if(dayPlan.daySchedule.get(0).getAttraction().getPlaceID().equals(hotelID))
                 onlyHotel = true;
         }
         return onlyHotel;
@@ -281,9 +282,9 @@ public class DayPlan {
         long differenceBetweenClockAndStartTime;
         long minValue = Integer.MAX_VALUE;
         double scoreTime;
-        Boolean closeAttraction;  //in case the next attraction is close on the hourOnClock - cant go to close attraction
-        Boolean overPossibleDuration;  //in case according to duration of attraction we'll stay longer then we can
-        Boolean stayMoreThenUserWish;
+        boolean closeAttraction;  //in case the next attraction is close on the hourOnClock - cant go to close attraction
+        boolean overPossibleDuration;  //in case according to duration of attraction we'll stay longer then we can
+        boolean stayMoreThenUserWish;
 
         DayOpeningHours dayOpeningHoursNext = nextAttraction.getOpeningHoursByDay(date.getDayOfWeek());
         ArrayList<LocalTime> openingHoursNext = new ArrayList<>(dayOpeningHoursNext.getOpeningHoursLocalTime());
@@ -368,7 +369,7 @@ public class DayPlan {
     private void printDaySchedule(ArrayList<OnePlan> daySchedule,LocalDate date)  {
         int i = 0;
         for (OnePlan plan : daySchedule) {
-            System.out.println(plan.getStartTime() + "-" + plan.getFinishTime() + "  " + date +" DAY " +String.valueOf(i)+ ":"+ (plan.getAttraction() != null ? plan.getAttraction().getName() : null) + "                favorite: " + plan.getIsFavoriteAttraction());
+            System.out.println(plan.getStartTime() + "-" + plan.getFinishTime() + "  " + date +" DAY " +i+ ":"+ (plan.getAttraction() != null ? plan.getAttraction().getName() : null) + "                favorite: " + plan.getIsFavoriteAttraction());
             i++;
         }
         System.out.println(scoreDay);
@@ -378,9 +379,7 @@ public class DayPlan {
     public void updateMustSeenAttractions(ArrayList<Attraction> mustSeenAttractionsLocal) {
         if(mustSeenAttractionsLocal.isEmpty())
             return;
-        for(Attraction mustAttraction : mustSeenAttractionsForDay){
-            mustSeenAttractionsLocal.add(mustAttraction);
-        }
+        mustSeenAttractionsLocal.addAll(mustSeenAttractionsForDay);
         mustSeenAttractionsForDay = mustSeenAttractionsLocal;
 
     }

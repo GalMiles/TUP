@@ -1,6 +1,5 @@
 package engine.trip;
 
-
 import com.google.gson.Gson;
 import common.*;
 import engine.attraction.Attraction;

@@ -11,8 +11,6 @@ import engine.trip.OnePlan;
 import engine.trip.RouteTrip;
 import engine.traveler.Traveler;
 import googleAPI.APIManager;
-import googleAPI.JsonAttraction;
-
 
 import wikipediaAPI.wikiAPIManager;
 
@@ -20,7 +18,6 @@ import java.io.IOException;
 import java.sql.*;
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Collection;
 
 public class DBManager {
 
@@ -45,7 +42,7 @@ public class DBManager {
 
     public ArrayList<Attraction> getAllAttractionsByDestination(String destination) throws SQLException {
         ArrayList<Attraction> attractions = new ArrayList<>();
-        String sql = "SELECT * FROM tup." + destination.toString();
+        String sql = "SELECT * FROM tup." + destination;
         PreparedStatement ps = this.sqlConnection.prepareStatement(sql);
         ResultSet results = ps.executeQuery();
         while (results.next()) {
