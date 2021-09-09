@@ -119,9 +119,7 @@ public class RouteTrip {
             dayPlan.updateMustSeenAttractions(mustSeenAttractionsLocal);
             dayPlan.calculateDayPlanWithMustSeenAttractions();
             mustSeenAttractionsLocal = dayPlan.getMustSeenAttractionsForDay();
-            //dayPlan.calculateDayPlanWithAllAttractions(attractionsAvailable, false, dayPlan.getFinishTime());
-            //dayPlan.calculateDayPlan(attractionsAvailable, false, dayPlan.getFinishTime());
-            dayPlan.managerFake(attractionsAvailable, false, dayPlan.getFinishTime());
+            dayPlan.findTheBestRouteOutOfFive(attractionsAvailable, false, dayPlan.getFinishTime());
 
         }
     }
@@ -136,6 +134,7 @@ public class RouteTrip {
             numberOfIterations += 1;
         }
         this.planForDays.forEach(dayPlan -> dayPlan.setDurationDay(0));
+
     }
 
     @Override
@@ -344,6 +343,7 @@ public class RouteTrip {
         return possibleAttractions;
 
     }
+
     public RouteTrip findTripById(Collection<RouteTrip> trips, int id){
         Iterator itr = trips.iterator();
         RouteTrip element = null;

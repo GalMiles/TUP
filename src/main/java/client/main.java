@@ -15,9 +15,10 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 
 public class main {
@@ -39,26 +40,63 @@ public class main {
         }
     }
 
+    public static class NameAndDistance{
+         public String AttractionName;
+        public double distance;
+
+        public NameAndDistance(String attractionName, double distance) {
+            AttractionName = attractionName;
+            this.distance = distance;
+        }
+
+        public static Comparator<NameAndDistance> StuDistanceComparator = new Comparator<NameAndDistance>() {
+
+            public int compare(NameAndDistance s1, NameAndDistance s2)
+            {
+
+                double d1 = s1.distance;
+                double d2 = s2.distance;
+                return (int) (d1-d2);
+                // ascending order
+
+
+                // descending order
+                // return
+                // StudentName2.compareTo(StudentName1);
+            }
+        };
+
+
+
+        @Override
+        public String toString() {
+            return "NameAndDistance{" +
+                    "AttractionName='" + AttractionName + '\'' +
+                    ", distance=" + distance +
+                    '}';
+        }
+    }
+
     public static void main(String[] args) throws IOException, SQLException, ParseException, RouteTrip.AlreadyExistException, Traveler.HasNoTripsException, RouteTrip.NotFoundException, Traveler.IllegalValueException {
-
-        LocalTime endOfDayHour = LocalTime.parse("23:59");
-        LocalTime afterEnjoying = LocalTime.parse("01:00");
-
-        LocalDate date = LocalDate.parse("2021-09-20");
-//        LocalDateTime combinedTime1 = date.atStartOfDay();
-//        combinedTime1 =combinedTime1.plusHours(endOfDayHour.getHour());
-//        combinedTime1 =combinedTime1.plusMinutes(endOfDayHour.getMinute());
-
-        LocalDateTime afterEnjoyingCombined = date.atStartOfDay();
-        afterEnjoyingCombined = afterEnjoyingCombined.plusHours(afterEnjoying.getHour());
-        afterEnjoyingCombined = afterEnjoyingCombined.plusMinutes(afterEnjoying.getMinute());
-
-        LocalDateTime endOfDayCombined = date.atStartOfDay();
-        endOfDayCombined = endOfDayCombined.plusHours(endOfDayHour.getHour());
-        endOfDayCombined = endOfDayCombined.plusMinutes(endOfDayHour.getMinute());
-
-
-        Boolean b =  afterEnjoyingCombined.isAfter(endOfDayCombined.plusHours(1));
+//
+//        LocalTime endOfDayHour = LocalTime.parse("23:59");
+//        LocalTime afterEnjoying = LocalTime.parse("01:00");
+//
+//        LocalDate date = LocalDate.parse("2021-09-20");
+////        LocalDateTime combinedTime1 = date.atStartOfDay();
+////        combinedTime1 =combinedTime1.plusHours(endOfDayHour.getHour());
+////        combinedTime1 =combinedTime1.plusMinutes(endOfDayHour.getMinute());
+//
+//        LocalDateTime afterEnjoyingCombined = date.atStartOfDay();
+//        afterEnjoyingCombined = afterEnjoyingCombined.plusHours(afterEnjoying.getHour());
+//        afterEnjoyingCombined = afterEnjoyingCombined.plusMinutes(afterEnjoying.getMinute());
+//
+//        LocalDateTime endOfDayCombined = date.atStartOfDay();
+//        endOfDayCombined = endOfDayCombined.plusHours(endOfDayHour.getHour());
+//        endOfDayCombined = endOfDayCombined.plusMinutes(endOfDayHour.getMinute());
+//
+//
+//        Boolean b =  afterEnjoyingCombined.isAfter(endOfDayCombined.plusHours(1));
 
 
 
@@ -129,16 +167,18 @@ public class main {
 
 
         DayPlan d = new DayPlan();
-        Attraction eye = db.getAttractionFromDBByID("ChIJc2nSALkEdkgRkuoJJBfzkUI",Destinations.valueOf("london"));
-        Attraction bfi = db.getAttractionFromDBByID("ChIJEYfH57cEdkgRvTdhVI3xJzQ", Destinations.valueOf("london"));
-        Attraction rfa = db.getAttractionFromDBByID("ChIJb2Mpz8UEdkgR6dpyR4XJgwE", Destinations.valueOf("london"));
-        double s1 = d.calculateScore(eye,bfi, LocalTime.parse("16:00"), LocalDate.parse("2021-08-31"),LocalTime.parse("20:00"));
-        double s2 = d.calculateScore(eye,rfa, LocalTime.parse("16:00"), LocalDate.parse("2021-08-31"),LocalTime.parse("20:00"));
+        Attraction brick = db.getAttractionFromDBByID("ChIJJX-rQLYcdkgRjiQDyLmOB-E",Destinations.valueOf("london"));
+        ArrayList<NameAndDistance> arr = new ArrayList();
+        for(Attraction att: allPossibleAttractions){
+            double s1 = d.calculateScore(brick,att, LocalTime.parse("22:00"), LocalDate.parse("2021-09-20"),LocalTime.parse("23:30"));
+            arr.add(new NameAndDistance("brick ->   "+ att.getName() ,s1));
+//            System.out.println("brick ->   "+ att.getName() "  "+ s1);
+        }
 
-        System.out.println("eye -> bfi  " + eye.calcDistanceBetweenAttractions(bfi));
-        System.out.println("eye -> rfa  " + eye.calcDistanceBetweenAttractions(rfa));
-        System.out.println("bfi" +s1);
-        System.out.println("rfa" +s2);
+        Collections.sort(arr,NameAndDistance.StuDistanceComparator);
+
+        //arr.forEach(e-> System.out.println(e));
+
 
 //        for(String attraction :trip.mustSeenAttractionsID){
 //            System.out.println(db.getAttractionFromDBByID(attraction,Destinations.valueOf("london")).getName());
