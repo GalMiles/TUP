@@ -27,7 +27,7 @@ public class DBManager {
 
 
     public DBManager() throws SQLException {
-        this.sqlConnection = DriverManager.getConnection("jdbc:mysql://localhost:3306/tup", "root", "123456ma");
+        this.sqlConnection = DriverManager.getConnection("jdbc:mysql://localhost:3306/tup", "root", "Galmiles31051960");
         this.statement = sqlConnection.createStatement();
 
         DriverManager.registerDriver(new com.mysql.cj.jdbc.Driver());
@@ -175,9 +175,14 @@ public class DBManager {
         String sql = "SELECT * FROM tup." + destination + "_hotels";
         PreparedStatement ps = this.sqlConnection.prepareStatement(sql);
         ResultSet results = ps.executeQuery();
-        if(!results.next()) {throw new Attraction.NoHotelsOnDestination("there are not hotels on this destination");}
+        boolean hotelsExist = false;
+
         while (results.next()) {
+            hotelsExist = true;
             hotels.add(new Attraction(results));
+        }
+        if (!hotelsExist){
+            throw new Attraction.NoHotelsOnDestination("there are not hotels on this destination");
         }
         return hotels;
     }
@@ -214,9 +219,6 @@ public class DBManager {
         p.setString(1, travelerID);
         ResultSet results = p.executeQuery();
         boolean tripsExist = false;
-
-//        if(!results.next()) {
-//            throw new Traveler.HasNoTripsException("Traveler with id " + travelerID + "has no trips yet!"); }
 
         while (results.next()) {
             tripsExist = true;
