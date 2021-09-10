@@ -20,7 +20,7 @@ public class DayPlan {
     int durationDay = 0;
     ArrayList<Attraction> mustSeenAttractionsForDay = new ArrayList<>();
     String hotelID;
-    int scoreDay = 0;
+    double scoreDay = 0;
 
 
     public DayPlan(LocalDate date, LocalTime startTime, LocalTime finishTime ,Attraction hotel){
@@ -75,11 +75,11 @@ public class DayPlan {
         return durationDay;
     }
 
-    public int getScoreDay() {
+    public double getScoreDay() {
         return scoreDay;
     }
 
-    public void setScoreDay(int scoreDay) {
+    public void setScoreDay(double scoreDay) {
         this.scoreDay = scoreDay;
     }
 

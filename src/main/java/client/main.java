@@ -97,10 +97,6 @@ public class main {
         Engine engine = new Engine();
         TripDetails trip = new TripDetails();
         APIManager APIManager = new APIManager();
-//       Attraction attraction = new Attraction(APIManager.getAttractionFromAPI("West End of London"));
-//        System.out.println(attraction);
-//        db.insertOneAttractionDescriptionToDB(attraction);
-//        db.insertOneAttractionsImagesToDB(attraction);attraction
 
         trip.destination = "london";
         trip.hotelID = "ChIJ1TVZs1UFdkgRIeWxo-jEYaE";
@@ -114,9 +110,6 @@ public class main {
 
         ArrayList<AttractionType> typesHotel = new ArrayList<>();
         typesHotel.add(AttractionType.lodging);
-        Attraction hotel = new Attraction("Baglioni Hotel - London", "60 Hyde Park Gate, South Kensington, London SW7 5BB, UK",
-                "020 7368 5700", null, new Geometry("51.50167580000001", "-0.1847417"), "ChIJFSZeB1kFdkgRTixgFHqP13g",
-                typesHotel, null);
 
 
         ArrayList<DesiredHoursInDay> desiredHoursInDays = new ArrayList<>();
@@ -149,7 +142,6 @@ public class main {
 
 
         trip.hoursEveryDay = desiredHoursInDays;
-        RouteTrip routeTrip = new RouteTrip("london",hotel,mustSeenAttractions, desiredHoursInDays);
 
         ArrayList<DayPlan> trip1 = engine.createTripForUser(trip.destination,trip.hotelID,trip.mustSeenAttractionsID,trip.hoursEveryDay);
 
