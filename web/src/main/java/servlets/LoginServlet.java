@@ -18,6 +18,7 @@ import java.sql.SQLException;
 public class LoginServlet extends HttpServlet {
 
     @Override
+    //login
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         ServletUtils servletUtils = new ServletUtils(req);
         User newUser = (User)servletUtils.gsonFromJson(User.class);

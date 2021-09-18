@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 
 public class wikiAPIManager {
 
+    //get attraction description from WikipediaAPI by url
     public static String getAttractionDescriptionFromWikiWithUrl(String url) throws IOException {
 
         String description=null;
@@ -44,6 +45,7 @@ public class wikiAPIManager {
         return description;
     }
 
+    //get attraction description from WikipediaAPI by attraction name
     public static String getAttractionDescriptionFromWiki(String attractionName) throws IOException {
         String descriptionUrl=null;
         String newAttractionName = attractionName.replace(" ", "_");
@@ -63,6 +65,7 @@ public class wikiAPIManager {
         return descriptionUrl;
     }
 
+    //get attraction image from WikipediaAPI by attraction name
     public static String getAttractionImageFromWiki(String attractionName) throws IOException {
         String imageUrl=null;
         String newAttractionName = attractionName.replace(" ", "_");
@@ -82,6 +85,7 @@ public class wikiAPIManager {
         return imageUrl;
     }
 
+    //get attraction image from WikipediaAPI by url
     public static String getAttractionImageFromWikiWithUrl(String url) throws IOException {
 
         URL urlObject = new URL(url);

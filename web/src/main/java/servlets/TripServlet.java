@@ -23,6 +23,7 @@ import java.util.ArrayList;
 public class TripServlet extends HttpServlet {
 
     @Override
+    //get traveler trips
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 
         ServletUtils servletUtils = new ServletUtils(req);
@@ -50,6 +51,7 @@ public class TripServlet extends HttpServlet {
             processPostRequestTrips(req, resp);
     }
 
+    //delete traveler trip
     private void processPostRequestDeleteTrips(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         ServletUtils servletUtils = new ServletUtils(req);
         TripsToDelete tripsToDelete = (TripsToDelete)servletUtils.gsonFromJson(TripsToDelete.class);
@@ -66,6 +68,7 @@ public class TripServlet extends HttpServlet {
         }
     }
 
+    //create traveler trip
     private void processPostRequestTrips(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         ServletUtils servletUtils = new ServletUtils(req);
 
@@ -85,6 +88,7 @@ public class TripServlet extends HttpServlet {
     }
 
     @Override
+    //save traveler trip
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 
         ServletUtils servletUtils = new ServletUtils(req);

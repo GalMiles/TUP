@@ -27,6 +27,7 @@ public class DBManager {
 
 
     public DBManager() throws SQLException {
+        //local DB connection
 //        this.sqlConnection = DriverManager.getConnection("jdbc:mysql://localhost:3306/tup", "root", "Galmiles31051960");
 //        this.statement = sqlConnection.createStatement();
 
@@ -40,6 +41,7 @@ public class DBManager {
         this.sqlConnection.close();
     }
 
+    //get all attraction from DB
     public ArrayList<Attraction> getAllAttractionsByDestination(String destination) throws SQLException {
         ArrayList<Attraction> attractions = new ArrayList<>();
         String sql = "SELECT * FROM tup." + destination;
@@ -51,9 +53,11 @@ public class DBManager {
         return attractions;
     }
 
+    //insert new traveler details to DB
     public String Register(Traveler traveler) throws SQLException, Traveler.AlreadyExistsException {
         String idString = null;
-        checkIfEmailIsFound(traveler.getEmailAddress());
+        checkIfEmailIsFound(traveler.getEmailAddress());          //email validation-if exists' we will get exception
+
         String query = "INSERT INTO travelers(Email, Password, FirstName, LastName) VALUES ( "
                 + "\"" + traveler.getEmailAddress() + "\", \"" + traveler.getPassword() + "\", \"" + traveler.getFirstName() +
                 "\", \"" + traveler.getLastName() + "\")";
@@ -63,9 +67,10 @@ public class DBManager {
         if (resultSet.next()) {
             idString = resultSet.getString("traveler_id");
         }
-        return idString;
+        return idString; //return to client traveler_id
     }
 
+    //traveler login by email and password
     public Traveler Login(String Email, String Password) throws SQLException, Traveler.NotFoundException, Traveler.IllegalValueException {
         Traveler traveler = null;
         String query = "SELECT * FROM travelers WHERE Email=? and Password=?";
@@ -88,6 +93,7 @@ public class DBManager {
         return traveler;
     }
 
+    //check attraction type
     private String getTypesStr(ArrayList<AttractionType> types) {
         StringBuilder typesStr = new StringBuilder();
         int typesArrSize = types.size();
@@ -110,6 +116,7 @@ public class DBManager {
         }
     }
 
+    //get attraction from DB by Attraction_ID
     public Attraction getAttractionFromDBByID(String id, Destinations destination) throws SQLException {
         Attraction resAttracion = null;
         String query = "SELECT * FROM tup." + destination.toString() + " WHERE attractionAPI_ID =\"" + id + "\"";
@@ -120,6 +127,7 @@ public class DBManager {
         return resAttracion;
     }
 
+    //check traveler email
     public void checkIfEmailIsFound(String email) throws SQLException, Traveler.AlreadyExistsException {
         String query = "SELECT * FROM travelers WHERE Email = \"" + email + "\"";
         ResultSet resultSet = this.statement.executeQuery(query);
@@ -128,6 +136,7 @@ public class DBManager {
         }
     }
 
+    //get traveler favorite attractions
     public ArrayList<Attraction> getFavoriteAttractions(String travelerID) throws SQLException {
         Destinations destination = null;
         ArrayList<Attraction> attractions = new ArrayList<>();
@@ -144,6 +153,7 @@ public class DBManager {
         return attractions;
     }
 
+    //delete traveler favorite attraction from DB
     public void deleteUserOneFavoriteAttraction(String attractionId, String travelerID) throws SQLException {
 
         PreparedStatement p = sqlConnection.prepareStatement("DELETE FROM favorites_attractions WHERE traveler_id = ? AND attractionAPI_ID = ?");
@@ -152,6 +162,7 @@ public class DBManager {
         p.execute();
     }
 
+    //add traveler favorite attraction to DB
     public void addFavoriteAttraction(String attractionId, String travelerID) throws SQLException {
         PreparedStatement p = sqlConnection.prepareStatement("INSERT INTO favorites_attractions (traveler_id, attractionAPI_ID) VALUES (?, ?)");
         p.setString(1, travelerID);
@@ -159,6 +170,7 @@ public class DBManager {
         p.execute();
     }
 
+    //get hotel from DB by Attraction_Id
     public Attraction getHotelFromDBByID(String id, Destinations destination) throws SQLException {
         Attraction resAttracion = null;
         String query = "SELECT * FROM tup." + destination.toString() + "_hotels" + " WHERE attractionAPI_ID =\"" + id + "\"";
@@ -170,6 +182,7 @@ public class DBManager {
 
     }
 
+    //get all hotels from DB
     public ArrayList<Attraction> getAllHotelsFromDB(String destination) throws SQLException, Attraction.NoHotelsOnDestination {
         ArrayList<Attraction> hotels = new ArrayList<>();
         String sql = "SELECT * FROM tup." + destination + "_hotels";
@@ -187,6 +200,7 @@ public class DBManager {
         return hotels;
     }
 
+    //update traveler details
     public void updateTravelerDetailsOnDB(Traveler newTraveler, String currentTravelerID, Boolean isSameEmail) throws Traveler.AlreadyExistsException, SQLException {
         if (!isSameEmail)
             checkIfEmailIsFound(newTraveler.getEmailAddress());
@@ -203,6 +217,7 @@ public class DBManager {
         p.execute();
     }
 
+    //get traveler detail from DB
     public Traveler getTravelerFromDBByID(String id) throws SQLException, Traveler.IllegalValueException {
         Traveler resTraveler = null;
         String query = "SELECT * FROM tup.travelers WHERE traveler_id =\"" + id + "\"";
@@ -213,6 +228,7 @@ public class DBManager {
         return resTraveler;
     }
 
+    //get all traveler trips from DB by traveler_id
     public ArrayList<TripPlan> getTripsFromDbByTravelerId(String travelerID) throws SQLException, Traveler.HasNoTripsException {
         ArrayList<TripPlan> trips = new ArrayList<>();
         PreparedStatement p = sqlConnection.prepareStatement("SELECT * FROM trips WHERE traveler_id = ?");
@@ -234,6 +250,7 @@ public class DBManager {
         return trips;
     }
 
+    //fill routeTrip cause in DB we save a part of it and to send it to client it needs to be full
     private void fillRouteTrip(RouteTrip routeTrip) throws SQLException {
         ArrayList<DayPlan> res = routeTrip.getPlanForDays();
         for (DayPlan d : res) {
@@ -247,6 +264,7 @@ public class DBManager {
         }
     }
 
+    //insert trip to DB - we insert the trip without the attractions details like address, website, etc.
     public int insertTripToDB(String tripName, ArrayList<DayPlan> tripPlan, String currentTravelerID, String destination) throws SQLException, RouteTrip.AlreadyExistException, RouteTrip.NotFoundException {
         Gson gson = new Gson();
         RouteTrip routeTrip = createRouteTripToDB(tripPlan, destination);
@@ -262,6 +280,8 @@ public class DBManager {
         return updateTripID(routeTrip, currentTravelerID, gson);
     }
 
+    //create routTrip
+    // set null in irrelevant fields for DB like attractions address etc
     private RouteTrip createRouteTripToDB(ArrayList<DayPlan> tripPlan, String destination){
         RouteTrip routeTrip = new RouteTrip(tripPlan, destination);
         ArrayList<DayPlan> res = routeTrip.getPlanForDays();
@@ -277,6 +297,7 @@ public class DBManager {
         return routeTrip;
     }
 
+    //update trip_id
     private int updateTripID(RouteTrip routeTrip, String currentTravelerID, Gson gson) throws SQLException, RouteTrip.NotFoundException {
         PreparedStatement p = sqlConnection.prepareStatement("SELECT trip_id FROM trips WHERE (trip = CAST(? AS JSON) AND traveler_id = ?)");
         p.setString(1, gson.toJson(routeTrip));
@@ -297,6 +318,7 @@ public class DBManager {
         return tripID;
     }
 
+    //check if trip exists already to this traveler in DB
     private void CheckIfTripExists(RouteTrip routeTrip, String currentTravelerID, Gson gson) throws SQLException, RouteTrip.AlreadyExistException{
         PreparedStatement p = sqlConnection.prepareStatement("SELECT * FROM trips WHERE (trip = CAST(? AS JSON) AND traveler_id = ?)");
         p.setString(1, gson.toJson(routeTrip));
@@ -307,6 +329,7 @@ public class DBManager {
             }
         }
 
+    //delete trip from DB
     public void deleteTripFromUserTripsInDB(String tripId, String currentTravelerID) throws SQLException, Traveler.HasNoTripsException {
         PreparedStatement p = sqlConnection.prepareStatement("DELETE FROM trips WHERE traveler_id = ? AND trip_id = ?");
         p.setString(1, currentTravelerID);
@@ -316,7 +339,7 @@ public class DBManager {
             throw new Traveler.HasNoTripsException("Trip id or traveler id doesn't exist in DB!");
         }
     }
-
+    //check if traveler exist in DB
     public void isTravelerExistInDB(String travelerID) throws SQLException, Traveler.NotFoundException {
         String query = "SELECT * FROM travelers WHERE traveler_id=?";
         PreparedStatement ps = this.sqlConnection.prepareStatement(query);
@@ -326,6 +349,8 @@ public class DBManager {
             throw new Traveler.NotFoundException("Traveler id doesn't exist in DB!");
         }
     }
+
+    //insert hotels images to DB-used to fill DB
     public void insertHotelsImagesToDB() throws SQLException, IOException, Attraction.NoHotelsOnDestination {
 
         String image = null;
@@ -342,6 +367,7 @@ public class DBManager {
 
     }
 
+    //insert attractions images to DB-used to fill DB
     public void insertAllAttractionsImagesToDB() throws SQLException,IOException {
         ArrayList<Attraction> attractions = this.getAllAttractionsByDestination("london");
         for (Attraction att : attractions) {
@@ -349,6 +375,7 @@ public class DBManager {
         }
     }
 
+    //insert one attraction images to DB-used to fill DB
     public void insertOneAttractionsImagesToDB(Attraction attraction) throws SQLException, IOException {
         String image = null;
         wikiAPIManager wiki = new wikiAPIManager();
@@ -360,6 +387,7 @@ public class DBManager {
         p.execute();
     }
 
+    //insert attractions descriptions to DB-used to fill DB
     public void insertAllAttractionsDescriptionToDB() throws SQLException, IOException {
         ArrayList<Attraction> attractions = this.getAllAttractionsByDestination("london");
         for (Attraction att : attractions) {
@@ -367,6 +395,7 @@ public class DBManager {
 
         }
     }
+    //insert one attraction descriptions to DB-used to fill DB
     public void insertOneAttractionDescriptionToDB(Attraction attraction) throws SQLException, IOException {
 
         String description = null;
@@ -379,31 +408,30 @@ public class DBManager {
         p.execute();
     }
 
-    public void insertToDB() throws SQLException, IOException, ParseException {
+    //insert attractions descriptions and images to DB by WikipediaAPI-used to fill DB
+    public void insertToDB( String atractionName,String attID ) throws SQLException, IOException, ParseException {
 
         wikiAPIManager w = new wikiAPIManager();
 
-        String attID = null;
-        String atractionName = "Britannia_Hotels";
-        attID = "ChIJyZap4LsCdkgR15bK4_L6-m0";
+       String desriptionUrl = "https://en.wikipedia.org/w/api.php?action=query&titles=" + atractionName+ "&prop=extracts&format=json";
+       String description =  w.getAttractionDescriptionFromWikiWithUrl(desriptionUrl);
 
-//        String url = "https://en.wikipedia.org/w/api.php?action=query&titles=" + atractionName+ "&prop=extracts&format=json";
-//       String description =  w.getAttractionDescriptionFromWikiWithUrl(url);
-//
-//        PreparedStatement p = sqlConnection.prepareStatement("UPDATE london SET Description = ? WHERE attractionAPI_ID = ?");
-//        p.setString(1, description);
-//        p.setString(2, attID);
-//        p.execute();
+       PreparedStatement p = sqlConnection.prepareStatement("UPDATE london SET Description = ? WHERE attractionAPI_ID = ?");
+       p.setString(1, description);
+       p.setString(2, attID);
+       p.execute();
 
-        String url = "https://en.wikipedia.org/w/api.php?action=query&titles=" + atractionName + "&prop=pageimages&format=json&pithumbsize=150";
-        String image = w.getAttractionImageFromWikiWithUrl(url);
+        String imageUrl = "https://en.wikipedia.org/w/api.php?action=query&titles=" + atractionName + "&prop=pageimages&format=json&pithumbsize=150";
+        String image = w.getAttractionImageFromWikiWithUrl(imageUrl);
 
 
-        PreparedStatement p = sqlConnection.prepareStatement("UPDATE london_hotels SET Image = ? WHERE attractionAPI_ID = ?");
-        p.setString(1, image);
-        p.setString(2, attID);
-        p.execute();
+        PreparedStatement p1 = sqlConnection.prepareStatement("UPDATE london_hotels SET Image = ? WHERE attractionAPI_ID = ?");
+        p1.setString(1, image);
+        p1.setString(2, attID);
+        p1.execute();
     }
+
+    //insert attractions to DB by GoogleAPI-used to fill DB
     public void insertAttractionToDB(Attraction attraction, Destinations destination) throws SQLException {
         ArrayList<StringBuilder> dayStrArr = new ArrayList<>();
         for (int i = 0; i < 7; ++i) {

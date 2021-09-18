@@ -55,6 +55,7 @@ public class AttractionsServlet extends HttpServlet {
             out.println(servletUtils.createOutResponse());
         }
     }
+    //get all attractions
     private void processGetRequestAllAttractions(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         ServletUtils servletUtils = new ServletUtils(req);
         Collection<Attraction> attractions;
@@ -71,6 +72,7 @@ public class AttractionsServlet extends HttpServlet {
         }
     }
 
+    //get all favorites attractions
     private void processGetRequestFavoritesAttractions(HttpServletRequest req, HttpServletResponse resp) throws IOException{
 
         ServletUtils servletUtils = new ServletUtils(req);

@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 
 public class APIManager {
 
+    //get attractions from GoogleAPI by name
     public JsonAttraction getAttractionFromAPI(String attractionName) throws IOException {
         String placeID = getPlaceIDFromAPI(attractionName);
         String url ="https://maps.googleapis.com/maps/api/place/details/json?place_id=" + placeID +
@@ -22,7 +23,7 @@ public class APIManager {
         return attraction;
     }
 
-
+    //get attractions from GoogleAPI by ID
     public JsonAttraction getAttractionByID(String id) throws IOException {
         String url ="https://maps.googleapis.com/maps/api/place/details/json?place_id=" + id +
                 "&fields=name,formatted_address,formatted_phone_number,opening_hours,geometry/location,types,business_status,price_level,place_id,website&key=AIzaSyAujNlik91rOdQwXKVEQgHakotz7hfl9oM";
@@ -32,7 +33,7 @@ public class APIManager {
         return attraction;
     }
 
-
+    //get place_id from GoogleAPI by attraction name
     public String getPlaceIDFromAPI(String attractionName) throws IOException {
         String searchedPlace = attractionName.replace(" ","%20");
         String url = "https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=" + searchedPlace +
@@ -42,6 +43,7 @@ public class APIManager {
         return idHolder.getCandidates().get(0).getPlaceId();
     }
 
+    //get JSON file from url
     private String getJsonString(String url) throws IOException {
         URL urlObject = new URL(url);
         HttpURLConnection connection = (HttpURLConnection) urlObject.openConnection();
@@ -51,12 +53,4 @@ public class APIManager {
         return lines;
     }
 
-
-
-//    private String getAttractionWikiID(String attractionName) throws IOException {
-//        attractionName = attractionName.replace(" ", "%20");
-//        String url = "http://en.wikipedia.org/w/api.php?format=json&action=query&prop=extracts&explaintext&exintro&titles=" + attractionName;
-//        String json = getJsonString(url);
-//
-//    }
 }

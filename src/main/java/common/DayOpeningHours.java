@@ -3,9 +3,6 @@ import java.time.DayOfWeek;
 import java.time.LocalTime;
 import java.util.ArrayList;
 
-// DayOfWeek is enum that contains all days
-// DayOfWeek is an enum representing the 7 days of the week - Monday, Tuesday, Wednesday, Thursday, Friday, Saturday and Sunday.
-// change ti it because it's easier to convert from localDate
 public class DayOpeningHours {
 
     private boolean isAllDayLongOpened;

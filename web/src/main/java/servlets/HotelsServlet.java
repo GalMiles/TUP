@@ -21,6 +21,7 @@ import java.util.ArrayList;
 public class HotelsServlet extends HttpServlet {
 
     @Override
+    //get hotels
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         ServletUtils servletUtils = new ServletUtils(req);
 
