@@ -23,15 +23,12 @@ public class OnePlan {
     public Boolean getFavoriteAttraction() {
         return isFavoriteAttraction;
     }
-
     public void setAttractionId(String attractionId) {
         this.attractionId = attractionId;
     }
-
     public String getAttractionId() {
         return attractionId;
     }
-
     public Attraction getAttraction() {return attraction;}
     public Boolean getIsFavoriteAttraction() {
         return isFavoriteAttraction;

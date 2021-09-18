@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
+// this class contain the tools to convert string to local date or time
 public class converter {
 
     public static LocalTime convertStringToLocalTime(String time){

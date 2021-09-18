@@ -7,6 +7,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.stream.Collectors;
 
+
+//this class manage the request and the response
 public class ServletUtils {
     public Gson gson = new Gson();
     public ResponseJson responseJson = new ResponseJson();
@@ -15,11 +17,11 @@ public class ServletUtils {
 
     public ServletUtils(HttpServletRequest req) throws IOException {
         reader = req.getReader();
-        lines = reader.lines().collect(Collectors.joining());
+        lines = reader.lines().collect(Collectors.joining()); //getting the request lines
     }
 
     public Object gsonFromJson(Class<?> classType){
-        Object obj = gson.fromJson(lines,classType);
+        Object obj = gson.fromJson(lines,classType); // creating object from lines
         return obj;
     }
 
@@ -46,7 +48,5 @@ public class ServletUtils {
     public String createOutResponse(){
         return gsonToJson(responseJson);
     }
-
-
 
 }

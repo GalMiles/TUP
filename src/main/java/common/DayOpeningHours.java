@@ -8,14 +8,15 @@ public class DayOpeningHours {
     private boolean isAllDayLongOpened;
     private boolean isOpen;
     private DayOfWeek day;
+    // those fields are arraylist because some attractions have break during the day (example: 10:00-14:00 , 16:00-20:00)
     private ArrayList<String> openingHours = new ArrayList<>();
     private ArrayList<String> closingHours = new ArrayList<>();
 
     public DayOpeningHours(boolean isAllDayLongOpened,boolean isOpen, int day, String openingHours, String closingHours) {
-        this.isAllDayLongOpened = isAllDayLongOpened;
-        this.isOpen = isOpen;
+        setAllDayLongOpened(isAllDayLongOpened);
+        setOpen(isOpen);
         this.day = DayOfWeek.of(day);
-        if(isAllDayLongOpened){
+        if(isAllDayLongOpened){ //default values
             this.addOpening("01:00");
             this.addClosing("23:59");
         }
@@ -27,10 +28,10 @@ public class DayOpeningHours {
 
     public DayOpeningHours(boolean isAllDayLongOpened, boolean isOpen, int day)
     {
-        this.isAllDayLongOpened = isAllDayLongOpened;
-        this.isOpen = isOpen;
+        setAllDayLongOpened(isAllDayLongOpened);
+        setOpen(isOpen);
         this.day = DayOfWeek.of(day);
-        if(isAllDayLongOpened) {
+        if(isAllDayLongOpened) { //default values
             this.addOpening("01:00");
             this.addClosing("23:59");
         }
@@ -38,8 +39,8 @@ public class DayOpeningHours {
     }
 
     public DayOpeningHours(boolean isOpen, int day) {
-        this.isAllDayLongOpened = false;
-        this.isOpen = isOpen;
+        setAllDayLongOpened(false);
+        setOpen(isOpen);
         this.day = DayOfWeek.of(day);
     }
 
@@ -51,9 +52,6 @@ public class DayOpeningHours {
         isAllDayLongOpened = allDayLongOpened;
     }
 
-    public DayOfWeek getDay() {
-        return day;
-    }
     public boolean isOpen() {
         return isOpen;
     }

@@ -14,6 +14,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 
+// this class is the mediator between the servlets and data base
+// each url on servlet is action here, this class call the function on DB
 public class Engine {
 
     String currentTravelerID = null;
@@ -39,7 +41,6 @@ public class Engine {
     public Collection<Attraction> getAttractions(String destination) throws SQLException {
         DBManager db = new DBManager();
         return db.getAllAttractionsByDestination(destination);
-        //return null;
     }
 
     public ArrayList<Attraction> getFavoriteAttractions() throws SQLException {
@@ -76,6 +77,7 @@ public class Engine {
              ArrayList<String> mustSeenAttractionsID, ArrayList<DesiredHoursInDay> desiredHoursInDays) throws SQLException, RouteTrip.AlreadyExistException, Traveler.IllegalValueException {
         checkIfHoursAreValid(desiredHoursInDays);
         DBManager db = new DBManager();
+        // update all necessary values to create trip
         Attraction hotel  = db.getHotelFromDBByID(stringHotelID, Destinations.valueOf(destination));
 
         ArrayList<Attraction> mustSeenAttractions = createArrayListOfMustSeenAttractions(mustSeenAttractionsID, db, destination);
@@ -94,6 +96,7 @@ public class Engine {
             throw new Traveler.IllegalValueException("too many days of trip");
     }
 
+    // create list of available attractions on destination without must seen attractions
     private ArrayList<Attraction> createListOfRestAttractionAvailableInDestination(DBManager db,String destination, ArrayList<Attraction> mustSeenAttractions) throws SQLException {
         ArrayList<Attraction> allPossibleAttractions = db.getAllAttractionsByDestination(destination);
         ArrayList<Attraction> attractionsAvailable = new ArrayList<>();
@@ -104,7 +107,7 @@ public class Engine {
         return attractionsAvailable;
     }
 
-    public ArrayList<Attraction> createArrayListOfMustSeenAttractions(ArrayList<String> mustSeenAttractionsID,DBManager db,String destination) throws SQLException {
+    private ArrayList<Attraction> createArrayListOfMustSeenAttractions(ArrayList<String> mustSeenAttractionsID,DBManager db,String destination) throws SQLException {
         ArrayList<Attraction> mustSeenAttractions = new ArrayList<>();
         for (String attractionID: mustSeenAttractionsID)
             mustSeenAttractions.add(db.getAttractionFromDBByID(attractionID, Destinations.valueOf(destination)));

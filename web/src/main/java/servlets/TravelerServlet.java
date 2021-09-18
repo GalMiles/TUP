@@ -15,7 +15,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
 
-//the use of JsonMember is needed because we want to make sure that the field we got are right.
+//the use of JsonMember is needed because we want to make sure that the fields we got are right.
 //In order to create JsonMember we activate the setters who are responsible for validations.
 
 @WebServlet(name = "TravelerServlet", urlPatterns = {"/traveler"})
@@ -29,7 +29,7 @@ public class TravelerServlet extends HttpServlet {
 
         try {
             Engine engine = ContextServletUtils.getEngine(req);
-            Traveler newTraveler = ResponseJson.travelerFromJson(jsonTraveler, req);
+            Traveler newTraveler = ResponseJson.travelerFromJson(jsonTraveler);
             String idString = engine.Register(newTraveler);
             resp.setHeader("travelerID", idString);
             servletUtils.writeJsonResponse(newTraveler);
@@ -51,7 +51,7 @@ public class TravelerServlet extends HttpServlet {
 
         try {
             Engine engine = ContextServletUtils.getEngine(req);
-            Traveler newTraveler = ResponseJson.travelerFromJson(jsonTraveler, req);
+            Traveler newTraveler = ResponseJson.travelerFromJson(jsonTraveler);
             engine.updateTravelerDetails(newTraveler);
             servletUtils.writeJsonResponse(newTraveler);
 

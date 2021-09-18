@@ -44,6 +44,7 @@ public class DesiredHoursInDay {
                 '}';
     }
 
+    // check the user input, make sure the range of hours is valid
     public void checkHour() throws Traveler.IllegalValueException {
         LocalDate date = common.converter.convertStringToLocalDate(this.date);
         if(LocalDate.now().isAfter(date))

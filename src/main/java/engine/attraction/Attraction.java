@@ -155,6 +155,7 @@ public class Attraction {
         this.setDuration(this.types);
     }
 
+    // calculate the distance between two attractions
     public double calcDistanceBetweenAttractions(Attraction other)
     {
         double xLat = Double.parseDouble(this.geometry.getLat());
@@ -229,6 +230,7 @@ public class Attraction {
         this.description = description;
     }
 
+    // according to attraction type we define it's average duration
     public void setDuration(ArrayList<AttractionType> types)
     {
         if (types.contains(AttractionType.amusement_park) || types.contains(AttractionType.aquarium)
