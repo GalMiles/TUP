@@ -12,7 +12,11 @@ With the help of an artificial intelligence algorithm, Hill Climbing, we create 
  - **Client Side**- Java, XML
  - **Libraries** - Volley, Glide, Gson(Google)
 
-https://user-images.githubusercontent.com/58370322/227768729-fe6541b9-bc40-4d0c-a089-a6491a46b8ea.mp4
-
 ## Full app Architecture
 ![Sofware Architecture](media/Software_Architecture.png)
+
+## Demo
+
+https://user-images.githubusercontent.com/58370322/227768891-00e10cdf-432d-42c9-920d-7b54b77a47b6.mp4
+
+
