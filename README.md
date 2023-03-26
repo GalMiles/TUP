@@ -11,5 +11,8 @@ With the help of an artificial intelligence algorithm, Hill Climbing, we create 
  - **Server Side**- Java, Maven, Tomcat 8.5, Amazon RDS, Amazon Elastic Beanstalk
  - **Client Side**- Java, XML
  - **Libraries** - Volley, Glide, Gson(Google)
+
+https://user-images.githubusercontent.com/58370322/227768729-fe6541b9-bc40-4d0c-a089-a6491a46b8ea.mp4
+
 ## Full app Architecture
 ![Sofware Architecture](media/Software_Architecture.png)
